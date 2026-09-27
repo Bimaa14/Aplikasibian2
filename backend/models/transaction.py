@@ -38,6 +38,7 @@ class TransactionDetail(BaseModel):
     product_id: str
     product_name: str
     product_type: Literal["barang", "jasa"]
+    owner: Optional[str] = None  # ikut pemilik produk saat checkout: 'bian' / 'ibu' / None (produk lama)
     qty: int
     price: float
     cost_price: float = 0

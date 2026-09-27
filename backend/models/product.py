@@ -1,8 +1,15 @@
-"""Product (barang / jasa) models. `service_fee` is the montir commission for jasa items."""
+"""Product (barang / jasa) models. `service_fee` is the montir commission for jasa items.
+
+`owner` menandai kepemilikan barang: 'bian' (Barang Bian) atau 'ibu' (Barang Ibu / Mamah Bian).
+Produk lama (hasil impor) belum ditandai (None) dan sengaja tidak diubah — hanya produk baru
+yang wajib memilih pemilik. Transaksi ikut pemilik produk (disimpan per baris di detail).
+"""
 import uuid
 from typing import Literal, Optional
 
 from pydantic import BaseModel, Field, model_validator
+
+Owner = Literal['bian', 'ibu']
 
 
 class Product(BaseModel):
@@ -13,6 +20,7 @@ class Product(BaseModel):
     name: str
     brand: str = ""
     size: str = ""
+    owner: Optional[Owner] = None  # None = produk lama belum ditandai
     stock: int = Field(default=0, ge=0)
     cost_price: float = Field(default=0, ge=0, allow_inf_nan=False)
     selling_price: float = Field(default=0, ge=0, allow_inf_nan=False)
@@ -26,6 +34,7 @@ class ProductCreate(BaseModel):
     name: str
     brand: str = ""
     size: str = ""
+    owner: Owner = 'bian'  # produk baru wajib punya pemilik; default Barang Bian
     stock: int = Field(default=0, ge=0)
     cost_price: float = Field(default=0, ge=0, allow_inf_nan=False)
     selling_price: float = Field(default=0, ge=0, allow_inf_nan=False)
@@ -46,6 +55,7 @@ class ProductUpdate(BaseModel):
     name: Optional[str] = None
     brand: Optional[str] = None
     size: Optional[str] = None
+    owner: Optional[Owner] = None
     stock: Optional[int] = Field(default=None, ge=0)
     cost_price: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)
     selling_price: Optional[float] = Field(default=None, ge=0, allow_inf_nan=False)

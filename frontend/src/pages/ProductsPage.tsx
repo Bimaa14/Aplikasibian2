@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { apiDelete, apiGet, apiPost, apiPut } from "@/lib/api";
 import { formatIDR, getApiErrorMessage } from "@/lib/format";
-import type { Product, ProductType } from "@/lib/types";
+import type { Product, ProductOwner, ProductType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 type ProductForm = {
@@ -22,10 +22,16 @@ type ProductForm = {
   name: string;
   brand: string;
   size: string;
+  owner: ProductOwner;
   stock: string;
   cost_price: string;
   selling_price: string;
   service_fee: string;
+};
+
+const OWNER_LABEL: Record<ProductOwner, string> = {
+  bian: "Barang Bian",
+  ibu: "Barang Ibu (Mamah Bian)",
 };
 
 const EMPTY_FORM: ProductForm = {
@@ -35,6 +41,7 @@ const EMPTY_FORM: ProductForm = {
   name: "",
   brand: "",
   size: "",
+  owner: "bian",
   stock: "0",
   cost_price: "0",
   selling_price: "0",
@@ -47,6 +54,7 @@ export default function ProductsPage() {
   const [editing, setEditing] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState<Product | null>(null);
   const [form, setForm] = useState<ProductForm>(EMPTY_FORM);
+  const [ownerFilter, setOwnerFilter] = useState<"all" | ProductOwner>("all");
 
   const productsQuery = useQuery({ queryKey: ["products"], queryFn: () => apiGet<Product[]>("/products") });
 
@@ -62,6 +70,7 @@ export default function ProductsPage() {
         name: form.name.trim(),
         brand: form.brand.trim(),
         size: form.size.trim(),
+        owner: form.owner,
         stock: form.type === "barang" ? Number(form.stock || 0) : 0,
         cost_price: form.type === "barang" ? Number(form.cost_price || 0) : 0,
         selling_price: Number(form.selling_price || 0),
@@ -106,6 +115,7 @@ export default function ProductsPage() {
       name: p.name,
       brand: p.brand,
       size: p.size,
+      owner: p.owner ?? "bian",
       stock: String(p.stock),
       cost_price: String(p.cost_price),
       selling_price: String(p.selling_price),
@@ -114,7 +124,8 @@ export default function ProductsPage() {
     setDialogOpen(true);
   }
 
-  const products = productsQuery.data ?? [];
+  const allProducts = productsQuery.data ?? [];
+  const products = ownerFilter === "all" ? allProducts : allProducts.filter((p) => p.owner === ownerFilter);
 
   return (
     <div className="p-4 md:p-6">
@@ -123,9 +134,21 @@ export default function ProductsPage() {
           <h1 className="font-heading text-2xl font-bold tracking-tight">Produk</h1>
           <p className="text-sm text-muted-foreground">Data master barang (ban, oli, sparepart) dan jasa servis.</p>
         </div>
-        <Button data-testid="product-add-button" onClick={openCreate}>
-          <Plus className="size-4" /> Tambah Produk
-        </Button>
+        <div className="flex items-center gap-2">
+          <select
+            data-testid="product-owner-filter"
+            className="bk-control h-9 w-auto"
+            value={ownerFilter}
+            onChange={(e) => setOwnerFilter(e.target.value as "all" | ProductOwner)}
+          >
+            <option value="all">Semua Pemilik</option>
+            <option value="bian">Barang Bian</option>
+            <option value="ibu">Barang Ibu (Mamah Bian)</option>
+          </select>
+          <Button data-testid="product-add-button" onClick={openCreate}>
+            <Plus className="size-4" /> Tambah Produk
+          </Button>
+        </div>
       </div>
 
       {productsQuery.isPending ? (
@@ -142,6 +165,7 @@ export default function ProductsPage() {
                 <TableHead>SKU</TableHead>
                 <TableHead>Nama</TableHead>
                 <TableHead>Jenis</TableHead>
+                <TableHead>Pemilik</TableHead>
                 <TableHead>Merek / Ukuran</TableHead>
                 <TableHead className="text-right">Stok</TableHead>
                 <TableHead className="text-right">Modal</TableHead>
@@ -165,6 +189,21 @@ export default function ProductsPage() {
                     >
                       {p.type === "jasa" ? "Jasa" : "Barang"}
                     </Badge>
+                  </TableCell>
+                  <TableCell data-testid={`product-owner-${p.sku.toLowerCase()}`}>
+                    {p.owner ? (
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "rounded-sm",
+                          p.owner === "ibu" ? "border-fuchsia-500/30 text-fuchsia-400" : "border-emerald-500/30 text-emerald-400"
+                        )}
+                      >
+                        {p.owner === "ibu" ? "Ibu" : "Bian"}
+                      </Badge>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">—</span>
+                    )}
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">{[p.brand, p.size].filter(Boolean).join(" · ") || "-"}</TableCell>
                   <TableCell
@@ -240,6 +279,13 @@ export default function ProductsPage() {
               <Label htmlFor="product-category" data-testid="product-category-label">Kategori laporan Excel</Label>
               <select id="product-category" data-testid="product-category-select" className="bk-control" value={form.category} onChange={e => set('category', e.target.value as Product['category'])}>
                 <option value="TIRE">Ban / Tire</option><option value="OIL">Oli / Oil</option><option value="SERVICE">Service / Spooring</option><option value="COMPLEMENTARY">Pelengkap / Complementary</option>
+              </select>
+            </div>
+            <div className="col-span-2 space-y-2">
+              <Label htmlFor="product-owner" data-testid="product-owner-label">Pemilik barang</Label>
+              <select id="product-owner" data-testid="product-form-owner-select" className="bk-control" value={form.owner} onChange={e => set('owner', e.target.value as ProductOwner)}>
+                <option value="bian">{OWNER_LABEL.bian}</option>
+                <option value="ibu">{OWNER_LABEL.ibu}</option>
               </select>
             </div>
             <div className="col-span-2 space-y-2">

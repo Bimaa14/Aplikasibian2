@@ -14,13 +14,15 @@ router = APIRouter(prefix="/products", tags=["products"], dependencies=[Depends(
 
 
 @router.get("", response_model=List[Product])
-async def list_products(search: Optional[str] = None, type: Optional[str] = None):
+async def list_products(search: Optional[str] = None, type: Optional[str] = None, owner: Optional[str] = None):
     query: dict = {}
     if search:
         rx = {"$regex": re.escape(search), "$options": "i"}
         query["$or"] = [{"name": rx}, {"sku": rx}, {"brand": rx}]
     if type in ("barang", "jasa"):
         query["type"] = type
+    if owner in ("bian", "ibu"):
+        query["owner"] = owner
     docs = await db.products.find(query, {"_id": 0}).sort("name", 1).to_list(1000)
     return [Product(**d) for d in docs]
 

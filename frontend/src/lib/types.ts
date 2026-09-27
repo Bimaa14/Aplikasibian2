@@ -2,6 +2,7 @@
 // boundary, so this file must change in the same edit as backend/models/*.
 
 export type ProductType = "barang" | "jasa";
+export type ProductOwner = "bian" | "ibu";
 export type PaymentMethod = "cash" | "credit";
 export type TxStatus = "completed" | "returned";
 export type DebtStatus = "unpaid" | "partial" | "paid" | "void";
@@ -15,6 +16,7 @@ export interface Product {
   name: string;
   brand: string;
   size: string;
+  owner: ProductOwner | null;
   stock: number;
   cost_price: number;
   selling_price: number;
@@ -41,6 +43,7 @@ export interface TransactionDetail {
   product_id: string;
   product_name: string;
   product_type: ProductType;
+  owner: ProductOwner | null;
   qty: number;
   price: number;
   cost_price: number;

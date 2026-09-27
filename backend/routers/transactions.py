@@ -110,6 +110,7 @@ async def create_transaction(body: TransactionCreate, user: dict = Depends(requi
                 product_id=pid,
                 product_name=p["name"],
                 product_type=p["type"],
+                owner=p.get("owner"),
                 qty=qty,
                 price=price,
                 cost_price=cost,
