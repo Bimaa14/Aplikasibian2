@@ -15,6 +15,7 @@ import VehiclesPage from "@/pages/VehiclesPage";
 import ExcelReportsPage from '@/pages/ExcelReportsPage';
 import ImportPage from '@/pages/ImportPage';
 import StockSnapshotPage from '@/pages/StockSnapshotPage';
+import BooksReportPage from '@/pages/BooksReportPage';
 import ReportsPage from "@/pages/ReportsPage";
 import LaravelBundlePage from "@/pages/LaravelBundlePage";
 
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="/stok-masuk" element={<StockInPage />} />
           <Route path="/kendaraan" element={<VehiclesPage />} />
           <Route path="/laporan" element={<ReportsPage />} />
+        <Route path="/laporan-kas" element={<BooksReportPage />} />
         <Route path="/laporan-excel" element={<ExcelReportsPage />} />
         <Route path="/impor" element={<ImportPage />} />
         <Route path="/snapshot-stok" element={<StockSnapshotPage />} />

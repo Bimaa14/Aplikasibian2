@@ -71,6 +71,7 @@ from routers import (auth, customers, dashboard, expenses, laravel_bundle,
                      payables, products, receivables, reports, stock_in,
                      suppliers, transactions, vehicles)
 from routers import excel_reports, imports as imports_router
+from routers import books
 from lib.dates import today_iso
 from lib.auth import require_user
 from fastapi import Depends
@@ -96,6 +97,7 @@ api_router.include_router(reports.router)
 api_router.include_router(laravel_bundle.router)
 api_router.include_router(excel_reports.router)
 api_router.include_router(imports_router.router)
+api_router.include_router(books.router)
 
 # Include the router in the main app
 app.include_router(api_router)

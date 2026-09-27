@@ -29,7 +29,7 @@ async def live_events(include_imported=True):
     for collection, kind in [(db.accounts_receivable, 'credit_payment'), (db.accounts_payable, 'supplier_payment')]:
         async for debt in collection.find({}, {'_id': 0}):
             for p in debt.get('payments', []):
-                events.append(dict(date=p['payment_date'], kind=kind, amount=p['amount'], profit=p.get('profit_amount', 0)))
+                events.append(dict(date=p['payment_date'], kind=kind, amount=p['amount'], profit=p.get('profit_amount', 0), method=p.get('method', 'cash')))
             if kind == 'credit_payment' and debt.get('return_date') and debt.get('refund_amount'):
                 events.append(dict(date=debt['return_date'], kind=kind, amount=-debt['refund_amount'], profit=-sum(p.get('profit_amount', 0) for p in debt.get('payments', []))))
     async for e in db.expenses.find({'import_source': {'$exists': False}}, {'_id': 0}):

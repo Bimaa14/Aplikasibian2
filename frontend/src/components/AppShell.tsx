@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink, Navigate, Outlet } from "react-router-dom";
 import {
   Archive,
+  Calculator,
   Car,
   FileSpreadsheet,
   HandCoins,
@@ -38,6 +39,7 @@ const NAV = [
   { to: "/piutang-hutang", label: "Piutang & Hutang", icon: HandCoins, testid: "nav-debts" },
   { to: "/pengeluaran", label: "Pengeluaran", icon: Wallet, testid: "nav-expenses" },
   { to: "/laporan", label: "Laba Margin POS", icon: FileSpreadsheet, testid: "nav-reports" },
+  { to: "/laporan-kas", label: "Laporan Kas & Pajak", icon: Calculator, testid: "nav-books" },
   { to: "/laporan-excel", label: "Laporan Excel", icon: FileSpreadsheet, testid: "nav-excel-reports" },
   { to: "/impor", label: "Impor & Pemeriksaan", icon: PackagePlus, testid: "nav-import" },
   { to: "/snapshot-stok", label: "Snapshot Stok (Ref)", icon: Archive, testid: "nav-stock-snapshot" },
@@ -47,7 +49,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const me = useMe();
   return (
     <nav className="flex flex-col gap-1 px-3">
-      {NAV.filter(n => me.data?.role === 'admin' || !['/laporan', '/laporan-excel', '/impor', '/snapshot-stok'].includes(n.to)).map(({ to, label, icon: Icon, testid }) => (
+      {NAV.filter(n => me.data?.role === 'admin' || !['/laporan', '/laporan-kas', '/laporan-excel', '/impor', '/snapshot-stok'].includes(n.to)).map(({ to, label, icon: Icon, testid }) => (
         <NavLink
           key={to}
           to={to}
