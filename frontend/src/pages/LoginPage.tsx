@@ -12,8 +12,9 @@ import { beginSession } from "@/lib/session";
 import { useMe } from "@/lib/useMe";
 import type { User } from "@/lib/types";
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1645445522156-9ac06bc7a767?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTV8MHwxfHNlYXJjaHwxfHxhdXRvJTIwcmVwYWlyJTIwdGlyZSUyMGdhcmFnZSUyMG1lY2hhbmljfGVufDB8fHx8MTc5MDQwMjkwOXww&ixlib=rb-4.1.0&q=85";
+// Foto asli storefront Perkasa Jaya (Dunlop Shop). Disimpan lokal di /public agar tetap
+// tampil saat deployment offline (LAN, tanpa internet).
+const HERO_IMAGE = "/storefront-login.jpg";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -37,10 +38,15 @@ export default function LoginPage() {
     <div className="grid min-h-svh bg-background text-foreground lg:grid-cols-2">
       {/* Hero kiri — workshop */}
       <div className="relative hidden lg:block">
-        <img src={HERO_IMAGE} alt="Mekanik bengkel sedang bekerja" className="absolute inset-0 size-full object-cover" />
+        <img
+          src={HERO_IMAGE}
+          alt="Storefront Dunlop Shop — Perkasa Jaya"
+          className="absolute inset-0 size-full object-cover"
+          style={{ objectPosition: "78% 30%" }}
+        />
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(180deg, rgba(11,15,23,0.92) 0%, rgba(11,15,23,0.96) 100%)" }}
+          style={{ background: "linear-gradient(180deg, rgba(11,15,23,0.35) 0%, rgba(11,15,23,0.72) 55%, rgba(11,15,23,0.94) 100%)" }}
         />
         <div className="relative flex h-full flex-col justify-end p-10">
           <div className="mb-auto flex items-center gap-3 pt-8">
