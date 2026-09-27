@@ -42,7 +42,7 @@ export default function LoginPage() {
           src={HERO_IMAGE}
           alt="Storefront Dunlop Shop — Perkasa Jaya"
           className="absolute inset-0 size-full object-cover"
-          style={{ objectPosition: "78% 30%" }}
+          style={{ objectPosition: "84% 32%" }}
         />
         <div
           className="absolute inset-0"

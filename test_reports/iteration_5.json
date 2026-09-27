@@ -1,0 +1,16 @@
+{
+  "summary": "Re-verified login credential fix in real browser. All 5 requested checks PASS: (1) storefront image loads (1280x960), (2) admin/admin123 logs in and lands on Dashboard with admin nav items (nav-reports visible), (3) kasir/kasir123 logs in and admin-only nav items (nav-reports, nav-excel-reports, nav-import, nav-stock-snapshot) are hidden, (4) wrong password shows Indonesian toast 'Username atau password salah' and stays on /login, (5) page reload after admin login keeps session (stays on Dashboard, not bounced to /login).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "admin/admin123, kasir/kasir123",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Login fix verified via browser. Cookies cleared between admin and kasir logins. Backend session cookie bengkel_session works end-to-end; RBAC filters nav correctly.",
+  "rca of the issue": "Previous test iteration failed because bootstrap credentials had been changed to admin/PerkasaJaya#2026 and login_attempts contained a lockout. Main agent updated the password_hash for existing admin/kasir users in Mongo and cleared db.login_attempts, restoring admin/admin123 and kasir/kasir123. Verified working."
+}
