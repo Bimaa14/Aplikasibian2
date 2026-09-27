@@ -1,0 +1,37 @@
+{
+  "summary": "Iteration 3: verified product import clamp+idempotency (468 committed, no negative stock), history import into ledger (7505 ready, transactions present, recommit idempotent), live vs preview reports match with 0.0 differences for 2026-03/05/07/08, regression totals hold (receivables 24@65,844,000 excl TEST; payables 39@829,751,449), September Laba-Rugi still 0.0. Frontend Kwitansi Cicilan: printable popup contains 'KWITANSI PEMBAYARAN' + customer name + 'Terbilang: Seratus Lima Puluh Ribu Rupiah' and the print-receipt-<paymentId> button works with no console errors. Import page banner shows '12 periode cocok dengan hasil Excel'. Import-note rows: backend API returns notes on preview rows (test passes), but the ImportPage UI currently masks the sky-colored note behind the 'Nama/SKU sudah ada; tidak ditimpa' issue label after commit — so users can never observe notes for already-committed groups.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ImportPage.tsx (row rendering)", "issue": "After commit, every row shows the 'Nama/SKU sudah ada; tidak ditimpa' issue and the sky-colored note (row.note) is hidden because rendering is guarded by `row.note && !row.issue`. Since notes explain adjustments (e.g. 'Stok sheet -6 diset 0') that were actually applied during commit, they should still be shown post-commit as informational context, not hidden as soon as an idempotency issue appears.", "selector": "[data-testid^=\"import-note-\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iteration3_scope.py",
+    "/app/test_reports/pytest/iter3_results.xml"
+  ],
+  "action_items": [
+    "(Optional/Low) In frontend/src/pages/ImportPage.tsx change the note rendering guard from `row.note && !row.issue` to `row.note` (always show the sky-colored note next to whichever badge is shown), so 'Stok sheet -X diset 0' remains visible after commit."
+  ],
+  "critical_code_review_comments": [
+    "backend/lib/workbooks.py store products parser correctly clamps negative stock to 0 and records a note; 5 duplicate names correctly blocked pre-commit.",
+    "backend/routers/imports.py history commit uses bulk_write with an id map for products — fast (7505 rows import cleanly). Recommit is a no-op (idempotent).",
+    "Product commit is guarded such that re-POST with the same digest does not create duplicates (verified count unchanged).",
+    "GET /excel/reports?origin=live now yields the same store_check.differences (all 0.0) as origin=preview for 2026-03/05/07/08, proving the imported ledger reconstructs the spreadsheet.",
+    "frontend/src/lib/receipt.ts renders proper KWITANSI PEMBAYARAN with terbilang; opens as a new window using printReceipt(). Verified end-to-end.",
+    "Minor UX: ImportPage hides the informational note whenever an issue is present, so the 'stok -X diset 0' explanation is not visible after commit."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iteration3_scope.py",
+    "/app/test_reports/iteration_3.json"
+  ],
+  "success_rate": {"backend": "100% (15/15)", "frontend": "Kwitansi 100%; Import notes: backend OK, UI hidden post-commit"},
+  "test_credentials": "admin/ELRc3GFFrRZUFjKc4Aww, kasir/5g-HPgTzoFG4xMVatn6w (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "Created TEST_UI product (deleted), TEST_UI customer, credit transaction and partial payment (150k of 300k). Return required cash-confirmation to void; TEST receivable left as 'partial' — filtered out of regression totals by name.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Backend `test_iteration3_scope.py` covers products+history import idempotency, live vs preview reports, regression totals, and kwitansi-payment id availability. Products commit is already applied (preview returns imported=true, ready=0, blocked=473). To re-observe pre-commit notes in the UI, either (a) fix the ImportPage guard to show `row.note` regardless of `row.issue`, or (b) run against a fresh DB. Frontend kwitansi print verified via popup expect_page — popup contains 'KWITANSI PEMBAYARAN', customer name, and 'Terbilang: ...'.",
+  "rca of the issue": "ImportPage.tsx renders note only when `row.note && !row.issue`. Post-commit, imports.py sets an issue like 'Nama/SKU sudah ada; tidak ditimpa' on every product row, which hides the note. Fix: drop `!row.issue` from the guard (and optionally style differently when issue also present)."
+}

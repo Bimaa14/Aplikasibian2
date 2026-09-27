@@ -101,3 +101,111 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+## user_problem_statement: Lanjutkan aplikasi BengKasir (POS bengkel Perkasa Jaya). Pakai aplikasi kasir yang ada, samakan pembukuan PERSIS dengan spreadsheet (Store Information System sheet REPORT + 09 Laporan September sheet Laba-Rugi). Impor produk/stok/transaksi/piutang/hutang dengan pratinjau sebelum simpan. (Windows XP offline dibahas nanti.)
+
+## backend:
+##   - task: "Fix backend startup crash (Mongo index name conflict id_unique vs id_1)"
+##     implemented: true
+##     working: true
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "server.py created id index with default name id_1 while ensure_indexes already made id_unique on same collections -> IndexOptionsConflict crashed startup. Fixed to name='id_unique' + try/except. Backend now boots, login works."
+##   - task: "Excel reports reconcile exactly with both spreadsheets"
+##     implemented: true
+##     working: true
+##     file: "backend/lib/excel_rules.py, backend/routers/excel_reports.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Store REPORT 12 months + September Laba-Rugi all diffs 0.0 via preview origin and lib checks."
+##   - task: "Import piutang/hutang from September workbook with preview then commit"
+##     implemented: true
+##     working: true
+##     file: "backend/lib/workbooks.py, backend/routers/imports.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Relaxed September Piutang/Hutang parser: blank SISA = fully unpaid. Committed 24 receivables (Rp65,844,000) + 39 payables (Rp829,751,449), matching sheet totals B21/B23. Aging computed."
+
+## frontend:
+##   - task: "Login, dashboard, POS, Excel report page, Import page, Piutang/Hutang page render with real data"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/*"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         -working: "NA"
+##         -agent: "main"
+##         -comment: "Needs frontend verification after backend restore."
+
+## metadata:
+##   created_by: "main_agent"
+##   version: "2.0"
+##   test_sequence: 1
+##   run_ui: true
+
+## test_plan:
+##   current_focus:
+##     - "Excel reports reconcile exactly with both spreadsheets"
+##     - "Import piutang/hutang from September workbook with preview then commit"
+##     - "POS checkout cash/credit, retur->void, partial payment"
+##   stuck_tasks: []
+##   test_all: false
+##   test_priority: "high_first"
+
+## agent_communication:
+##     -agent: "main"
+##     -message: "Fixed startup crash. Imported piutang/hutang. Please verify backend (login, excel reconcile both origins, receivables/payables lists sum to 65844000/829751449, POS checkout cash+credit, credit return sets receivable void, partial installment payment) and frontend (login as admin, dashboard, Laporan Excel shows 'Cocok dengan Excel', Impor page, Piutang & Hutang page lists imported debts with aging). Admin creds in /app/memory/test_credentials.md."
+
+## === Iteration 3: product+history import, negative-stock clamp, printable Kwitansi ===
+## backend:
+##   - task: "Import products (store) with negative/fractional stock clamped to 0 + empty category defaulted"
+##     implemented: true
+##     working: true
+##     file: "backend/lib/workbooks.py, backend/routers/imports.py"
+##     needs_retesting: true
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Products preview now 468 ready / 5 blocked (5 = genuine duplicate names). Committed 468 products. Negative stock rows carry a non-blocking note 'Stok sheet X diset 0'."
+##   - task: "Import historical transactions (store) into ledger; fast bulk_write; drop qty0/amount0 noise line"
+##     implemented: true
+##     working: true
+##     file: "backend/routers/imports.py"
+##     needs_retesting: true
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "History preview 7505 ready / 0 blocked (was 1 blocked). Committed 7505 transactions in ~3s via bulk_write (preloaded product name->id map). Live excel report now matches preview/spreadsheet 0.0 for 2026-03/05/07/08."
+## frontend:
+##   - task: "Printable Kwitansi (payment receipt) per installment in Piutang/Hutang history"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/lib/receipt.ts, frontend/src/pages/DebtPage.tsx"
+##     needs_retesting: true
+##     status_history:
+##         -working: "NA"
+##         -agent: "main"
+##         -comment: "Print button (data-testid=print-receipt-<paymentId>) appears per payment in payment-history dialog; opens print window with terbilang. Needs a debt WITH payments to appear."
+##   - task: "Import page shows non-blocking notes (sky text) for clamped rows"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/ImportPage.tsx"
+##     needs_retesting: true
+
+## agent_communication:
+##     -agent: "main"
+##     -message: "Iteration 3: imported 468 products + 7505 historical transactions; live report now complete for past months. Added printable Kwitansi. Please verify (backend) product/history import idempotency and live reports reconcile 0.0 for several 2026 months, plus no dup on recommit; (frontend) create a fresh test scenario: create a test product+customer, do a CREDIT POS checkout to make a receivable, record a PARTIAL payment, open Piutang history, confirm print-receipt button renders and clicking opens a Kwitansi window/page containing 'KWITANSI PEMBAYARAN'. Do NOT add test payments onto the imported real piutang (XL-RE-*). Admin creds in /app/memory/test_credentials.md."

@@ -1,11 +1,12 @@
+import asyncio
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, APIRouter
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field
 from typing import List
 import uuid
 from datetime import datetime, timezone
@@ -15,12 +16,37 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+from lib.db import client, db, ensure_indexes
+from lib.debts import migrate_returned_debts
+
+
+# Startup runs before the yield, shutdown after it. Add your own setup/teardown here.
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await ensure_indexes()
+    await migrate_returned_debts()
+    for name in ('excel_events', 'import_batches', 'transactions', 'transaction_details'):
+        try:
+            await db[name].create_index('id', unique=True, name='id_unique')
+        except Exception as exc:
+            logging.getLogger(__name__).error("create id index on %s: %s", name, exc)
+    try:
+        await db.excel_parameters.create_index('month', unique=True, name='month_unique')
+        await db.excel_snapshots.create_index([('source', 1), ('month', 1)], unique=True, name='source_month_unique')
+    except Exception as exc:
+        logging.getLogger(__name__).error("create excel indexes: %s", exc)
+    yield
+    client.close()
+
 
 # Create the main app without a prefix
-app = FastAPI()
+app = FastAPI(
+    lifespan=lifespan,
+    # Skema/dokumentasi API tidak diekspos di produksi (set ENABLE_API_DOCS=true untuk dev).
+    docs_url="/docs" if os.environ.get("ENABLE_API_DOCS", "false").lower() == "true" else None,
+    redoc_url=None,
+    openapi_url="/openapi.json" if os.environ.get("ENABLE_API_DOCS", "false").lower() == "true" else None,
+)
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
@@ -28,8 +54,6 @@ api_router = APIRouter(prefix="/api")
 
 # Define Models
 class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     client_name: str
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -42,29 +66,36 @@ class StatusCheckCreate(BaseModel):
 async def root():
     return {"message": "Hello World"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
+# Mount resource routers (each exports its own APIRouter, all under /api)
+from routers import (auth, customers, dashboard, expenses, laravel_bundle,
+                     payables, products, receivables, reports, stock_in,
+                     suppliers, transactions, vehicles)
+from routers import excel_reports, imports as imports_router
+from lib.dates import today_iso
+from lib.auth import require_user
+from fastapi import Depends
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+
+@api_router.get('/system', dependencies=[Depends(require_user)])
+async def system_info():
+    return {'today': today_iso(), 'timezone': os.environ['APP_TZ'], 'xp_supported': False,
+            'offline_installer': False, 'source_commit': '2382f5bc3bbbaf3c230319701d8351c1f0e80881'}
+
+api_router.include_router(auth.router)
+api_router.include_router(products.router)
+api_router.include_router(customers.router)
+api_router.include_router(suppliers.router)
+api_router.include_router(transactions.router)
+api_router.include_router(receivables.router)
+api_router.include_router(payables.router)
+api_router.include_router(expenses.router)
+api_router.include_router(dashboard.router)
+api_router.include_router(stock_in.router)
+api_router.include_router(vehicles.router)
+api_router.include_router(reports.router)
+api_router.include_router(laravel_bundle.router)
+api_router.include_router(excel_reports.router)
+api_router.include_router(imports_router.router)
 
 # Include the router in the main app
 app.include_router(api_router)
@@ -83,7 +114,3 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
