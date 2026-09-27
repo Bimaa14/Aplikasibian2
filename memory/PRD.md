@@ -62,4 +62,10 @@ Tawarkan ke user: (1) bangun Fitur B (merge produk ganda), (2) revisi foto login
 ## Update 2026-06 (lanjutan)
 - LOGIN: foto storefront asli (Dunlop/Perkasa Jaya) terpasang di panel kiri (crop fokus plang brand, disimpan lokal /storefront-login.jpg). Kredensial direset & terverifikasi: admin/admin123, kasir/kasir123.
 - FITUR PEMILIK BARANG (Bian/Ibu): produk punya atribut owner ('bian'|'ibu'); produk baru wajib pilih pemilik (default Bian); 468 produk lama sengaja dibiarkan owner=None. Transaksi ikut pemilik produk (owner tersimpan per baris detail). Filter Semua/Bian/Ibu + badge di halaman Produk. Terverifikasi testing agent iteration_6 (BE+FE 100%). Data tetap 7505 tx / 468 produk.
-- DITUNDA (nunggu jawaban client): Laporan Pajak (basis PPN 11% vs angka manual) & isi Laporan harian/bulanan.
+## Update 2026-06 (Laporan Kas & Pajak — SELESAI)
+Menu baru admin "Laporan Kas & Pajak" (/laporan-kas), sumber data = live_events (konsisten dgn Laporan Excel):
+- Laporan Harian: pendapatan tunai + bayar piutang − bayar transfer − komisi montir − pengeluaran = kas bersih.
+- Laporan Bulanan: (1) Total omzet semua kecuali oli, (2) Pembayaran distributor, (3) Pengeluaran, (4) Sisa aset (stok snapshot B19 + piutang − hutang) + rincian sumber uang (Modal→distributor; Laba→pengeluaran+pajak+gaji).
+- Laporan Pajak: PPh final 0,5% dari total omzet (non-oli).
+Terverifikasi testing agent iteration_7 (BE 12/12, FE 13/13). Read-only, data tetap 7505 tx / 468 produk.
+Angka Agustus 2026: omzet 346.172.000, distributor 295.583.930, pengeluaran 38.780.500, PPh 1.730.860, sisa aset −503.175.032.
