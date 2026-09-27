@@ -58,3 +58,8 @@ Lanjutkan aplikasi BengKasir (POS bengkel ban & servis "Perkasa Jaya"). Stack te
 
 ## Next action
 Tawarkan ke user: (1) bangun Fitur B (merge produk ganda), (2) revisi foto login (butuh foto), (3) siapkan skrip backup GitHub + panduan deploy offline Win11/XP.
+
+## Update 2026-06 (lanjutan)
+- LOGIN: foto storefront asli (Dunlop/Perkasa Jaya) terpasang di panel kiri (crop fokus plang brand, disimpan lokal /storefront-login.jpg). Kredensial direset & terverifikasi: admin/admin123, kasir/kasir123.
+- FITUR PEMILIK BARANG (Bian/Ibu): produk punya atribut owner ('bian'|'ibu'); produk baru wajib pilih pemilik (default Bian); 468 produk lama sengaja dibiarkan owner=None. Transaksi ikut pemilik produk (owner tersimpan per baris detail). Filter Semua/Bian/Ibu + badge di halaman Produk. Terverifikasi testing agent iteration_6 (BE+FE 100%). Data tetap 7505 tx / 468 produk.
+- DITUNDA (nunggu jawaban client): Laporan Pajak (basis PPN 11% vs angka manual) & isi Laporan harian/bulanan.
