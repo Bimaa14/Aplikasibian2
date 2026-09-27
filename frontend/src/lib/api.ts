@@ -46,3 +46,7 @@ export const apiPut = <T>(path: string, body?: JsonBody) => request<T>("PUT", pa
 export const apiPatch = <T>(path: string, body?: JsonBody) =>
   request<T>("PATCH", path, body ?? null);
 export const apiDelete = <T>(path: string) => request<T>("DELETE", path);
+
+// Absolute URL for file downloads (CSV/PDF) opened via <a href>/window.open. Same-origin so
+// the httpOnly session cookie rides along automatically — never append tokens here.
+export const fileUrl = (path: string) => `${BASE}${path}`;

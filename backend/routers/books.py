@@ -1,13 +1,15 @@
-"""Laporan kas harian, ringkasan bulanan, dan PPh final 0.5% (dari omzet).
+"""Laporan kas harian, ringkasan bulanan (+ per pemilik), PPh final 0,5%, dan ekspor CSV.
 
-Sumber data = `live_events()` yang sama dipakai laporan Excel, jadi angkanya konsisten
-dengan pembukuan spreadsheet. Aturan uang (dari pemilik):
-- Pembayaran distributor memakai UANG MODAL.
-- Pengeluaran, pajak (PPh final), dan gaji karyawan memakai UANG LABA.
+Sumber data = `live_events()` (konsisten dgn laporan Excel). Ringkasan per pemilik dihitung
+langsung dari transaction_details.owner (produk baru), data lama owner=None -> "Belum ditandai".
+Aturan uang: distributor pakai UANG MODAL; pengeluaran + pajak + gaji pakai UANG LABA.
 """
+import csv
+import io
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import StreamingResponse
 
 from lib.auth import require_admin
 from lib.db import db
@@ -17,9 +19,10 @@ from routers.excel_reports import live_events
 
 router = APIRouter(prefix="/books", tags=["books"], dependencies=[Depends(require_admin)])
 
-PPH_RATE = 0.005  # PPh Final UMKM 0,5% dari peredaran bruto (omzet)
+PPH_RATE = 0.005  # PPh Final UMKM 0,5% dari omzet
 BULAN_ID = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
             "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+OWNER_LABEL = {"bian": "Barang Bian", "ibu": "Barang Ibu (Mamah Bian)", "unassigned": "Belum ditandai (data lama)"}
 
 
 def _month_label(month: str) -> str:
@@ -40,37 +43,37 @@ def _months_from(events) -> list:
     return sorted(months, reverse=True)
 
 
-@router.get("/daily")
-async def daily(date: Optional[str] = Query(default=None)):
-    """Rekonsiliasi kas harian: pendapatan tunai + bayar piutang − bayar transfer − komisi montir − pengeluaran."""
-    day = date or today_iso()
-    if len(day) != 10 or day[4] != "-" or day[7] != "-":
-        raise HTTPException(422, "Format tanggal harus YYYY-MM-DD")
+def _valid_date(d: str) -> bool:
+    return len(d) == 10 and d[4] == "-" and d[7] == "-"
+
+
+def _valid_month(m: str) -> bool:
+    return len(m) == 7 and m[4] == "-"
+
+
+async def _daily_data(day: str) -> dict:
     events = await live_events()
     todays = [e for e in events if e.get("date") == day]
-
     cash_sales = sum(e["amount"] for e in todays if e["kind"] == "cash_sale")
     receivable_payments = sum(e["amount"] for e in todays if e["kind"] == "credit_payment")
     transfer_payments = sum(e["amount"] for e in todays if e["kind"] == "credit_payment" and e.get("method") == "transfer")
     montir_fee = sum(e.get("fee", 0) for e in todays if _is_sale(e))
     expenses = sum(e["amount"] for e in todays if e["kind"] == "expense")
     net_cash = cash_sales + receivable_payments - transfer_payments - montir_fee - expenses
-
     return {
         "date": day,
-        "cash_sales": cash_sales,                 # total pendapatan tunai hari itu
-        "receivable_payments": receivable_payments,  # pembayaran piutang yang masuk
-        "transfer_payments": transfer_payments,   # bagian pembayaran via transfer (dikurangi)
-        "montir_fee": montir_fee,                 # komisi ke montir
-        "expenses": expenses,                     # pengeluaran hari itu
-        "net_cash": net_cash,                     # kas bersih di laci hari itu
+        "cash_sales": cash_sales,
+        "receivable_payments": receivable_payments,
+        "transfer_payments": transfer_payments,
+        "montir_fee": montir_fee,
+        "expenses": expenses,
+        "net_cash": net_cash,
         "months_available": _months_from(events),
     }
 
 
 async def _asset_snapshot():
-    """Aset lancar terkini. Stok memakai nilai resmi snapshot (B19, 2 Juni 2026) bila ada —
-    valuasi stok mentah produk tidak dipakai karena berbeda jauh dari dasar laporan."""
+    """Aset lancar terkini. Stok memakai nilai resmi snapshot (B19, 2 Juni 2026) bila ada."""
     piutang = sum([hydrate(d)["remaining"] async for d in db.accounts_receivable.find({}, {"_id": 0})])
     hutang = sum([hydrate(d)["remaining"] async for d in db.accounts_payable.find({}, {"_id": 0})])
     snap = await db.excel_snapshots.find_one({"source": "september"}, {"_id": 0})
@@ -84,14 +87,23 @@ async def _asset_snapshot():
     return stok_value, piutang, hutang, stok_basis
 
 
-@router.get("/monthly")
-async def monthly(month: Optional[str] = Query(default=None)):
-    m = month or today_iso()[:7]
-    if len(m) != 7 or m[4] != "-":
-        raise HTTPException(422, "Format bulan harus YYYY-MM")
+async def _owner_summary(month: str) -> list:
+    """Omzet (kecuali oli) & laba per pemilik untuk bagi hasil, dari transaction_details.owner."""
+    txs = await db.transactions.find({"date_key": {"$regex": f"^{month}"}, "status": "completed"}, {"_id": 0, "id": 1}).to_list(None)
+    ids = [t["id"] for t in txs]
+    buckets = {k: {"omzet": 0.0, "laba": 0.0} for k in ("bian", "ibu", "unassigned")}
+    if ids:
+        async for d in db.transaction_details.find({"transaction_id": {"$in": ids}}, {"_id": 0}):
+            key = d.get("owner") if d.get("owner") in ("bian", "ibu") else "unassigned"
+            if (d.get("category", "") or "").upper() != "OIL":
+                buckets[key]["omzet"] += d.get("subtotal", 0)
+            buckets[key]["laba"] += d.get("spreadsheet_profit", d.get("subtotal", 0) - d.get("cost_price", 0) * d.get("qty", 0))
+    return [{"owner": k, "label": OWNER_LABEL[k], "omzet": buckets[k]["omzet"], "laba": buckets[k]["laba"]} for k in ("bian", "ibu", "unassigned")]
+
+
+async def _monthly_data(m: str) -> dict:
     events = await live_events()
     me = [e for e in events if e.get("date", "")[:7] == m]
-
     omzet = sum(e["amount"] for e in me if _is_sale(e) and e.get("category", "").upper() != "OIL")
     omzet_bruto = sum(e["amount"] for e in me if _is_sale(e))
     oli = omzet_bruto - omzet
@@ -100,23 +112,22 @@ async def monthly(month: Optional[str] = Query(default=None)):
     gaji = sum(e["amount"] for e in me if e["kind"] == "expense" and "gaji" in e.get("category", "").lower())
     pengeluaran = expenses_total - gaji
     pph = round(omzet * PPH_RATE)
-
     stok_value, piutang, hutang, stok_basis = await _asset_snapshot()
     sisa_aset = stok_value + piutang - hutang
-
+    owner_summary = await _owner_summary(m)
     return {
         "month": m,
         "month_label": _month_label(m),
-        "omzet": omzet,                       # 1. Total omzet (semua kecuali oli)
+        "omzet": omzet,
         "omzet_bruto": omzet_bruto,
         "oli": oli,
-        "distributor_payment": distributor,   # 2. Pembayaran ke distributor
-        "expenses": pengeluaran,              # 3. Pengeluaran (di luar gaji)
+        "distributor_payment": distributor,
+        "expenses": pengeluaran,
         "expenses_total": expenses_total,
         "gaji": gaji,
-        "pph_final": pph,                     # pajak PPh final 0,5% dari omzet
+        "pph_final": pph,
         "pph_rate": PPH_RATE,
-        "sisa_aset": sisa_aset,               # 4. Sisa aset (stok + piutang − hutang, terkini)
+        "sisa_aset": sisa_aset,
         "stok_value": stok_value,
         "stok_basis": stok_basis,
         "piutang_outstanding": piutang,
@@ -129,14 +140,96 @@ async def monthly(month: Optional[str] = Query(default=None)):
                                {"name": "Pajak (PPh final 0,5%)", "amount": pph},
                                {"name": "Gaji karyawan", "amount": gaji}]},
         },
+        "owner_summary": owner_summary,
         "months_available": _months_from(events),
     }
+
+
+def _csv_response(rows, filename):
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    for r in rows:
+        w.writerow(r)
+    buf.seek(0)
+    return StreamingResponse(iter([buf.getvalue()]), media_type="text/csv; charset=utf-8",
+                             headers={"Content-Disposition": f'attachment; filename="{filename}"'})
+
+
+def _rp(v) -> int:
+    return int(round(v))
+
+
+@router.get("/daily")
+async def daily(date: Optional[str] = Query(default=None)):
+    day = date or today_iso()
+    if not _valid_date(day):
+        raise HTTPException(422, "Format tanggal harus YYYY-MM-DD")
+    return await _daily_data(day)
+
+
+@router.get("/daily/csv")
+async def daily_csv(date: Optional[str] = Query(default=None)):
+    day = date or today_iso()
+    if not _valid_date(day):
+        raise HTTPException(422, "Format tanggal harus YYYY-MM-DD")
+    d = await _daily_data(day)
+    rows = [
+        ["Laporan Kas Harian", day],
+        [],
+        ["Keterangan", "Jumlah (Rp)"],
+        ["Total pendapatan tunai", _rp(d["cash_sales"])],
+        ["Pembayaran piutang masuk", _rp(d["receivable_payments"])],
+        ["Dikurangi: pembayaran via transfer", -_rp(d["transfer_payments"])],
+        ["Dikurangi: komisi montir", -_rp(d["montir_fee"])],
+        ["Dikurangi: pengeluaran", -_rp(d["expenses"])],
+        ["KAS BERSIH HARI INI", _rp(d["net_cash"])],
+    ]
+    return _csv_response(rows, f"laporan-harian-{day}.csv")
+
+
+@router.get("/monthly")
+async def monthly(month: Optional[str] = Query(default=None)):
+    m = month or today_iso()[:7]
+    if not _valid_month(m):
+        raise HTTPException(422, "Format bulan harus YYYY-MM")
+    return await _monthly_data(m)
+
+
+@router.get("/monthly/csv")
+async def monthly_csv(month: Optional[str] = Query(default=None)):
+    m = month or today_iso()[:7]
+    if not _valid_month(m):
+        raise HTTPException(422, "Format bulan harus YYYY-MM")
+    r = await _monthly_data(m)
+    rows = [
+        ["Laporan Bulanan", r["month_label"]],
+        [],
+        ["Ringkasan", "Jumlah (Rp)"],
+        ["1. Total omzet (semua kecuali oli)", _rp(r["omzet"])],
+        ["   Omzet termasuk oli", _rp(r["omzet_bruto"])],
+        ["2. Pembayaran ke distributor", _rp(r["distributor_payment"])],
+        ["3. Pengeluaran", _rp(r["expenses"])],
+        ["   Gaji karyawan", _rp(r["gaji"])],
+        ["   Pajak (PPh final 0,5%)", _rp(r["pph_final"])],
+        ["4. Sisa aset", _rp(r["sisa_aset"])],
+        [],
+        ["Sumber Uang", "Jumlah (Rp)"],
+        ["Uang Modal — Pembayaran distributor", _rp(r["distributor_payment"])],
+        ["Uang Laba — Pengeluaran", _rp(r["expenses"])],
+        ["Uang Laba — Pajak (PPh final)", _rp(r["pph_final"])],
+        ["Uang Laba — Gaji karyawan", _rp(r["gaji"])],
+        [],
+        ["Ringkasan Per Pemilik (bagi hasil)", "Omzet (kecuali oli)", "Laba"],
+    ]
+    for o in r["owner_summary"]:
+        rows.append([o["label"], _rp(o["omzet"]), _rp(o["laba"])])
+    return _csv_response(rows, f"laporan-bulanan-{m}.csv")
 
 
 @router.get("/tax")
 async def tax(month: Optional[str] = Query(default=None)):
     m = month or today_iso()[:7]
-    if len(m) != 7 or m[4] != "-":
+    if not _valid_month(m):
         raise HTTPException(422, "Format bulan harus YYYY-MM")
     events = await live_events()
     me = [e for e in events if e.get("date", "")[:7] == m]

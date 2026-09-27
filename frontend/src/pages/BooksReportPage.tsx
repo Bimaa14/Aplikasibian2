@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { CalendarDays, Calculator, Landmark, TrendingUp } from "lucide-react";
+import { CalendarDays, Calculator, Download, Landmark, Printer, TrendingUp } from "lucide-react";
 import { ErrorBlock, LoadingBlock } from "@/components/StateBlock";
-import { apiGet } from "@/lib/api";
+import { apiGet, fileUrl } from "@/lib/api";
 import { formatIDR } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +24,7 @@ type MonthlyReport = {
   pph_final: number; pph_rate: number;
   sisa_aset: number; stok_value: number; stok_basis: string; piutang_outstanding: number; hutang_outstanding: number;
   funding: { modal: FundingGroup; laba: FundingGroup };
+  owner_summary: { owner: string; label: string; omzet: number; laba: number }[];
 };
 
 type TaxReport = {
@@ -51,15 +52,31 @@ function Row({ label, value, tone = "plain", strong = false, sub }: { label: str
   );
 }
 
+function ReportActions({ csvHref, testid }: { csvHref: string; testid: string }) {
+  return (
+    <div className="flex items-center gap-2 print:hidden">
+      <a data-testid={`${testid}-csv-button`} href={csvHref} className="inline-flex items-center gap-1.5 rounded-md bg-secondary/60 px-3 py-2 text-sm font-medium transition-colors hover:text-foreground">
+        <Download className="size-4" /> Unduh CSV
+      </a>
+      <button data-testid={`${testid}-print-button`} onClick={() => window.print()} className="inline-flex items-center gap-1.5 rounded-md bg-secondary/60 px-3 py-2 text-sm font-medium transition-colors hover:text-foreground">
+        <Printer className="size-4" /> Cetak
+      </button>
+    </div>
+  );
+}
+
 function DailyView() {
   const today = new Date().toISOString().slice(0, 10);
   const [date, setDate] = useState(today);
   const q = useQuery({ queryKey: ["books-daily", date], queryFn: () => apiGet<DailyReport>(`/books/daily?date=${date}`) });
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <label className="text-sm text-muted-foreground">Tanggal</label>
-        <input type="date" data-testid="daily-date-input" className="bk-control h-9 w-auto" value={date} max={today} onChange={(e) => setDate(e.target.value)} />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <label className="text-sm text-muted-foreground">Tanggal</label>
+          <input type="date" data-testid="daily-date-input" className="bk-control h-9 w-auto" value={date} max={today} onChange={(e) => setDate(e.target.value)} />
+        </div>
+        <ReportActions csvHref={fileUrl(`/books/daily/csv?date=${date}`)} testid="daily" />
       </div>
       {q.isPending ? <LoadingBlock /> : q.isError ? <ErrorBlock error={q.error} onRetry={() => void q.refetch()} /> : q.data && (
         <div className="bk-panel p-3 max-w-xl" data-testid="daily-report">
@@ -91,7 +108,10 @@ function MonthlyView() {
   const q = useQuery({ queryKey: ["books-monthly", month], queryFn: () => apiGet<MonthlyReport>(`/books/monthly?month=${month}`) });
   return (
     <div className="space-y-4">
-      <MonthPicker month={month} setMonth={setMonth} />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <MonthPicker month={month} setMonth={setMonth} />
+        <ReportActions csvHref={fileUrl(`/books/monthly/csv?month=${month}`)} testid="monthly" />
+      </div>
       {q.isPending ? <LoadingBlock /> : q.isError ? <ErrorBlock error={q.error} onRetry={() => void q.refetch()} /> : q.data && (
         <div className="grid gap-4 lg:grid-cols-2" data-testid="monthly-report">
           <div className="bk-panel p-3">
@@ -113,6 +133,24 @@ function MonthlyView() {
               {q.data.funding.laba.items.map((it) => <Row key={it.name} label={it.name} value={formatIDR(it.amount)} />)}
               <Row label="Subtotal dari laba" value={formatIDR(q.data.funding.laba.total)} strong />
             </div>
+          </div>
+          <div className="bk-panel p-3 lg:col-span-2" data-testid="owner-summary">
+            <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ringkasan Per Pemilik (bagi hasil)</p>
+            <div className="overflow-x-auto">
+              <table className="bk-table">
+                <thead><tr><th>Pemilik</th><th className="text-right">Omzet (kecuali oli)</th><th className="text-right">Laba</th></tr></thead>
+                <tbody>
+                  {q.data.owner_summary.map((o) => (
+                    <tr key={o.owner} data-testid={`owner-row-${o.owner}`}>
+                      <td><b>{o.label}</b></td>
+                      <td className="text-right font-mono">{formatIDR(o.omzet)}</td>
+                      <td className="text-right font-mono">{formatIDR(o.laba)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-2 px-1 text-[11px] text-muted-foreground">Bian &amp; Ibu dihitung dari transaksi produk yang sudah ditandai pemilik. Transaksi lama (sebelum fitur ini) masuk "Belum ditandai".</p>
           </div>
         </div>
       )}
