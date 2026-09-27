@@ -1,0 +1,24 @@
+{
+  "summary": "Verified iteration 8 additions to Laporan Kas & Pajak: (1) Ringkasan Per Pemilik owner_summary in /api/books/monthly with three buckets (bian/ibu/unassigned), (2) CSV export endpoints /api/books/daily/csv and /api/books/monthly/csv, and (3) Cetak (print) buttons on Daily & Monthly tabs. Backend: 20/20 pytest cases pass (8 new + 12 regression). Frontend Playwright as admin: owner-summary table renders with three rows and correct figures (Belum ditandai omzet Rp 346.172.000 / laba Rp 52.797.000; bian & ibu Rp 0), monthly-csv-button href resolves to /api/books/monthly/csv?month=2026-08 returning 200 text/csv containing 'Ringkasan Per Pemilik', daily-csv-button href resolves to /api/books/daily/csv?date=2026-09-25 returning 200 text/csv, print buttons visible on both tabs. E2E owner attribution: created throwaway ibu product, POS cash checkout (INV-...), owner_summary.ibu omzet & laba incremented as expected (Excel spreadsheet_profit rule), then cleaned up product+transaction+details from Mongo. Final counts confirmed back to 468 products / 7505 transactions.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_books_owner_csv.py",
+    "/app/backend/tests/test_books_reports.py",
+    "/app/test_reports/pytest/iteration_8.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "_owner_summary uses spreadsheet_profit which applies Excel-literal cost rounding (ceil to nearest 5000). For low-value items this can make laba=0 even when raw margin>0. Documented and matches product spec (bagi-hasil follows spreadsheet rules), just noting for future clarity.",
+    "Daily/monthly CSV endpoints use StreamingResponse with an in-memory iter([]) — fine for MVP volume; consider chunking if reports grow.",
+    "Frontend BooksReportPage: CSV links are plain <a href> without download attribute — browsers still download because Content-Disposition: attachment is set, so behavior is correct."
+  ],
+  "updated_files": ["/app/backend/tests/test_books_owner_csv.py"],
+  "success_rate": {"backend": "100% (20/20)", "frontend": "100% (all owner-summary rows, CSV hrefs, print buttons, and CSV fetches verified)"},
+  "test_credentials": "admin/admin123, kasir/kasir123 (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "E2E test creates one throwaway ibu product + one POS cash transaction, then deletes product, transaction, transaction_details, and any receivable directly from Mongo. Verified counts return to 468 products / 7505 transactions after run.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "test_books_owner_csv.py is the new regression suite for owner_summary + CSV endpoints. It requires REACT_APP_BACKEND_URL, MONGO_URL, DB_NAME env vars. The E2E test uses cost_price=5000/selling_price=10000 so spreadsheet_profit (Excel-literal rounding to nearest 5000 ceil) yields laba=5000. If future tests need Rp precision, avoid values that get rounded to 0 profit.",
+  "rca of the issue": "N/A — feature works as specified."
+}

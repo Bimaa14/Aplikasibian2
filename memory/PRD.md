@@ -69,3 +69,9 @@ Menu baru admin "Laporan Kas & Pajak" (/laporan-kas), sumber data = live_events 
 - Laporan Pajak: PPh final 0,5% dari total omzet (non-oli).
 Terverifikasi testing agent iteration_7 (BE 12/12, FE 13/13). Read-only, data tetap 7505 tx / 468 produk.
 Angka Agustus 2026: omzet 346.172.000, distributor 295.583.930, pengeluaran 38.780.500, PPh 1.730.860, sisa aset −503.175.032.
+
+## Update 2026-06 (Ringkasan per pemilik + Ekspor CSV/Cetak — SELESAI)
+- Laporan Bulanan sekarang punya tabel "Ringkasan Per Pemilik (bagi hasil)": omzet (kecuali oli) & laba per Barang Bian / Barang Ibu / Belum ditandai. Dihitung dari transaction_details.owner (produk baru). Data lama masuk "Belum ditandai".
+- Tombol Unduh CSV + Cetak untuk Laporan Harian & Bulanan (endpoint /api/books/daily/csv & /monthly/csv; api.ts fileUrl helper; window.print dengan sidebar print:hidden).
+- Terverifikasi testing agent iteration_8 (BE 20/20, FE 100%, E2E owner attribution + cleanup). Data tetap 7505 tx / 468 produk.
+- Catatan: laba per pemilik pakai spreadsheet_profit (pembulatan modal Excel ke kelipatan 5000), konsisten dgn aturan sheet.
