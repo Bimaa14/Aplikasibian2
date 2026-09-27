@@ -40,5 +40,21 @@ Lanjutkan aplikasi BengKasir (POS bengkel ban & servis "Perkasa Jaya"). Stack te
 - Kategori pendapatan Spooring/Oli/Ban lebih detail di UI; modul bagi laba pemilik (Subsidi Modal 50/50, Cicilan BNI, min laba ibu 10jt) bila aturan bisnis final.
 - GET /api/receivables/{id} single lookup; default payment_date=today di UI.
 
+## Restore log (2026-06, pod baru)
+- Pod datang sebagai template CRA kosong. App asli user ada di github.com/Bimaa14/Aplikasibian2 (React+TS/Vite + FastAPI). Repo di-migrasi ke /app (pertahankan /app/.git & /app/.emergent; buat backend/.env + frontend/.env).
+- Hapus sisa config CRA (postcss/craco/tailwind.config.js/jsconfig/plugins) + komponen .jsx lama yang bikin Vite gagal build. Install deps (buang emergentintegrations+litellm yang tak dipakai & konflik).
+- Seed akun admin/kasir. Re-impor data via /api/imports: 468 produk, 7505 transaksi, 24 piutang (Rp65.844.000), 39 hutang (Rp829.751.449), + snapshot Laba-Rugi & Laporan Data Barang (2 Juni). Semua rekonsiliasi 0.0.
+- Testing agent iteration_4: backend 6/6, frontend 7/7 — login admin/kasir, dashboard aging+KPI, transaksi, piutang/hutang, snapshot, RBAC semua LULUS. Tidak ada bug.
+
+## Status fitur plan (A→B→C)
+- Fitur A (Ringkasan Aging di Dashboard): SUDAH ADA & jalan (dashboard.py aging_buckets + DashboardPage aging card).
+- Fitur B (Merge 5 produk ganda): BELUM dibangun. Saat impor, duplikat nama digabung otomatis di level workbook, jadi tidak ada UI review/merge master. Perlu fitur baru: review pasangan nama-sama, pilih master, gabung stok + samakan harga, idempotent/reversible, jangan yatim-kan referensi ledger.
+- Fitur C (Snapshot Stok 2 Juni, read-only): SUDAH ADA & jalan (StockSnapshotPage + /api/excel/stock-snapshot). Read-only, tidak ubah stok.
+
+## Menunggu user (non-blocking)
+- Foto storefront Perkasa Jaya/Dunlop untuk panel login (revisi login) — belum diupload.
+- Backup GitHub ke repo private Aplikasi-Bian-Backu — butuh akses/collaborator; hanya zip berpassword yang di-push.
+- Deployment offline Win11+XP — di luar env cloud; disiapkan skrip/dokumen. CATATAN PENTING: untuk LAN http, backend/.env COOKIE_SECURE harus =false (cookie Secure tidak terkirim di http → login loop di XP).
+
 ## Next action
-Tawarkan ke user: impor produk/stok, atau bahas arsitektur Windows XP offline. Tidak ada bug terbuka.
+Tawarkan ke user: (1) bangun Fitur B (merge produk ganda), (2) revisi foto login (butuh foto), (3) siapkan skrip backup GitHub + panduan deploy offline Win11/XP.
