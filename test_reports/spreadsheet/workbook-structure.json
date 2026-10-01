@@ -1,0 +1,2956 @@
+{
+  "DASHBOARD": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "B3",
+        "TAHUN"
+      ],
+      [
+        "D3",
+        "Penjualan"
+      ],
+      [
+        "E3",
+        "Barang Keluar"
+      ],
+      [
+        "G3",
+        "Pembelian"
+      ],
+      [
+        "H3",
+        "Barang Masuk"
+      ],
+      [
+        "J3",
+        "Laba Kotor"
+      ],
+      [
+        "K3",
+        "Pengeluaran Tercatat"
+      ],
+      [
+        "L3",
+        "Laba Bersih"
+      ],
+      [
+        "B4",
+        "2026.0"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "D4",
+        "=SUMIFS('SELLING CASH'!$I:$I,\n  'SELLING CASH'!$C:$C, \">=\" & DATE($B$4, 1, 1),\n  'SELLING CASH'!$C:$C, \"<=\" & DATE($B$4, 12, 31),\n  'SELLING CASH'!$R:$R, \"<>OIL\")\n+\nSUMIFS('SELLING CREDIT'!$P:$P,\n  'SELLING CREDIT'!$C:$C, \">=\" & DATE($B$4, 1, 1),\n  'SELLING CREDIT'!$C:$C, \"<=\" & DATE($B$4, 12, 31),\n  'SELLING CREDIT'!$S:$S, \"<>OIL\")"
+      ],
+      [
+        "E4",
+        "=SUMIFS('SELLING CASH'!$F:$F,\n  'SELLING CASH'!$C:$C, \">=\" & DATE($B$4, 1, 1),\n  'SELLING CASH'!$C:$C, \"<=\" & DATE($B$4, 12, 31),\n  'SELLING CASH'!$R:$R, \"TIRE\")\n+\nSUMIFS('SELLING CREDIT'!$G:$G,\n  'SELLING CREDIT'!$C:$C, \">=\" & DATE($B$4, 1, 1),\n  'SELLING CREDIT'!$C:$C, \"<=\" & DATE($B$4, 12, 31),\n  'SELLING CREDIT'!$S:$S, \"TIRE\")"
+      ],
+      [
+        "G4",
+        "=SUMIFS(PURCHASE!$N:$N,\n  PURCHASE!$C:$C, \">=\" & DATE($B$4, 1, 1),\n  PURCHASE!$C:$C, \"<=\" & DATE($B$4, 12, 31),\n  PURCHASE!$P:$P, \"TIRE\")"
+      ],
+      [
+        "H4",
+        "=SUMIFS(PURCHASE!$J:$J,\n  PURCHASE!$C:$C, \">=\" & DATE($B$4, 1, 1),\n  PURCHASE!$C:$C, \"<=\" & DATE($B$4, 12, 31),\n  PURCHASE!$P:$P, \"TIRE\")"
+      ],
+      [
+        "J4",
+        "=SUMIFS('SELLING CASH'!$N:$N,\n  'SELLING CASH'!$C:$C, \">=\" & DATE($B$4, 1, 1),\n  'SELLING CASH'!$C:$C, \"<=\" & DATE($B$4, 12, 31),\n  'SELLING CASH'!$R:$R, \"<>OIL\", 'SELLING CASH'!$R:$R, \"<>SERVICE\")\n+\nSUMIFS('PAYMENT CREDIT'!$G:$G,\n  'PAYMENT CREDIT'!$C:$C, \">=\" & DATE($B$4, 1, 1),\n  'PAYMENT CREDIT'!$C:$C, \"<=\" & DATE($B$4, 12, 31))"
+      ],
+      [
+        "K4",
+        "=SUMIFS(EXPENSES!$D:$D,\n  EXPENSES!$C:$C, \">=\" & DATE($B$4, 1, 1),\n  EXPENSES!$C:$C, \"<=\" & DATE($B$4, 12, 31))"
+      ],
+      [
+        "L4",
+        "=J4-K4"
+      ]
+    ],
+    "errors": []
+  },
+  "DAILY REPORT": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "A1",
+        "-"
+      ],
+      [
+        "H1",
+        "                                                                                                                                                                         "
+      ],
+      [
+        "A2",
+        "27375.0"
+      ],
+      [
+        "D2",
+        " "
+      ],
+      [
+        "E2",
+        "2026-09-29 00:00:00"
+      ],
+      [
+        "L2",
+        "Month"
+      ],
+      [
+        "M2",
+        "September"
+      ],
+      [
+        "A3",
+        "22500.0"
+      ],
+      [
+        "E3",
+        " "
+      ],
+      [
+        "Q3",
+        "GRAND TOTAL"
+      ],
+      [
+        "Y3",
+        "BIAN"
+      ],
+      [
+        "A4",
+        "0.0"
+      ],
+      [
+        "L4",
+        "Tanggal"
+      ],
+      [
+        "M4",
+        "CASH"
+      ],
+      [
+        "Q4",
+        "TEMPO"
+      ],
+      [
+        "S4",
+        "Jumlah"
+      ],
+      [
+        "V4",
+        "TOTAL"
+      ],
+      [
+        "W4",
+        "oil"
+      ],
+      [
+        "D5",
+        "Report"
+      ],
+      [
+        "G5",
+        "Detail "
+      ],
+      [
+        "M5",
+        "Modal"
+      ],
+      [
+        "N5",
+        "Laba"
+      ],
+      [
+        "O5",
+        "Spooring"
+      ],
+      [
+        "P5",
+        "Service fee"
+      ],
+      [
+        "Q5",
+        "Modal"
+      ],
+      [
+        "R5",
+        "Laba"
+      ],
+      [
+        "S5",
+        "Modal"
+      ],
+      [
+        "T5",
+        "Laba"
+      ],
+      [
+        "U5",
+        "Spooring"
+      ],
+      [
+        "Y5",
+        "Modal"
+      ],
+      [
+        "Z5",
+        "Laba"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "P3",
+        "=SUM(P6:P36)"
+      ],
+      [
+        "S3",
+        "=SUM(S6:S40)"
+      ],
+      [
+        "T3",
+        "=SUM(T6:T40)"
+      ],
+      [
+        "U3",
+        "=SUM(U6:U40)"
+      ],
+      [
+        "V3",
+        "=SUM(V6:V40)"
+      ],
+      [
+        "W3",
+        "=SUM(W6:W40)"
+      ],
+      [
+        "Y4",
+        "=sum(Y7:Y37)"
+      ],
+      [
+        "Z4",
+        "=sum(Z7:Z37)"
+      ],
+      [
+        "E5",
+        "=E2"
+      ],
+      [
+        "E6",
+        "=sumifs('SELLING CASH'!I:I,'SELLING CASH'!C:C,E5,'SELLING CASH'!R:R,\"<>OIL\")"
+      ],
+      [
+        "H6",
+        "=E15-(H7+H8)"
+      ],
+      [
+        "M6",
+        "=sumifs('SELLING CASH'!I:I,'SELLING CASH'!C:C,L6,'SELLING CASH'!R:R,\"<>OIL\")-(N6+O6+P6)\n \n"
+      ],
+      [
+        "N6",
+        "=sumifs('SELLING CASH'!N:N,'SELLING CASH'!C:C,L6,'SELLING CASH'!R:R,\"<>SERVICE\",'SELLING CASH'!R:R, \"<>OIL\")"
+      ],
+      [
+        "O6",
+        "=sumifs('SELLING CASH'!N:N,'SELLING CASH'!C:C,L6,'SELLING CASH'!R:R,\"SERVICE\")"
+      ],
+      [
+        "P6",
+        "=sumif('SELLING CASH'!C:C,L6,'SELLING CASH'!J:J)"
+      ],
+      [
+        "Q6",
+        "=SUMIF('PAYMENT CREDIT'!C:C,L6,'PAYMENT CREDIT'!F:F)-R6"
+      ],
+      [
+        "R6",
+        "=SUMIF('PAYMENT CREDIT'!C:C,L6,'PAYMENT CREDIT'!G:G)"
+      ],
+      [
+        "S6",
+        "=M6+Q6"
+      ],
+      [
+        "T6",
+        "=N6+R6"
+      ],
+      [
+        "U6",
+        "=O6"
+      ],
+      [
+        "V6",
+        "=SUM(S6:U6)"
+      ],
+      [
+        "W6",
+        "=SUMIFS('SELLING CASH'!I:I,'SELLING CASH'!C:C,L6,'SELLING CASH'!R:R,\"OIL\")"
+      ],
+      [
+        "E7",
+        "=sumif('PAYMENT CREDIT'!C:C,E5,'PAYMENT CREDIT'!F:F)"
+      ],
+      [
+        "H7",
+        "=SUMIFS('SELLING CASH'!N:N, 'SELLING CASH'!C:C, E5, 'SELLING CASH'!R:R, \"<>SERVICE\", 'SELLING CASH'!R:R, \"<>OIL\") + \nSUMIF('PAYMENT CREDIT'!C:C, E5, 'PAYMENT CREDIT'!G:G)-\nE10-E14-SUMIF('SELLING CREDIT'!C:C,E5,'SELLING CREDIT'!K:K)"
+      ],
+      [
+        "M7",
+        "=sumifs('SELLING CASH'!I:I,'SELLING CASH'!C:C,L7,'SELLING CASH'!R:R,\"<>OIL\")-(N7+O7+P7)\n \n"
+      ]
+    ],
+    "errors": []
+  },
+  "DATABASE": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "C1",
+        "Item"
+      ],
+      [
+        "D1",
+        "Size"
+      ],
+      [
+        "E1",
+        "Tipe"
+      ],
+      [
+        "F1",
+        "Brand"
+      ],
+      [
+        "G1",
+        "Stock"
+      ],
+      [
+        "H1",
+        "Selling Price"
+      ],
+      [
+        "I1",
+        "Cost Price"
+      ],
+      [
+        "J1",
+        "Owned by"
+      ],
+      [
+        "K1",
+        "TAX"
+      ],
+      [
+        "L1",
+        "Service Fee"
+      ],
+      [
+        "M1",
+        "Category"
+      ],
+      [
+        "N1",
+        "IN"
+      ],
+      [
+        "O1",
+        "CASH"
+      ],
+      [
+        "P1",
+        "Credit"
+      ],
+      [
+        "Q1",
+        "FINAL"
+      ],
+      [
+        "V1",
+        "code"
+      ],
+      [
+        "W1",
+        "Customer Name"
+      ],
+      [
+        "X1",
+        "Credit"
+      ],
+      [
+        "Y1",
+        "Payment"
+      ],
+      [
+        "Z1",
+        "Out Standing Balance"
+      ],
+      [
+        "AD1",
+        "D-0022"
+      ],
+      [
+        "AE1",
+        "Bapak Velg"
+      ],
+      [
+        "AF1",
+        "Purchase"
+      ],
+      [
+        "AG1",
+        "Payment"
+      ],
+      [
+        "AH1",
+        "Out Standing Balance"
+      ],
+      [
+        "C2",
+        "Accelera 165/60 14 eco plush"
+      ],
+      [
+        "D2",
+        "165/60 14"
+      ],
+      [
+        "E2",
+        "eco plush"
+      ],
+      [
+        "F2",
+        "Accelera"
+      ],
+      [
+        "G2",
+        "0.0"
+      ],
+      [
+        "H2",
+        "535000.0"
+      ],
+      [
+        "I2",
+        "431000.0"
+      ],
+      [
+        "J2",
+        "BIAN"
+      ],
+      [
+        "K2",
+        "1.0"
+      ],
+      [
+        "L2",
+        "0.0"
+      ],
+      [
+        "M2",
+        "Tire"
+      ],
+      [
+        "V2",
+        "C-0001"
+      ],
+      [
+        "W2",
+        "Aartijaya Velvet"
+      ],
+      [
+        "AC2",
+        "1.0"
+      ],
+      [
+        "AD2",
+        "D-0001"
+      ],
+      [
+        "AE2",
+        "KHARISMA MAKMUR ABADI/PAK DADI"
+      ],
+      [
+        "C3",
+        "Accelera 165/65 13"
+      ],
+      [
+        "D3",
+        "165/65 13"
+      ],
+      [
+        "F3",
+        "Accelera"
+      ],
+      [
+        "G3",
+        "0.0"
+      ],
+      [
+        "H3",
+        "455000.0"
+      ],
+      [
+        "I3",
+        "375000.0"
+      ],
+      [
+        "J3",
+        "BIAN"
+      ],
+      [
+        "K3",
+        "1.0"
+      ],
+      [
+        "L3",
+        "0.0"
+      ],
+      [
+        "M3",
+        "Tire"
+      ],
+      [
+        "V3",
+        "C-0002"
+      ],
+      [
+        "W3",
+        "Bpk. Abah Agus/PACRT"
+      ],
+      [
+        "AC3",
+        "1.0"
+      ],
+      [
+        "AD3",
+        "D-0002"
+      ],
+      [
+        "AE3",
+        "TS. SUDIRMAN/NAUFAL"
+      ],
+      [
+        "C4",
+        "Accelera 165/80 13"
+      ],
+      [
+        "D4",
+        "165/80 13"
+      ],
+      [
+        "F4",
+        "Accelera"
+      ],
+      [
+        "G4",
+        "0.0"
+      ],
+      [
+        "H4",
+        "480000.0"
+      ],
+      [
+        "I4",
+        "400000.0"
+      ],
+      [
+        "J4",
+        "BIAN"
+      ],
+      [
+        "K4",
+        "1.0"
+      ],
+      [
+        "L4",
+        "0.0"
+      ],
+      [
+        "M4",
+        "Tire"
+      ],
+      [
+        "V4",
+        "C-0003"
+      ],
+      [
+        "W4",
+        "Bpk. Acep Cibeureum"
+      ],
+      [
+        "AC4",
+        "1.0"
+      ],
+      [
+        "AD4",
+        "D-0003"
+      ],
+      [
+        "AE4",
+        "CV. MEKAR BARU/CI NOVI"
+      ],
+      [
+        "C5",
+        "Accelera 175/13"
+      ],
+      [
+        "D5",
+        "175/13"
+      ],
+      [
+        "F5",
+        "Accelera"
+      ],
+      [
+        "G5",
+        "1.0"
+      ],
+      [
+        "H5",
+        "640000.0"
+      ],
+      [
+        "I5",
+        "531000.0"
+      ],
+      [
+        "J5",
+        "BIAN"
+      ],
+      [
+        "K5",
+        "1.0"
+      ],
+      [
+        "L5",
+        "0.0"
+      ],
+      [
+        "M5",
+        "Tire"
+      ],
+      [
+        "V5",
+        "C-0004"
+      ],
+      [
+        "W5",
+        "Bpk. Aden Fahri/Cibeureum"
+      ],
+      [
+        "AC5",
+        "1.0"
+      ],
+      [
+        "AD5",
+        "D-0004"
+      ],
+      [
+        "AE5",
+        "SAMUDERA GEMILANG/PAK KEMAN"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "R1",
+        "=counta(F:F)"
+      ],
+      [
+        "AA1",
+        "=counta(V:V)"
+      ],
+      [
+        "AI1",
+        "=counta(AD:AD)"
+      ],
+      [
+        "N2",
+        "=sumif(PURCHASE!I:I,C2,PURCHASE!J:J)"
+      ],
+      [
+        "O2",
+        "=sumif('SELLING CASH'!E:E,C2,'SELLING CASH'!F:F)"
+      ],
+      [
+        "P2",
+        "=sumif('SELLING CREDIT'!F:F,C2,'SELLING CREDIT'!G:G)"
+      ],
+      [
+        "Q2",
+        "=(N2+G2)-(O2+P2)"
+      ],
+      [
+        "X2",
+        "=sumif('SELLING CREDIT'!E:E,W2,'SELLING CREDIT'!P:P)"
+      ],
+      [
+        "Y2",
+        "=sumif('PAYMENT CREDIT'!E:E,W2,'PAYMENT CREDIT'!F:F)"
+      ],
+      [
+        "Z2",
+        "=X2-Y2"
+      ],
+      [
+        "AF2",
+        "=sumif(PURCHASE!E:E,AE2,PURCHASE!N:N)"
+      ],
+      [
+        "AG2",
+        "=sumif('PAYMENT SUPPLIER'!D:D,AE2,'PAYMENT SUPPLIER'!E:E)+sumifs(PURCHASE!N:N,PURCHASE!E:E,AE2,PURCHASE!M:M,\"Cash\")"
+      ],
+      [
+        "AH2",
+        "=AF2-AG2"
+      ],
+      [
+        "N3",
+        "=sumif(PURCHASE!I:I,C3,PURCHASE!J:J)"
+      ],
+      [
+        "O3",
+        "=sumif('SELLING CASH'!E:E,C3,'SELLING CASH'!F:F)"
+      ],
+      [
+        "P3",
+        "=sumif('SELLING CREDIT'!F:F,C3,'SELLING CREDIT'!G:G)"
+      ],
+      [
+        "Q3",
+        "=(N3+G3)-(O3+P3)"
+      ],
+      [
+        "X3",
+        "=sumif('SELLING CREDIT'!E:E,W3,'SELLING CREDIT'!P:P)"
+      ],
+      [
+        "Y3",
+        "=sumif('PAYMENT CREDIT'!E:E,W3,'PAYMENT CREDIT'!F:F)"
+      ],
+      [
+        "Z3",
+        "=X3-Y3"
+      ],
+      [
+        "AF3",
+        "=sumif(PURCHASE!E:E,AE3,PURCHASE!N:N)"
+      ],
+      [
+        "AG3",
+        "=sumif('PAYMENT SUPPLIER'!D:D,AE3,'PAYMENT SUPPLIER'!E:E)+sumifs(PURCHASE!N:N,PURCHASE!E:E,AE3,PURCHASE!M:M,\"Cash\")"
+      ],
+      [
+        "AH3",
+        "=AF3-AG3"
+      ],
+      [
+        "N4",
+        "=sumif(PURCHASE!I:I,C4,PURCHASE!J:J)"
+      ],
+      [
+        "O4",
+        "=sumif('SELLING CASH'!E:E,C4,'SELLING CASH'!F:F)"
+      ]
+    ],
+    "errors": []
+  },
+  "EXPENSES": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "A1",
+        "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "
+      ],
+      [
+        "C1",
+        "Date"
+      ],
+      [
+        "D1",
+        "Amount"
+      ],
+      [
+        "E1",
+        "Explain"
+      ],
+      [
+        "F1",
+        "Category"
+      ],
+      [
+        "G1",
+        "Payment"
+      ],
+      [
+        "K1",
+        "Date"
+      ],
+      [
+        "L1",
+        "Amount"
+      ],
+      [
+        "M1",
+        "Explain"
+      ],
+      [
+        "N1",
+        "Category"
+      ],
+      [
+        "C2",
+        "2025-11-01 00:00:00"
+      ],
+      [
+        "D2",
+        "60000.0"
+      ],
+      [
+        "E2",
+        "Rokok Bian ke Indaramayu"
+      ],
+      [
+        "F2",
+        "Personal"
+      ],
+      [
+        "G2",
+        "Cashier"
+      ],
+      [
+        "K2",
+        "2025-11-04 00:00:00"
+      ],
+      [
+        "L2",
+        "100000.0"
+      ],
+      [
+        "M2",
+        "Admin mah nabil"
+      ],
+      [
+        "N2",
+        "Store"
+      ],
+      [
+        "O2",
+        ""
+      ],
+      [
+        "C3",
+        "2025-11-01 00:00:00"
+      ],
+      [
+        "D3",
+        "200000.0"
+      ],
+      [
+        "E3",
+        "Ibu kasih ke PKL"
+      ],
+      [
+        "F3",
+        "Personal"
+      ],
+      [
+        "G3",
+        "Cashier"
+      ],
+      [
+        "K3",
+        "2025-11-04 00:00:00"
+      ],
+      [
+        "L3",
+        "350000.0"
+      ],
+      [
+        "M3",
+        "Ibu bayar ke mamah nabil"
+      ],
+      [
+        "N3",
+        "Personal"
+      ],
+      [
+        "C4",
+        "2025-11-01 00:00:00"
+      ],
+      [
+        "D4",
+        "150000.0"
+      ],
+      [
+        "E4",
+        "Biaya service ka ade bian"
+      ],
+      [
+        "F4",
+        "Personal"
+      ],
+      [
+        "G4",
+        "Cashier"
+      ],
+      [
+        "K4",
+        "2025-11-07 00:00:00"
+      ],
+      [
+        "L4",
+        "17000000.0"
+      ],
+      [
+        "M4",
+        "Ka Mah nabil"
+      ],
+      [
+        "N4",
+        "Store"
+      ],
+      [
+        "C5",
+        "2025-11-02 00:00:00"
+      ],
+      [
+        "D5",
+        "20000.0"
+      ],
+      [
+        "E5",
+        "Makanan burung"
+      ],
+      [
+        "F5",
+        "Personal"
+      ],
+      [
+        "G5",
+        "Cashier"
+      ],
+      [
+        "K5",
+        "2025-11-11 00:00:00"
+      ],
+      [
+        "L5",
+        "8000000.0"
+      ],
+      [
+        "M5",
+        "Ka Mah nabil"
+      ],
+      [
+        "N5",
+        "Store"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "H1",
+        "=counta(C:C)"
+      ],
+      [
+        "I1",
+        "=SUM(D:D)"
+      ],
+      [
+        "O1",
+        "=sum(L:L)"
+      ],
+      [
+        "D543",
+        "=420000+468000+625000+500000+213000+284000+300000"
+      ]
+    ],
+    "errors": []
+  },
+  "Sheet21": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "H3",
+        "Service"
+      ],
+      [
+        "B4",
+        "Barang"
+      ],
+      [
+        "C4",
+        "Jumlah"
+      ],
+      [
+        "D4",
+        "Modal"
+      ],
+      [
+        "E4",
+        "Laba"
+      ],
+      [
+        "F4",
+        "Total"
+      ],
+      [
+        "H4",
+        "Jenis Jasa"
+      ],
+      [
+        "I4",
+        "Jumlah"
+      ],
+      [
+        "J4",
+        "Harga"
+      ],
+      [
+        "K4",
+        "Komisi montir"
+      ],
+      [
+        "L4",
+        "Profit"
+      ],
+      [
+        "B5",
+        "Advance 1000/20 GL662A+"
+      ],
+      [
+        "C5",
+        "1.0"
+      ],
+      [
+        "D5",
+        "4200000.0"
+      ],
+      [
+        "E5",
+        "4450000.0"
+      ],
+      [
+        "F5",
+        "250000.0"
+      ],
+      [
+        "H5",
+        "Bongkar Pasang"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "P40",
+        "=L40*N40*O40"
+      ],
+      [
+        "U40",
+        "=R40*S40*T40"
+      ],
+      [
+        "P41",
+        "=L41*N41*O41"
+      ],
+      [
+        "U41",
+        "=R41*S41*T41"
+      ],
+      [
+        "P42",
+        "=L42*N42*O42"
+      ],
+      [
+        "U42",
+        "=R42*S42*T42"
+      ],
+      [
+        "P43",
+        "=L43*N43*O43"
+      ],
+      [
+        "U43",
+        "=R43*S43*T43"
+      ],
+      [
+        "P44",
+        "=L44*N44*O44"
+      ],
+      [
+        "U44",
+        "=R44*S44*T44"
+      ],
+      [
+        "P45",
+        "=L45*N45*O45"
+      ],
+      [
+        "U45",
+        "=R45*S45*T45"
+      ],
+      [
+        "P46",
+        "=L46*N46*O46"
+      ],
+      [
+        "U46",
+        "=SUM(U40:U45)"
+      ],
+      [
+        "P47",
+        "=L47*N47*O47"
+      ],
+      [
+        "P48",
+        "=L48*N48*O48"
+      ],
+      [
+        "P49",
+        "=L49*N49*O49"
+      ],
+      [
+        "P50",
+        "=L50*N50*O50"
+      ],
+      [
+        "P51",
+        "=L51*N51*O51"
+      ],
+      [
+        "P52",
+        "=L52*N52*O52"
+      ],
+      [
+        "P53",
+        "=sum(P40:P52)"
+      ]
+    ],
+    "errors": []
+  },
+  "PURCHASE": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "A1",
+        " "
+      ],
+      [
+        "C1",
+        "Date In"
+      ],
+      [
+        "D1",
+        "Date Invoice"
+      ],
+      [
+        "E1",
+        "Distributor"
+      ],
+      [
+        "F1",
+        "TAX"
+      ],
+      [
+        "G1",
+        "Invoice"
+      ],
+      [
+        "H1",
+        "Owned by"
+      ],
+      [
+        "I1",
+        "Column 7"
+      ],
+      [
+        "J1",
+        "Quantity"
+      ],
+      [
+        "K1",
+        "Price"
+      ],
+      [
+        "L1",
+        "Price Fixed"
+      ],
+      [
+        "M1",
+        "Payment"
+      ],
+      [
+        "N1",
+        "SUM"
+      ],
+      [
+        "O1",
+        "Due Date"
+      ],
+      [
+        "P1",
+        "Category"
+      ],
+      [
+        "Q1",
+        "Brand"
+      ],
+      [
+        "C2",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "D2",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "E2",
+        "TS. SUDIRMAN/NAUFAL"
+      ],
+      [
+        "F2",
+        "1"
+      ],
+      [
+        "G2",
+        "SLS-SDR-2500012"
+      ],
+      [
+        "H2",
+        "IBU"
+      ],
+      [
+        "I2",
+        "Bridgestone 205/65 15 Turanza"
+      ],
+      [
+        "J2",
+        "5.0"
+      ],
+      [
+        "K2",
+        "Rp1.085.500"
+      ],
+      [
+        "L2",
+        "1085500.0"
+      ],
+      [
+        "M2",
+        "Tempo 2 Month"
+      ],
+      [
+        "C3",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "D3",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "E3",
+        "TS. SUDIRMAN/NAUFAL"
+      ],
+      [
+        "F3",
+        "1"
+      ],
+      [
+        "G3",
+        "SLS-SDR-2500006"
+      ],
+      [
+        "H3",
+        "IBU"
+      ],
+      [
+        "I3",
+        "Bridgestone 175/13 Duravis"
+      ],
+      [
+        "J3",
+        "10.0"
+      ],
+      [
+        "K3",
+        "Rp700.000"
+      ],
+      [
+        "L3",
+        "700000.0"
+      ],
+      [
+        "M3",
+        "Tempo 2 Month"
+      ],
+      [
+        "C4",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "D4",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "E4",
+        "TS. SUDIRMAN/NAUFAL"
+      ],
+      [
+        "F4",
+        "1"
+      ],
+      [
+        "G4",
+        "SLS-SDR-2500007"
+      ],
+      [
+        "H4",
+        "IBU"
+      ],
+      [
+        "I4",
+        "Bridgestone 750/16 MRN"
+      ],
+      [
+        "J4",
+        "4.0"
+      ],
+      [
+        "K4",
+        "Rp1.570.000"
+      ],
+      [
+        "L4",
+        "1570000.0"
+      ],
+      [
+        "M4",
+        "Tempo 2 Month"
+      ],
+      [
+        "C5",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "D5",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "E5",
+        "TS. SUDIRMAN/NAUFAL"
+      ],
+      [
+        "F5",
+        "1"
+      ],
+      [
+        "G5",
+        "SLS-SDR-2500007"
+      ],
+      [
+        "H5",
+        "IBU"
+      ],
+      [
+        "I5",
+        "Bridgestone 750/15 MRD"
+      ],
+      [
+        "J5",
+        "10.0"
+      ],
+      [
+        "K5",
+        "Rp1.285.000"
+      ],
+      [
+        "L5",
+        "1285000.0"
+      ],
+      [
+        "M5",
+        "Tempo 2 Month"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "R1",
+        "=COUNTA(C:C)"
+      ],
+      [
+        "N2",
+        "=J2*L2"
+      ],
+      [
+        "O2",
+        "=if(M2=\"Cash\",\"LUNAS\",\n   IF(M2=\"Tempo 14 Days\",D2+14,\n    if(M2=\"Tempo 30 Days\",D2+30,\n     IF(M2=\"Tempo 2 Month\",D2+60,if(M2=\"Tempo DUNLOP\",D2+75,0)))))"
+      ],
+      [
+        "P2",
+        "=VLOOKUP(I2,DATABASE!C:Q,11,FALSE)"
+      ],
+      [
+        "Q2",
+        "=VLOOKUP(I2,DATABASE!C:Q,4,FALSE)"
+      ],
+      [
+        "N3",
+        "=J3*L3"
+      ],
+      [
+        "O3",
+        "=if(M3=\"Cash\",\"LUNAS\",\nIF(M3=\"Tempo 14 Days\",D3+14,\nif(M3=\"Tempo 30 Days\",D3+30,\nIF(M3=\"Tempo 2 Month\",D3+60,if(M3=\"Tempo DUNLOP\",D3+75,0)))))"
+      ],
+      [
+        "P3",
+        "=VLOOKUP(I3,DATABASE!C:Q,11,FALSE)"
+      ],
+      [
+        "Q3",
+        "=VLOOKUP(I3,DATABASE!C:Q,4,FALSE)"
+      ],
+      [
+        "N4",
+        "=J4*L4"
+      ],
+      [
+        "O4",
+        "=if(M4=\"Cash\",\"LUNAS\",\nIF(M4=\"Tempo 14 Days\",D4+14,\nif(M4=\"Tempo 30 Days\",D4+30,\nIF(M4=\"Tempo 2 Month\",D4+60,if(M4=\"Tempo DUNLOP\",D4+75,0)))))"
+      ],
+      [
+        "P4",
+        "=VLOOKUP(I4,DATABASE!C:Q,11,FALSE)"
+      ],
+      [
+        "Q4",
+        "=VLOOKUP(I4,DATABASE!C:Q,4,FALSE)"
+      ],
+      [
+        "N5",
+        "=J5*L5"
+      ],
+      [
+        "O5",
+        "=if(M5=\"Cash\",\"LUNAS\",\nIF(M5=\"Tempo 14 Days\",D5+14,\nif(M5=\"Tempo 30 Days\",D5+30,\nIF(M5=\"Tempo 2 Month\",D5+60,if(M5=\"Tempo DUNLOP\",D5+75,0)))))"
+      ],
+      [
+        "P5",
+        "=VLOOKUP(I5,DATABASE!C:Q,11,FALSE)"
+      ],
+      [
+        "Q5",
+        "=VLOOKUP(I5,DATABASE!C:Q,4,FALSE)"
+      ],
+      [
+        "N6",
+        "=J6*L6"
+      ],
+      [
+        "O6",
+        "=if(M6=\"Cash\",\"LUNAS\",\nIF(M6=\"Tempo 14 Days\",D6+14,\nif(M6=\"Tempo 30 Days\",D6+30,\nIF(M6=\"Tempo 2 Month\",D6+60,if(M6=\"Tempo DUNLOP\",D6+75,0)))))"
+      ],
+      [
+        "P6",
+        "=VLOOKUP(I6,DATABASE!C:Q,11,FALSE)"
+      ],
+      [
+        "Q6",
+        "=VLOOKUP(I6,DATABASE!C:Q,4,FALSE)"
+      ],
+      [
+        "N7",
+        "=J7*L7"
+      ],
+      [
+        "O7",
+        "=if(M7=\"Cash\",\"LUNAS\",\nIF(M7=\"Tempo 14 Days\",D7+14,\nif(M7=\"Tempo 30 Days\",D7+30,\nIF(M7=\"Tempo 2 Month\",D7+60,if(M7=\"Tempo DUNLOP\",D7+75,0)))))"
+      ],
+      [
+        "P7",
+        "=VLOOKUP(I7,DATABASE!C:Q,11,FALSE)"
+      ],
+      [
+        "Q7",
+        "=VLOOKUP(I7,DATABASE!C:Q,4,FALSE)"
+      ]
+    ],
+    "errors": []
+  },
+  "TRANSACTION": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "A1",
+        " Perkasa Jaya Sistem Informasi"
+      ],
+      [
+        "B4",
+        "!"
+      ],
+      [
+        "C4",
+        "Add Items"
+      ],
+      [
+        "H4",
+        "!"
+      ],
+      [
+        "I4",
+        "Selling Cash"
+      ],
+      [
+        "N4",
+        "!"
+      ],
+      [
+        "O4",
+        "Pucchase"
+      ],
+      [
+        "U4",
+        "Payment of Receivables"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "K6",
+        "=today()"
+      ],
+      [
+        "Q6",
+        "=TODAY()"
+      ],
+      [
+        "W6",
+        "=TODAY()"
+      ],
+      [
+        "K14",
+        "=VLOOKUP(K10,DATABASE!C:Q,6,false)"
+      ],
+      [
+        "W14",
+        "=IF(COUNTIFS('PAYMENT CREDIT'!D:D, W8, 'PAYMENT CREDIT'!E:E, W10) > 0, \n    0, \n    SUMIFS('SELLING CREDIT'!Q:Q, 'SELLING CREDIT'!C:C, W8, 'SELLING CREDIT'!E:E, W10) +\n    SUMIFS('SELLING CREDIT'!K:K, 'SELLING CREDIT'!C:C, W8, 'SELLING CREDIT'!E:E, W10)\n)"
+      ],
+      [
+        "K22",
+        "=IF(B9=\"Transfer\", (B7-B8)*B6, IF(B9=\"Mix\", B11, \"\"))"
+      ],
+      [
+        "Q22",
+        "=VLOOKUP(Q18,DATABASE!C:Q,7,FALSE)"
+      ],
+      [
+        "E38",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"C-\"\"&TEXT(IFERROR(MAX(ARRAYFORMULA(IF(ISNUMBER(SEARCH(\"\"C-\"\",DATABASE!V:V)),VALUE(REGEXEXTRACT(DATABASE!V:V,\"\"[0-9]+\"\")),0))),0)+1,\"\"0000\"\")\"),\"C-0114\")"
+      ],
+      [
+        "K38",
+        "=TODAY()"
+      ],
+      [
+        "Q38",
+        "=TODAY()"
+      ],
+      [
+        "W38",
+        "=TODAY()"
+      ],
+      [
+        "K52",
+        "=K38+30"
+      ],
+      [
+        "E68",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"D-\"\"&TEXT(IFERROR(MAX(ARRAYFORMULA(IF(ISNUMBER(SEARCH(\"\"D-\"\",DATABASE!AD:AD)),VALUE(REGEXEXTRACT(DATABASE!AD:AD,\"\"[0-9]+\"\")),0))),0)+1,\"\"0000\"\")\"),\"D-0023\")"
+      ],
+      [
+        "K68",
+        "=TODAY()"
+      ]
+    ],
+    "errors": []
+  },
+  "SELLING CASH": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "A1",
+        " "
+      ],
+      [
+        "C1",
+        "Date"
+      ],
+      [
+        "D1",
+        "Invoice"
+      ],
+      [
+        "E1",
+        "Item"
+      ],
+      [
+        "F1",
+        "QTY"
+      ],
+      [
+        "G1",
+        "Price"
+      ],
+      [
+        "H1",
+        "Discon"
+      ],
+      [
+        "I1",
+        "Total"
+      ],
+      [
+        "J1",
+        "Service Fee"
+      ],
+      [
+        "K1",
+        "Cost Price VLOOKUP"
+      ],
+      [
+        "L1",
+        "Coist Price Absolute"
+      ],
+      [
+        "M1",
+        "Cost Price Fixed"
+      ],
+      [
+        "N1",
+        "Profit"
+      ],
+      [
+        "O1",
+        "Owned by"
+      ],
+      [
+        "P1",
+        "Tax"
+      ],
+      [
+        "Q1",
+        "Brand"
+      ],
+      [
+        "R1",
+        "Category"
+      ],
+      [
+        "C2",
+        "2025-01-01 00:00:00"
+      ],
+      [
+        "D2",
+        "3761.0"
+      ],
+      [
+        "E2",
+        "GT 185/65 15 ECOTEC"
+      ],
+      [
+        "F2",
+        "2.0"
+      ],
+      [
+        "G2",
+        "670000.0"
+      ],
+      [
+        "H2",
+        "0.0"
+      ],
+      [
+        "K2",
+        "582500.0"
+      ],
+      [
+        "L2",
+        "582500.0"
+      ],
+      [
+        "C3",
+        "2025-01-01 00:00:00"
+      ],
+      [
+        "D3",
+        "3761.0"
+      ],
+      [
+        "E3",
+        "Balancing 30"
+      ],
+      [
+        "F3",
+        "2.0"
+      ],
+      [
+        "G3",
+        "30000.0"
+      ],
+      [
+        "H3",
+        "0.0"
+      ],
+      [
+        "K3",
+        "0.0"
+      ],
+      [
+        "L3",
+        "0.0"
+      ],
+      [
+        "C4",
+        "2025-01-01 00:00:00"
+      ],
+      [
+        "D4",
+        "3762.0"
+      ],
+      [
+        "E4",
+        "Bongkar Pasang"
+      ],
+      [
+        "F4",
+        "1.0"
+      ],
+      [
+        "G4",
+        "30000.0"
+      ],
+      [
+        "H4",
+        "0.0"
+      ],
+      [
+        "L4",
+        "0.0"
+      ],
+      [
+        "C5",
+        "2025-01-01 00:00:00"
+      ],
+      [
+        "D5",
+        "3764.0"
+      ],
+      [
+        "E5",
+        "SPOORING"
+      ],
+      [
+        "F5",
+        "1.0"
+      ],
+      [
+        "G5",
+        "130000.0"
+      ],
+      [
+        "H5",
+        "0.0"
+      ],
+      [
+        "L5",
+        "0.0"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "S1",
+        "=COUNTA(C:C)"
+      ],
+      [
+        "I2",
+        "=(G2-H2)*F2"
+      ],
+      [
+        "J2",
+        "=IF(E2=\"SERVICE\",I2-(I2*50%),Vlookup(E2,DATABASE!C:Q,10,false)*F2)"
+      ],
+      [
+        "M2",
+        "=CEILING(L2, 5000)"
+      ],
+      [
+        "N2",
+        "=if(R2=\"SERVICE\",I2-(J2+M2),\n   IF(R2=\"COMPLEMENTARY\",I2-((M2*F2)+J2),I2-(M2*F2)))"
+      ],
+      [
+        "O2",
+        "=VLOOKUP(E2,DATABASE!C:Q,8,false)"
+      ],
+      [
+        "P2",
+        "=VLOOKUP(E2,DATABASE!C:Q,9,False)"
+      ],
+      [
+        "Q2",
+        "=VLOOKUP(E2,DATABASE!C:Q,4,false)"
+      ],
+      [
+        "R2",
+        "=VLOOKUP(E2,DATABASE!C:Q,11,false)"
+      ],
+      [
+        "I3",
+        "=(G3-H3)*F3"
+      ],
+      [
+        "J3",
+        "=IF(E3=\"SERVICE\",I3-(I3*50%),Vlookup(E3,DATABASE!C:Q,10,false)*F3)"
+      ],
+      [
+        "M3",
+        "=CEILING(L3, 5000)"
+      ],
+      [
+        "N3",
+        "=if(R3=\"SERVICE\",I3-(J3+M3),\nIF(R3=\"COMPLEMENTARY\",I3-((M3*F3)+J3),I3-(M3*F3)))"
+      ],
+      [
+        "O3",
+        "=VLOOKUP(E3,DATABASE!C:Q,8,false)"
+      ],
+      [
+        "P3",
+        "=VLOOKUP(E3,DATABASE!C:Q,9,False)"
+      ],
+      [
+        "Q3",
+        "=VLOOKUP(E3,DATABASE!C:Q,4,false)"
+      ],
+      [
+        "R3",
+        "=VLOOKUP(E3,DATABASE!C:Q,11,false)"
+      ],
+      [
+        "I4",
+        "=(G4-H4)*F4"
+      ],
+      [
+        "J4",
+        "=IF(E4=\"SERVICE\",I4-(I4*50%),Vlookup(E4,DATABASE!C:Q,10,false)*F4)"
+      ],
+      [
+        "K4",
+        "=VLOOKUP(E4,DATABASE!C:Q,7,false)"
+      ],
+      [
+        "M4",
+        "=CEILING(L4, 5000)"
+      ],
+      [
+        "N4",
+        "=if(R4=\"SERVICE\",I4-(J4+M4),\nIF(R4=\"COMPLEMENTARY\",I4-((M4*F4)+J4),I4-(M4*F4)))"
+      ],
+      [
+        "O4",
+        "=VLOOKUP(E4,DATABASE!C:Q,8,false)"
+      ],
+      [
+        "P4",
+        "=VLOOKUP(E4,DATABASE!C:Q,9,False)"
+      ],
+      [
+        "Q4",
+        "=VLOOKUP(E4,DATABASE!C:Q,4,false)"
+      ]
+    ],
+    "errors": []
+  },
+  "DATA_PIVOT": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "A1",
+        " "
+      ],
+      [
+        "D1",
+        "Top Ukuran BAN "
+      ],
+      [
+        "B2",
+        "Terjual"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "A2",
+        "<openpyxl.worksheet.formula.ArrayFormula object at 0x0000020AC8D7FE00>"
+      ],
+      [
+        "A3",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"QUERY({\n    FILTER({'SELLING CASH'!E:F, TRIM('SELLING CASH'!R:R)}, \n      YEAR('SELLING CASH'!C:C) = VALUE(DASHBOARD!B4),\n      TRIM('SELLING CASH'!R:R) = \"\"Tire\"\");\n    \n    FILTER({'SELLING CREDIT'!F:G, TRIM('SELLING CREDIT'!S:S)}, \n      YEAR('SELLING \"&\"CREDIT'!C:C) = VALUE(DASHBOARD!B4),\n      TRIM('SELLING CREDIT'!S:S) = \"\"Tire\"\")\n  },\n  \"\"SELECT Col1, SUM(Col2) \n   WHERE Col1 IS NOT NULL \n   GROUP BY Col1 \n   ORDER BY SUM(Col2) DESC \n   LIMIT 15\"\")\"),\"\")"
+      ],
+      [
+        "B3",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"sum \")"
+      ],
+      [
+        "A4",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"Dunlop 175/13 LT5\")"
+      ],
+      [
+        "B4",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),439.0)"
+      ],
+      [
+        "A5",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"Dunlop 185/14 LT5\")"
+      ],
+      [
+        "B5",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),240.0)"
+      ],
+      [
+        "A6",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"GT 165/80 13 ECOTEC\")"
+      ],
+      [
+        "B6",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),199.0)"
+      ],
+      [
+        "A7",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"Dunlop 185/70 14 SP10\")"
+      ],
+      [
+        "B7",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),159.0)"
+      ],
+      [
+        "A8",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"Dunlop 165/13 LT5\")"
+      ],
+      [
+        "B8",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),128.0)"
+      ],
+      [
+        "A9",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"BD 13 IBK\")"
+      ],
+      [
+        "B9",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),114.0)"
+      ],
+      [
+        "A10",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"Flap 16 GT\")"
+      ],
+      [
+        "B10",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),97.0)"
+      ],
+      [
+        "A11",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"TIRON 750/16\")"
+      ],
+      [
+        "B11",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),90.0)"
+      ],
+      [
+        "A12",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"Dunlop 175/65 14 EC300\")"
+      ],
+      [
+        "B12",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),76.0)"
+      ],
+      [
+        "A13",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"Dunlop 185/65 15 EC300\")"
+      ],
+      [
+        "B13",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),75.0)"
+      ],
+      [
+        "A14",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),\"GT 550/13 8PR\")"
+      ],
+      [
+        "B14",
+        "=IFERROR(__xludf.DUMMYFUNCTION(\"\"\"COMPUTED_VALUE\"\"\"),74.0)"
+      ]
+    ],
+    "errors": []
+  },
+  "PAYMENT SUPPLIER": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "A1",
+        "           "
+      ],
+      [
+        "C1",
+        "DATE"
+      ],
+      [
+        "D1",
+        "Column 2"
+      ],
+      [
+        "E1",
+        "AMOUNT"
+      ],
+      [
+        "I1",
+        "DATE"
+      ],
+      [
+        "J1",
+        "Column 2"
+      ],
+      [
+        "K1",
+        "AMOUNT"
+      ],
+      [
+        "C2",
+        "2025-01-21 00:00:00"
+      ],
+      [
+        "D2",
+        "PT. RODA GAMA"
+      ],
+      [
+        "E2",
+        "3660000.0"
+      ],
+      [
+        "K2",
+        "Bian"
+      ],
+      [
+        "L2",
+        "Ibu"
+      ],
+      [
+        "C3",
+        "2025-02-03 00:00:00"
+      ],
+      [
+        "D3",
+        "CV. MULTIPRIMA INTI NUSANTARA"
+      ],
+      [
+        "E3",
+        "13600000.0"
+      ],
+      [
+        "K3",
+        " "
+      ],
+      [
+        "C4",
+        "2025-02-19 00:00:00"
+      ],
+      [
+        "D4",
+        "CV. MEKAR BARU/CI NOVI"
+      ],
+      [
+        "E4",
+        "14365600.0"
+      ],
+      [
+        "C5",
+        "2025-02-19 00:00:00"
+      ],
+      [
+        "D5",
+        "CV. MEKAR BARU/CI NOVI"
+      ],
+      [
+        "E5",
+        "18437500.0"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "F1",
+        "=COUNTA(C:C)"
+      ],
+      [
+        "G1",
+        "=sum(E:E)"
+      ],
+      [
+        "P1",
+        "=COUNTA(C:C)"
+      ],
+      [
+        "L3",
+        "=I7+I21"
+      ],
+      [
+        "E31",
+        "=53760000"
+      ],
+      [
+        "E70",
+        "=7939099+2699723"
+      ],
+      [
+        "E121",
+        "=19680000+16170000"
+      ],
+      [
+        "E128",
+        "=37548554"
+      ],
+      [
+        "E206",
+        "=6364500-893000"
+      ]
+    ],
+    "errors": []
+  },
+  "SELLING CREDIT": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "A1",
+        "                                                                       "
+      ],
+      [
+        "C1",
+        "Date"
+      ],
+      [
+        "D1",
+        "Invoice"
+      ],
+      [
+        "E1",
+        "Name"
+      ],
+      [
+        "F1",
+        "Column 4"
+      ],
+      [
+        "G1",
+        "QTY"
+      ],
+      [
+        "H1",
+        "Cash Price"
+      ],
+      [
+        "I1",
+        "Credit Price"
+      ],
+      [
+        "J1",
+        "Due Date"
+      ],
+      [
+        "K1",
+        "Service Fee"
+      ],
+      [
+        "L1",
+        "Cost price VLOOKUP"
+      ],
+      [
+        "M1",
+        "Cost price Absolute"
+      ],
+      [
+        "N1",
+        "Cost Price Fixed"
+      ],
+      [
+        "O1",
+        "Total Cash"
+      ],
+      [
+        "P1",
+        "Total Credit"
+      ],
+      [
+        "Q1",
+        "Profit"
+      ],
+      [
+        "R1",
+        "Brand"
+      ],
+      [
+        "S1",
+        "Category"
+      ],
+      [
+        "T1",
+        "Owned by"
+      ],
+      [
+        "C2",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "D2",
+        "45659.0"
+      ],
+      [
+        "E2",
+        "Bpk. Bram"
+      ],
+      [
+        "F2",
+        "BD 16 GT"
+      ],
+      [
+        "G2",
+        "1.0"
+      ],
+      [
+        "H2",
+        "240000.0"
+      ],
+      [
+        "I2",
+        "250000.0"
+      ],
+      [
+        "M2",
+        "199920.0"
+      ],
+      [
+        "C3",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "D3",
+        "45659.0"
+      ],
+      [
+        "E3",
+        "Bpk. Bram"
+      ],
+      [
+        "F3",
+        "Flap 16 GT"
+      ],
+      [
+        "G3",
+        "1.0"
+      ],
+      [
+        "H3",
+        "65000.0"
+      ],
+      [
+        "I3",
+        "110000.0"
+      ],
+      [
+        "M3",
+        "43520.0"
+      ],
+      [
+        "C4",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "D4",
+        "45659.0"
+      ],
+      [
+        "E4",
+        "Bpk. Ujang Damai/Rancakole"
+      ],
+      [
+        "F4",
+        "Dunlop 750/16 12PR"
+      ],
+      [
+        "G4",
+        "2.0"
+      ],
+      [
+        "H4",
+        "1547000.0"
+      ],
+      [
+        "I4",
+        "1630000.0"
+      ],
+      [
+        "M4",
+        "1447000.0"
+      ],
+      [
+        "C5",
+        "2025-01-03 00:00:00"
+      ],
+      [
+        "D5",
+        "45660.0"
+      ],
+      [
+        "E5",
+        "Bpk. Usep Isma/Balekambang"
+      ],
+      [
+        "F5",
+        "GT 750/16 HAPPY DUTY"
+      ],
+      [
+        "G5",
+        "1.0"
+      ],
+      [
+        "H5",
+        "1600000.0"
+      ],
+      [
+        "I5",
+        "1685000.0"
+      ],
+      [
+        "M5",
+        "1500000.0"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "U1",
+        "=counta(C:C)"
+      ],
+      [
+        "J2",
+        "=C2+30"
+      ],
+      [
+        "K2",
+        "=if(F2=\"SERVICE\",O2-(O2*50%),Vlookup(F2,DATABASE!C:Q,10,false)*G2)"
+      ],
+      [
+        "L2",
+        "=VLOOKUP(F2,DATABASE!C:Q,7,FALSE)"
+      ],
+      [
+        "N2",
+        "=CEILING(M2, 5000)"
+      ],
+      [
+        "O2",
+        "=H2*G2"
+      ],
+      [
+        "P2",
+        "=G2*I2"
+      ],
+      [
+        "Q2",
+        "=if(S2=\"SERVICE\",P2-(K2+N2),\n    IF(S2=\"Tire\",P2-(N2*G2),\n      IF(S2=\"COMPLEMENTARY\",P2-((N2*G2)+K2),0)))"
+      ],
+      [
+        "R2",
+        "=VLOOKUP(F2,DATABASE!C:Q,4,false)"
+      ],
+      [
+        "S2",
+        "=VLOOKUP(F2,DATABASE!C:P,11,false)"
+      ],
+      [
+        "T2",
+        "=vlookup(F2,DATABASE!C:Q,8,false)"
+      ],
+      [
+        "J3",
+        "=C3+30"
+      ],
+      [
+        "K3",
+        "=if(F3=\"SERVICE\",O3-(O3*50%),Vlookup(F3,DATABASE!C:Q,10,false)*G3)"
+      ],
+      [
+        "L3",
+        "=VLOOKUP(F3,DATABASE!C:Q,7,FALSE)"
+      ],
+      [
+        "N3",
+        "=CEILING(M3, 5000)"
+      ],
+      [
+        "O3",
+        "=H3*G3"
+      ],
+      [
+        "P3",
+        "=G3*I3"
+      ],
+      [
+        "Q3",
+        "=if(S3=\"SERVICE\",P3-(K3+N3),\nIF(S3=\"Tire\",P3-(N3*G3),\nIF(S3=\"COMPLEMENTARY\",P3-((N3*G3)+K3),0)))"
+      ],
+      [
+        "R3",
+        "=VLOOKUP(F3,DATABASE!C:Q,4,false)"
+      ],
+      [
+        "S3",
+        "=VLOOKUP(F3,DATABASE!C:P,11,false)"
+      ],
+      [
+        "T3",
+        "=vlookup(F3,DATABASE!C:Q,8,false)"
+      ],
+      [
+        "J4",
+        "=C4+30"
+      ],
+      [
+        "K4",
+        "=if(F4=\"SERVICE\",O4-(O4*50%),Vlookup(F4,DATABASE!C:Q,10,false)*G4)"
+      ],
+      [
+        "L4",
+        "=VLOOKUP(F4,DATABASE!C:Q,7,FALSE)"
+      ],
+      [
+        "N4",
+        "=CEILING(M4, 5000)"
+      ]
+    ],
+    "errors": []
+  },
+  "REPORT": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "A1",
+        "                                                                                                                                                                                                                                                               "
+      ],
+      [
+        "D2",
+        "Year"
+      ],
+      [
+        "E2",
+        "2026.0"
+      ],
+      [
+        "P2",
+        "Month"
+      ],
+      [
+        "Q2",
+        "September"
+      ],
+      [
+        "S2",
+        "Report"
+      ],
+      [
+        "T2",
+        "PENJUALAN"
+      ],
+      [
+        "P3",
+        "Year"
+      ],
+      [
+        "Q3",
+        "2026.0"
+      ],
+      [
+        "S3",
+        "Owned by"
+      ],
+      [
+        "T3",
+        "IBU"
+      ],
+      [
+        "D5",
+        "Bulan"
+      ],
+      [
+        "E5",
+        "Total Pendapatan"
+      ],
+      [
+        "F5",
+        "Rincian"
+      ],
+      [
+        "I5",
+        "Pembayaran Supplier"
+      ],
+      [
+        "J5",
+        "Pengeluaran Tercatat"
+      ],
+      [
+        "K5",
+        "NETT"
+      ],
+      [
+        "P5",
+        "TANGGAL TRANSAKSI"
+      ],
+      [
+        "Q5",
+        "JENIS BARANG YANG DIJUAL"
+      ],
+      [
+        "S5",
+        "NO. FAKTUR ( PK )"
+      ],
+      [
+        "T5",
+        "TANGGAL FAKTUR"
+      ],
+      [
+        "U5",
+        "HARGA JUAL TERMASUK PPN"
+      ],
+      [
+        "V5",
+        "HARGA JUAL TANPA PPN"
+      ],
+      [
+        "W5",
+        "NILAI PAJAK KELUARAN"
+      ],
+      [
+        "X5",
+        "NAMA PEMBELI/NAMA PENJUAL"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "U4",
+        "=SUM(U7:U1002)"
+      ],
+      [
+        "X4",
+        "=U4*(0.5/100)"
+      ],
+      [
+        "D7",
+        "=IF(E$2=\"\",\"\",TEXT(DATE(E$2,ROW(A1),1),\"mmmm yyyy\"))"
+      ],
+      [
+        "E7",
+        "=IF(D7=\"\", \"\", \n    SUMIFS('SELLING CASH'!$I:$I, \n           'SELLING CASH'!$C:$C, \">=\" & D7,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D7, 1),\n           'SELLING CASH'!$R:$R,\"<>OIL\")+\n    SUMIFS('PAYMENT CREDIT'!$F:$F, \n           'PAYMENT CREDIT'!$C:$C, \">=\" & D7,\n           'PAYMENT CREDIT'!$C:$C, \"<\" & EDATE(D7, 1))-\n    SUMIFS('SELLING CASH'!$J:$J, \n           'SELLING CASH'!$C:$C, \">=\" & D7,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D7, 1)\n))"
+      ],
+      [
+        "F7",
+        "=E7-(G7+H7)"
+      ],
+      [
+        "G7",
+        "=IF(D7=\"\", \"\", \n    SUMIFS('SELLING CASH'!$N:$N, \n           'SELLING CASH'!$C:$C, \">=\" & D7,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D7, 1),\n           'SELLING CASH'!$R:$R,\"<>OIL\",\n           'SELLING CASH'!$R:$R,\"<>SERVICE\")+\n    SUMIFS('PAYMENT CREDIT'!$G:$G, \n           'PAYMENT CREDIT'!$C:$C, \">=\" & D7,\n           'PAYMENT CREDIT'!$C:$C, \"<\" & EDATE(D7, 1))-\n    SUMIFS('SELLING CREDIT'!$K:$K, \n           'SELLING CREDIT'!$C:$C, \">=\" & D7,\n           'SELLING CREDIT'!$C:$C, \"<\" & EDATE(D7, 1)\n))"
+      ],
+      [
+        "H7",
+        "=IF(D7=\"\", \"\", \n    SUMIFS('SELLING CASH'!$N:$N, \n           'SELLING CASH'!$C:$C, \">=\" & D7,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D7, 1),\n           'SELLING CASH'!$R:$R,\"SERVICE\"))"
+      ],
+      [
+        "I7",
+        "=IF(D7=\"\", \"\", \n    SUMIFS('PAYMENT SUPPLIER'!$E:$E, \n           'PAYMENT SUPPLIER'!$C:$C, \">=\" & D7,\n           'PAYMENT SUPPLIER'!$C:$C, \"<\" & EDATE(D7, 1)\n           ))"
+      ],
+      [
+        "J7",
+        "=IF(D7=\"\", \"\", \n    SUMIFS(EXPENSES!$D:$D, \n           EXPENSES!$C:$C, \">=\" & D7,\n           EXPENSES!$C:$C, \"<\" & EDATE(D7, 1)\n           ))"
+      ],
+      [
+        "K7",
+        "=F7-I7"
+      ],
+      [
+        "L7",
+        "=G7-J7"
+      ],
+      [
+        "M7",
+        "=H7"
+      ],
+      [
+        "D8",
+        "=IF(E$2=\"\",\"\",TEXT(DATE(E$2,ROW(A2),1),\"mmmm yyyy\"))"
+      ],
+      [
+        "E8",
+        "=IF(D8=\"\", \"\", \n    SUMIFS('SELLING CASH'!$I:$I, \n           'SELLING CASH'!$C:$C, \">=\" & D8,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D8, 1),\n           'SELLING CASH'!$R:$R,\"<>OIL\")+\n    SUMIFS('PAYMENT CREDIT'!$F:$F, \n           'PAYMENT CREDIT'!$C:$C, \">=\" & D8,\n           'PAYMENT CREDIT'!$C:$C, \"<\" & EDATE(D8, 1))-\n    SUMIFS('SELLING CASH'!$J:$J, \n           'SELLING CASH'!$C:$C, \">=\" & D8,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D8, 1)\n))"
+      ],
+      [
+        "F8",
+        "=E8-(G8+H8)"
+      ],
+      [
+        "G8",
+        "=IF(D8=\"\", \"\", \n    SUMIFS('SELLING CASH'!$N:$N, \n           'SELLING CASH'!$C:$C, \">=\" & D8,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D8, 1),\n           'SELLING CASH'!$R:$R,\"<>OIL\",\n           'SELLING CASH'!$R:$R,\"<>SERVICE\")+\n    SUMIFS('PAYMENT CREDIT'!$G:$G, \n           'PAYMENT CREDIT'!$C:$C, \">=\" & D8,\n           'PAYMENT CREDIT'!$C:$C, \"<\" & EDATE(D8, 1))-\n    SUMIFS('SELLING CREDIT'!$K:$K, \n           'SELLING CREDIT'!$C:$C, \">=\" & D8,\n           'SELLING CREDIT'!$C:$C, \"<\" & EDATE(D8, 1)\n))"
+      ],
+      [
+        "H8",
+        "=IF(D8=\"\", \"\", \n    SUMIFS('SELLING CASH'!$N:$N, \n           'SELLING CASH'!$C:$C, \">=\" & D8,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D8, 1),\n           'SELLING CASH'!$R:$R,\"SERVICE\"))"
+      ],
+      [
+        "I8",
+        "=IF(D8=\"\", \"\", \n    SUMIFS('PAYMENT SUPPLIER'!$E:$E, \n           'PAYMENT SUPPLIER'!$C:$C, \">=\" & D8,\n           'PAYMENT SUPPLIER'!$C:$C, \"<\" & EDATE(D8, 1)\n           ))"
+      ],
+      [
+        "J8",
+        "=IF(D8=\"\", \"\", \n    SUMIFS(EXPENSES!$D:$D, \n           EXPENSES!$C:$C, \">=\" & D8,\n           EXPENSES!$C:$C, \"<\" & EDATE(D8, 1)\n           ))"
+      ],
+      [
+        "K8",
+        "=F8-I8"
+      ],
+      [
+        "L8",
+        "=G8-J8"
+      ],
+      [
+        "M8",
+        "=H8"
+      ],
+      [
+        "D9",
+        "=IF(E$2=\"\",\"\",TEXT(DATE(E$2,ROW(A3),1),\"mmmm yyyy\"))"
+      ],
+      [
+        "E9",
+        "=IF(D9=\"\", \"\", \n    SUMIFS('SELLING CASH'!$I:$I, \n           'SELLING CASH'!$C:$C, \">=\" & D9,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D9, 1),\n           'SELLING CASH'!$R:$R,\"<>OIL\")+\n    SUMIFS('PAYMENT CREDIT'!$F:$F, \n           'PAYMENT CREDIT'!$C:$C, \">=\" & D9,\n           'PAYMENT CREDIT'!$C:$C, \"<\" & EDATE(D9, 1))-\n    SUMIFS('SELLING CASH'!$J:$J, \n           'SELLING CASH'!$C:$C, \">=\" & D9,\n           'SELLING CASH'!$C:$C, \"<\" & EDATE(D9, 1)\n))"
+      ],
+      [
+        "F9",
+        "=E9-(G9+H9)"
+      ]
+    ],
+    "errors": []
+  },
+  "TRANSFER": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "C1",
+        "Date"
+      ],
+      [
+        "D1",
+        "Amount"
+      ],
+      [
+        "E1",
+        "BANK"
+      ],
+      [
+        "F1",
+        "COUNTA"
+      ],
+      [
+        "C2",
+        "2025-09-02 00:00:00"
+      ],
+      [
+        "D2",
+        "1850000.0"
+      ],
+      [
+        "E2",
+        "BCA"
+      ],
+      [
+        "C3",
+        "2025-09-02 00:00:00"
+      ],
+      [
+        "D3",
+        "1350000.0"
+      ],
+      [
+        "E3",
+        "BCA"
+      ],
+      [
+        "C4",
+        "2025-09-02 00:00:00"
+      ],
+      [
+        "D4",
+        "130000.0"
+      ],
+      [
+        "E4",
+        "BRI"
+      ],
+      [
+        "C5",
+        "2025-09-02 00:00:00"
+      ],
+      [
+        "D5",
+        "1740000.0"
+      ],
+      [
+        "E5",
+        "BCA"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "F2",
+        "=COUNTA(C:C)"
+      ]
+    ],
+    "errors": []
+  },
+  "PAYMENT CREDIT": {
+    "dimensions": [
+      null,
+      null
+    ],
+    "headers": [
+      [
+        "C1",
+        "DATE"
+      ],
+      [
+        "D1",
+        "DATE OF INVOICE"
+      ],
+      [
+        "E1",
+        "NAMA CUSTOMER"
+      ],
+      [
+        "F1",
+        "AMOUNT"
+      ],
+      [
+        "G1",
+        "PROFIT"
+      ],
+      [
+        "D2",
+        "2025-01-08 00:00:00"
+      ],
+      [
+        "E2",
+        "Aartijaya Velvet"
+      ],
+      [
+        "F2",
+        "3320000.0"
+      ],
+      [
+        "G2",
+        "450000.0"
+      ],
+      [
+        "Q2",
+        "SISA"
+      ],
+      [
+        "D3",
+        "2025-01-14 00:00:00"
+      ],
+      [
+        "E3",
+        "Aartijaya Velvet"
+      ],
+      [
+        "F3",
+        "3320000.0"
+      ],
+      [
+        "G3",
+        "450000.0"
+      ],
+      [
+        "D4",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "E4",
+        "Bpk. Bram"
+      ],
+      [
+        "F4",
+        "360000.0"
+      ],
+      [
+        "G4",
+        "115000.0"
+      ],
+      [
+        "D5",
+        "2025-01-02 00:00:00"
+      ],
+      [
+        "E5",
+        "Bpk. Ujang Damai/Rancakole"
+      ],
+      [
+        "F5",
+        "3260000.0"
+      ],
+      [
+        "G5",
+        "360000.0"
+      ]
+    ],
+    "formula_samples": [
+      [
+        "H1",
+        "=COUNTA(C:C)"
+      ],
+      [
+        "C2",
+        "=D2+14"
+      ],
+      [
+        "C3",
+        "=D3+14"
+      ],
+      [
+        "C4",
+        "=D4+30"
+      ],
+      [
+        "O4",
+        "=SUMIFS(F:F,E:E,K4,D:D,L4)"
+      ],
+      [
+        "P4",
+        "=IF(N4=O4,\"LUNAS\", \"BELUM LUNAS\")"
+      ],
+      [
+        "Q4",
+        "=N4-O4"
+      ],
+      [
+        "C5",
+        "=D5+30"
+      ],
+      [
+        "O5",
+        "=SUMIFS(F:F,E:E,K5,D:D,L5)"
+      ],
+      [
+        "P5",
+        "=IF(N5=O5,\"LUNAS\", \"BELUM LUNAS\")"
+      ],
+      [
+        "Q5",
+        "=N5-O5"
+      ],
+      [
+        "C6",
+        "=D6+30"
+      ],
+      [
+        "O6",
+        "=SUMIFS(F:F,E:E,K6,D:D,L6)"
+      ],
+      [
+        "P6",
+        "=IF(N6=O6,\"LUNAS\", \"BELUM LUNAS\")"
+      ],
+      [
+        "Q6",
+        "=N6-O6"
+      ],
+      [
+        "C7",
+        "=D7+30"
+      ],
+      [
+        "O7",
+        "=SUMIFS(F:F,E:E,K7,D:D,L7)"
+      ],
+      [
+        "P7",
+        "=IF(N7=O7,\"LUNAS\", \"BELUM LUNAS\")"
+      ],
+      [
+        "Q7",
+        "=N7-O7"
+      ],
+      [
+        "C8",
+        "=D8+30"
+      ],
+      [
+        "O8",
+        "=SUMIFS(F:F,E:E,K8,D:D,L8)"
+      ],
+      [
+        "P8",
+        "=IF(N8=O8,\"LUNAS\", \"BELUM LUNAS\")"
+      ],
+      [
+        "Q8",
+        "=N8-O8"
+      ],
+      [
+        "C9",
+        "=D9+30"
+      ],
+      [
+        "O9",
+        "=SUMIFS(F:F,E:E,K9,D:D,L9)"
+      ]
+    ],
+    "errors": []
+  }
+}

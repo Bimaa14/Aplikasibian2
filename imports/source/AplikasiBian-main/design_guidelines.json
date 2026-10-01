@@ -1,0 +1,181 @@
+{
+  "theme": "dark_primary_with_high_contrast",
+  "archetype": "ARCHETYPE_2_PERFORMANCE_PRO_TACTICAL",
+  "colors": {
+    "surfaces": [
+      {
+        "name": "page",
+        "kind": "solid",
+        "bg": "#0B0F17",
+        "on_bg": "#F8FAFC",
+        "on_bg_muted": "#94A3B8",
+        "roles": {
+          "border": "#1E293B",
+          "link": "#F59E0B",
+          "error": "#EF4444",
+          "success": "#10B981",
+          "warning": "#F59E0B"
+        }
+      },
+      {
+        "name": "panel",
+        "kind": "solid",
+        "bg": "#111827",
+        "on_bg": "#F9FAFB",
+        "on_bg_muted": "#9CA3AF",
+        "roles": {
+          "border": "#1F2937",
+          "link": "#FBBF24",
+          "error": "#F87171",
+          "success": "#34D399",
+          "warning": "#FBBF24"
+        }
+      },
+      {
+        "name": "card_subtle",
+        "kind": "solid",
+        "bg": "#1E293B",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#CBD5E1",
+        "roles": {
+          "border": "#334155",
+          "link": "#F59E0B",
+          "error": "#FCA5A5",
+          "success": "#6EE7B7"
+        }
+      },
+      {
+        "name": "inverse",
+        "kind": "solid",
+        "bg": "#F8FAFC",
+        "on_bg": "#0F172A",
+        "on_bg_muted": "#475569",
+        "roles": {
+          "border": "#E2E8F0",
+          "link": "#D97706",
+          "error": "#DC2626",
+          "success": "#059669"
+        }
+      },
+      {
+        "name": "thermal_receipt",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#000000",
+        "on_bg_muted": "#4B5563",
+        "roles": {
+          "border": "#E5E7EB",
+          "link": "#000000",
+          "error": "#B91C1C",
+          "success": "#047857"
+        }
+      },
+      {
+        "name": "hero_auth",
+        "kind": "image",
+        "contrast_against": "#0B0F17",
+        "guarantee": "scrim: linear-gradient(180deg, rgba(11,15,23,0.92) 0%, rgba(11,15,23,0.96) 100%)",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#94A3B8",
+        "roles": {
+          "link": "#F59E0B",
+          "error": "#EF4444",
+          "success": "#10B981"
+        }
+      }
+    ],
+    "accent": "#F59E0B",
+    "on_accent": "#000000",
+    "accent_secondary": "#EA580C",
+    "on_accent_secondary": "#FFFFFF",
+    "status_colors": {
+      "completed": "#10B981",
+      "returned": "#EF4444",
+      "unpaid_due": "#DC2626",
+      "unpaid_normal": "#F59E0B",
+      "paid": "#10B981"
+    }
+  },
+  "typography": {
+    "font_heading": "'Outfit Variable', sans-serif",
+    "font_body": "'IBM Plex Sans', sans-serif",
+    "font_mono": "'JetBrains Mono Variable', monospace",
+    "scale_px": {
+      "display": 52,
+      "h1": 40,
+      "h2": 30,
+      "h3": 22,
+      "body": 16,
+      "caption": 14
+    },
+    "letter_spacing": {
+      "headings": "-0.025em",
+      "labels": "0.15em",
+      "body": "0em"
+    }
+  },
+  "entry_surfaces": {
+    "/login": "tactical split login — automotive workshop hero positioning left, quick PIN / role switcher form right",
+    "/": "full-stack workshop cockpit — quick KPI telemetry row, split active POS register and financial alerts"
+  },
+  "visual_enhancers": {
+    "tactical_borders": "1px solid rgba(255, 255, 255, 0.08)",
+    "highlight_glow": "0 0 20px -5px rgba(245, 158, 11, 0.3)",
+    "badge_style": "sharp 6px radius, bold tracking with color-coded dot indicator",
+    "pos_keyboard_hints": "Tactical pill badges (e.g., [F2: Cari] [F4: Bayar] [ESC: Batal])"
+  },
+  "grids": {
+    "pos_layout": "grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-5rem)]",
+    "pos_catalog_span": "col-span-12 lg:col-span-7 xl:col-span-8 flex flex-col h-full",
+    "pos_cart_span": "col-span-12 lg:col-span-5 xl:col-span-4 flex flex-col h-full",
+    "dashboard_kpi_grid": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4",
+    "master_crud_grid": "grid grid-cols-1 xl:grid-cols-12 gap-6"
+  },
+  "motion": {
+    "transition_hover": "transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease",
+    "cart_add_animation": "scale: [0.98, 1.02, 1], duration: 0.2",
+    "thermal_print_slide": "slide-in from top with opacity 0 to 1"
+  },
+  "accessibility": {
+    "wcag_target": "AA",
+    "contrast_ratio_min": "4.5:1 for all text & badges",
+    "keyboard_navigation": "Full arrow, tab, and shortcut keys for POS cart and cashier checkout",
+    "currency_format": "IDR (Rupiah) with Indonesian standard formatting: Rp 150.000 (titik pemisah ribuan)",
+    "date_format": "dd MMM yyyy / HH:mm WIB (Indonesian locale)"
+  },
+  "media": {
+    "image_urls": {
+      "mechanic_working": "https://images.unsplash.com/photo-1645445522156-9ac06bc7a767?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTV8MHwxfHNlYXJjaHwxfHxhdXRvJTIwcmVwYWlyJTIwdGlyZSUyMGdhcmFnZSUyMG1lY2hhbmljfGVufDB8fHx8MTc5MDQwMjkwOXww&ixlib=rb-4.1.0&q=85",
+      "tire_change_close": "https://images.unsplash.com/photo-1613214149922-f1809c99b414?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTV8MHwxfHNlYXJjaHwzfHxhdXRvJTIwcmVwYWlyJTIwdGlyZSUyMGdhcmFnZSUyMG1lY2hhbmljfGVufDB8fHx8MTc5MDQwMjkwOXww&ixlib=rb-4.1.0&q=85",
+      "workshop_interior": "https://images.unsplash.com/photo-1676018366904-c083ed678e60?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwxfHxtb3RvcmN5Y2xlJTIwY2FyJTIwdGlyZSUyMHdvcmtzaG9wfGVufDB8fHx8MTc5MDQwMjkwOXww&ixlib=rb-4.1.0&q=85"
+    }
+  },
+  "component_paths": {
+    "pos_page": "frontend/src/pages/PosPage.tsx",
+    "dashboard_page": "frontend/src/pages/DashboardPage.tsx",
+    "master_products": "frontend/src/pages/ProductsPage.tsx",
+    "master_customers": "frontend/src/pages/CustomersPage.tsx",
+    "master_suppliers": "frontend/src/pages/SuppliersPage.tsx",
+    "debts_receivables": "frontend/src/pages/DebtReceivablePage.tsx",
+    "expenses_page": "frontend/src/pages/ExpensesPage.tsx",
+    "transactions_history": "frontend/src/pages/TransactionsPage.tsx",
+    "thermal_receipt_modal": "frontend/src/components/pos/ThermalReceiptModal.tsx",
+    "laravel_bundle_viewer": "frontend/src/components/laravel/LaravelBundleViewer.tsx"
+  },
+  "instructions_to_main_agent": [
+    "Language & Locale: All labels, buttons, receipt format, and error messages MUST be in clean Bahasa Indonesia (e.g. 'Kasir POS', 'Tambah Barang', 'Cetak Ulang Struk', 'Piutang Pelanggan', 'Jatuh Tempo', 'Laba Kotor', 'Laba Bersih', 'Komisi Montir').",
+    "POS Reactive UX: Fast product catalog search with filter tabs ('Semua', 'Ban & Sparepart', 'Jasa Servis'), keyboard friendly, instant quantity adjuster (+/-) with stock validation.",
+    "Credit Payment Rule: If payment_method == 'credit' (Tempo), customer_id and due_date are MANDATORY. Backend automatically creates accounts_receivable record with unpaid status.",
+    "Profit Calculation Engine: For type 'barang', profit = (selling_price - cost_price) * qty. For type 'jasa', profit = (selling_price - service_fee) * qty, where service_fee is montir commission.",
+    "Return Transaction: Feature to return completed sale, which automatically increments stock back and reduces cashier revenue / profit.",
+    "80mm Thermal Receipt: Formatted monospace component with pure white background, simulated serrated receipt edges, barcode text, item breakdown, and window.print() trigger with @media print CSS targeting 80mm width.",
+    "Due Date Visual Warning: In accounts_receivable and accounts_payable, highlight overdue rows with red badge/pulse 'Lewat Jatuh Tempo' and warning yellow badge for due in <= 3 days.",
+    "Laravel 11 Reference Bundle: Provide a tab / drawer inside the app where the user can inspect or download the parallel Laravel 11 + Filament v3 + Livewire v3 codebase bundle files as requested in problem statement."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": {
+    "do_not_center_app": "Keep naturally aligned layout with crisp high-density panels",
+    "data_testids": "Ensure every button, input, tab, card, modal, and badge includes descriptive data-testid like pos-search-input, checkout-btn, return-tx-btn, etc.",
+    "currency_display": "Format currency via helper formatIDR(amount) => 'Rp 125.000'",
+    "avoid_slop": "Use authentic automotive tactical dark theme with glowing amber accents and sharp clean badges"
+  }
+}

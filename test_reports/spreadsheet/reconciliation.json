@@ -1,0 +1,544 @@
+{
+  "file": "Perkasa Jaya - Store information system (1).xlsx",
+  "sha256": "7faa480412138dde21e5b00028677725b9d3b5b74578c44751a76b8b4d7772bb",
+  "sheets": [
+    "DASHBOARD",
+    "DAILY REPORT",
+    "DATABASE",
+    "EXPENSES",
+    "Sheet21",
+    "PURCHASE",
+    "TRANSACTION",
+    "SELLING CASH",
+    "DATA_PIVOT",
+    "PAYMENT SUPPLIER",
+    "SELLING CREDIT",
+    "REPORT",
+    "TRANSFER",
+    "PAYMENT CREDIT"
+  ],
+  "counts": {
+    "SELLING CASH": {
+      "dated_rows": 10522,
+      "first_date": "2025-01-01",
+      "last_date": "2026-09-28"
+    },
+    "SELLING CREDIT": {
+      "dated_rows": 902,
+      "first_date": "2025-01-02",
+      "last_date": "2026-09-27"
+    },
+    "PURCHASE": {
+      "dated_rows": 1503,
+      "first_date": "2025-01-02",
+      "last_date": "2026-09-29"
+    },
+    "PAYMENT CREDIT": {
+      "dated_rows": 706,
+      "first_date": "2025-01-22",
+      "last_date": "2026-09-28"
+    },
+    "PAYMENT SUPPLIER": {
+      "dated_rows": 446,
+      "first_date": "2025-01-21",
+      "last_date": "2026-09-29"
+    },
+    "EXPENSES": {
+      "dated_rows": 1206,
+      "first_date": "2025-11-01",
+      "last_date": "2026-09-29"
+    },
+    "TRANSFER": {
+      "dated_rows": 1266,
+      "first_date": "2025-09-02",
+      "last_date": "2026-09-29"
+    }
+  },
+  "reconciliation": [
+    {
+      "month": "2026-01",
+      "sheet": "REPORT",
+      "row": 7,
+      "actual": {
+        "pendapatan": 513570000.0,
+        "modal": 440070000.0,
+        "laba": 60335000.0,
+        "spooring": 13165000.0,
+        "supplier": 351570710.0,
+        "pengeluaran": 65240247.0,
+        "total_modal": 88499290.0,
+        "nett_laba": -4905247.0,
+        "nett_spooring": 13165000.0
+      },
+      "expected": {
+        "pendapatan": 513570000.0,
+        "modal": 440070000.0,
+        "laba": 60335000.0,
+        "spooring": 13165000.0,
+        "supplier": 351570710.0,
+        "pengeluaran": 65240247.0,
+        "total_modal": 88499290.0,
+        "nett_laba": -4905247.0,
+        "nett_spooring": 13165000.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-02",
+      "sheet": "REPORT",
+      "row": 8,
+      "actual": {
+        "pendapatan": 448895000.0,
+        "modal": 393950000.0,
+        "laba": 50185000.0,
+        "spooring": 4760000.0,
+        "supplier": 303746290.0,
+        "pengeluaran": 58216747.0,
+        "total_modal": 90203710.0,
+        "nett_laba": -8031747.0,
+        "nett_spooring": 4760000.0
+      },
+      "expected": {
+        "pendapatan": 448895000.0,
+        "modal": 393950000.0,
+        "laba": 50185000.0,
+        "spooring": 4760000.0,
+        "supplier": 303746290.0,
+        "pengeluaran": 58216747.0,
+        "total_modal": 90203710.0,
+        "nett_laba": -8031747.0,
+        "nett_spooring": 4760000.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-03",
+      "sheet": "REPORT",
+      "row": 9,
+      "actual": {
+        "pendapatan": 501291000.0,
+        "modal": 421640000.0,
+        "laba": 63941000.0,
+        "spooring": 15710000.0,
+        "supplier": 434179000.0,
+        "pengeluaran": 54973247.0,
+        "total_modal": -12539000.0,
+        "nett_laba": 8967753.0,
+        "nett_spooring": 15710000.0
+      },
+      "expected": {
+        "pendapatan": 501291000.0,
+        "modal": 421640000.0,
+        "laba": 63941000.0,
+        "spooring": 15710000.0,
+        "supplier": 434179000.0,
+        "pengeluaran": 54973247.0,
+        "total_modal": -12539000.0,
+        "nett_laba": 8967753.0,
+        "nett_spooring": 15710000.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-04",
+      "sheet": "REPORT",
+      "row": 10,
+      "actual": {
+        "pendapatan": 434058000.0,
+        "modal": 368445000.0,
+        "laba": 50463000.0,
+        "spooring": 15150000.0,
+        "supplier": 403630148.0,
+        "pengeluaran": 52607350.0,
+        "total_modal": -35185148.0,
+        "nett_laba": -2144350.0,
+        "nett_spooring": 15150000.0
+      },
+      "expected": {
+        "pendapatan": 434058000.0,
+        "modal": 368445000.0,
+        "laba": 50463000.0,
+        "spooring": 15150000.0,
+        "supplier": 403630148.0,
+        "pengeluaran": 52607350.0,
+        "total_modal": -35185148.0,
+        "nett_laba": -2144350.0,
+        "nett_spooring": 15150000.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-05",
+      "sheet": "REPORT",
+      "row": 11,
+      "actual": {
+        "pendapatan": 411914000.0,
+        "modal": 348960000.0,
+        "laba": 51089000.0,
+        "spooring": 11865000.0,
+        "supplier": 415320132.0,
+        "pengeluaran": 49450000.0,
+        "total_modal": -66360132.0,
+        "nett_laba": 1639000.0,
+        "nett_spooring": 11865000.0
+      },
+      "expected": {
+        "pendapatan": 411914000.0,
+        "modal": 348960000.0,
+        "laba": 51089000.0,
+        "spooring": 11865000.0,
+        "supplier": 415320132.0,
+        "pengeluaran": 49450000.0,
+        "total_modal": -66360132.0,
+        "nett_laba": 1639000.0,
+        "nett_spooring": 11865000.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-06",
+      "sheet": "REPORT",
+      "row": 12,
+      "actual": {
+        "pendapatan": 432835000.0,
+        "modal": 369670000.0,
+        "laba": 49940000.0,
+        "spooring": 13225000.0,
+        "supplier": 341491801.0,
+        "pengeluaran": 42140000.0,
+        "total_modal": 28178199.0,
+        "nett_laba": 7800000.0,
+        "nett_spooring": 13225000.0
+      },
+      "expected": {
+        "pendapatan": 432835000.0,
+        "modal": 369670000.0,
+        "laba": 49940000.0,
+        "spooring": 13225000.0,
+        "supplier": 341491801.0,
+        "pengeluaran": 42140000.0,
+        "total_modal": 28178199.0,
+        "nett_laba": 7800000.0,
+        "nett_spooring": 13225000.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-07",
+      "sheet": "REPORT",
+      "row": 13,
+      "actual": {
+        "pendapatan": 398765000.0,
+        "modal": 344645000.0,
+        "laba": 43345000.0,
+        "spooring": 10775000.0,
+        "supplier": 266096798.0,
+        "pengeluaran": 39900000.0,
+        "total_modal": 78548202.0,
+        "nett_laba": 3445000.0,
+        "nett_spooring": 10775000.0
+      },
+      "expected": {
+        "pendapatan": 398765000.0,
+        "modal": 344645000.0,
+        "laba": 43345000.0,
+        "spooring": 10775000.0,
+        "supplier": 266096798.0,
+        "pengeluaran": 39900000.0,
+        "total_modal": 78548202.0,
+        "nett_laba": 3445000.0,
+        "nett_spooring": 10775000.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-08",
+      "sheet": "REPORT",
+      "row": 14,
+      "actual": {
+        "pendapatan": 334602000.0,
+        "modal": 284895000.0,
+        "laba": 39262000.0,
+        "spooring": 10445000.0,
+        "supplier": 295583930.0,
+        "pengeluaran": 38780500.0,
+        "total_modal": -10688930.0,
+        "nett_laba": 481500.0,
+        "nett_spooring": 10445000.0
+      },
+      "expected": {
+        "pendapatan": 334602000.0,
+        "modal": 284895000.0,
+        "laba": 39262000.0,
+        "spooring": 10445000.0,
+        "supplier": 295583930.0,
+        "pengeluaran": 38780500.0,
+        "total_modal": -10688930.0,
+        "nett_laba": 481500.0,
+        "nett_spooring": 10445000.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-09",
+      "sheet": "REPORT",
+      "row": 15,
+      "actual": {
+        "pendapatan": 376183000.0,
+        "modal": 323510000.0,
+        "laba": 42233000.0,
+        "spooring": 10440000.0,
+        "supplier": 291536500.0,
+        "pengeluaran": 39190000.0,
+        "total_modal": 31973500.0,
+        "nett_laba": 3043000.0,
+        "nett_spooring": 10440000.0
+      },
+      "expected": {
+        "pendapatan": 376183000.0,
+        "modal": 323510000.0,
+        "laba": 42233000.0,
+        "spooring": 10440000.0,
+        "supplier": 291536500.0,
+        "pengeluaran": 39190000.0,
+        "total_modal": 31973500.0,
+        "nett_laba": 3043000.0,
+        "nett_spooring": 10440000.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-10",
+      "sheet": "REPORT",
+      "row": 16,
+      "actual": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      },
+      "expected": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-11",
+      "sheet": "REPORT",
+      "row": 17,
+      "actual": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      },
+      "expected": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    },
+    {
+      "month": "2026-12",
+      "sheet": "REPORT",
+      "row": 18,
+      "actual": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      },
+      "expected": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      },
+      "differences": {
+        "pendapatan": 0.0,
+        "modal": 0.0,
+        "laba": 0.0,
+        "spooring": 0.0,
+        "supplier": 0.0,
+        "pengeluaran": 0.0,
+        "total_modal": 0.0,
+        "nett_laba": 0.0,
+        "nett_spooring": 0.0
+      }
+    }
+  ],
+  "master": {
+    "rows": 475,
+    "owners": {
+      "BIAN": 292,
+      "IBU": 147,
+      "NON": 20,
+      "POLOSAN": 1,
+      "NON VPT": 12,
+      "NON VAT": 2,
+      "Bian": 1
+    },
+    "tax": {
+      "1.0": 390,
+      "0.0": 84,
+      "1": 1
+    },
+    "negative_stock_rows": 110,
+    "duplicate_names": 5
+  },
+  "import_preview": {
+    "products_after_merge": 470,
+    "events": 13782,
+    "checks": 12,
+    "failed_checks": 0
+  },
+  "cached_errors": {
+    "counts": {},
+    "samples": []
+  }
+}

@@ -1,0 +1,7143 @@
+{
+  "summary": {
+    "rows": 445,
+    "negative": 0,
+    "duplicate_skus": [],
+    "matched": 157,
+    "ambiguous": 0,
+    "unmatched": 288,
+    "unmatched_examples": [
+      {
+        "row": 9,
+        "name": "Dunlop 175/70 13 SPtouring",
+        "sku": "B_007",
+        "stock": 5,
+        "selling_price": 590000,
+        "cost_price": 505000
+      },
+      {
+        "row": 15,
+        "name": "Dunlop 195/70 14 turing BE",
+        "sku": "B_013",
+        "stock": 8,
+        "selling_price": 675000,
+        "cost_price": 585000
+      },
+      {
+        "row": 18,
+        "name": "GT 165/13 m.m",
+        "sku": "B_017",
+        "stock": 0,
+        "selling_price": 645000,
+        "cost_price": 556800
+      },
+      {
+        "row": 19,
+        "name": "GT  175/13 m.m",
+        "sku": "B_018",
+        "stock": 0,
+        "selling_price": 700000,
+        "cost_price": 615300
+      },
+      {
+        "row": 20,
+        "name": "GT 185/14 m.m",
+        "sku": "B_019",
+        "stock": 6,
+        "selling_price": 800000,
+        "cost_price": 711000
+      },
+      {
+        "row": 23,
+        "name": "GT  175/65 14 champ ecotec",
+        "sku": "B_023",
+        "stock": 9,
+        "selling_price": 600000,
+        "cost_price": 512640
+      },
+      {
+        "row": 28,
+        "name": "GT 195/55 16 gtx pro2",
+        "sku": "B_031",
+        "stock": 4,
+        "selling_price": 820000,
+        "cost_price": 720000
+      },
+      {
+        "row": 29,
+        "name": "GT  185/55 16 gtx pro2",
+        "sku": "B_032",
+        "stock": 0,
+        "selling_price": 775000,
+        "cost_price": 672800
+      },
+      {
+        "row": 30,
+        "name": "GT  550 /13 8pr",
+        "sku": "B_033",
+        "stock": 7,
+        "selling_price": 560000,
+        "cost_price": 470000
+      },
+      {
+        "row": 37,
+        "name": "Brgstn 165/13 duravis",
+        "sku": "B_040",
+        "stock": 5,
+        "selling_price": 765000,
+        "cost_price": 675000
+      },
+      {
+        "row": 38,
+        "name": "Brgstn  175/13 duravis",
+        "sku": "B_041",
+        "stock": 2,
+        "selling_price": 800000,
+        "cost_price": 710000
+      },
+      {
+        "row": 39,
+        "name": "Brgstn 165/80 13 ecopia",
+        "sku": "B_043",
+        "stock": 1,
+        "selling_price": 640000,
+        "cost_price": 545000
+      },
+      {
+        "row": 40,
+        "name": "Brgstn 185/70 14 ecopia 150",
+        "sku": "B_045",
+        "stock": 7,
+        "selling_price": 725000,
+        "cost_price": 635000
+      },
+      {
+        "row": 41,
+        "name": "Brgstn 175/65 14 EP150",
+        "sku": "B_046",
+        "stock": 6,
+        "selling_price": 700000,
+        "cost_price": 615000
+      },
+      {
+        "row": 42,
+        "name": "Brgstn 185/65 15 ecovia",
+        "sku": "B_047",
+        "stock": 8,
+        "selling_price": 845000,
+        "cost_price": 755000
+      },
+      {
+        "row": 43,
+        "name": "Brgstn 185/80 14 tecno",
+        "sku": "B_049",
+        "stock": 2,
+        "selling_price": 770000,
+        "cost_price": 685000
+      },
+      {
+        "row": 44,
+        "name": "Brgstn 195/70 14 ecopia",
+        "sku": "B_050",
+        "stock": 6,
+        "selling_price": 850000,
+        "cost_price": 760000
+      },
+      {
+        "row": 45,
+        "name": "Brgstn 195/55 16 tecno sport",
+        "sku": "B_051",
+        "stock": 2,
+        "selling_price": 940000,
+        "cost_price": 845000
+      },
+      {
+        "row": 46,
+        "name": "Brgstn 205/65 15 ep300",
+        "sku": "B_052",
+        "stock": 3,
+        "selling_price": 1030000,
+        "cost_price": 930000
+      },
+      {
+        "row": 47,
+        "name": "Brgstn 195/60 16 ecopia",
+        "sku": "B_053",
+        "stock": 0,
+        "selling_price": 1085000,
+        "cost_price": 980542
+      }
+    ],
+    "ambiguous_examples": []
+  },
+  "rows": [
+    {
+      "row": 3,
+      "name": "GT 175/70 13 Ecotec",
+      "sku": "B_0460",
+      "stock": 0,
+      "selling_price": 545000,
+      "cost_price": 458600
+    },
+    {
+      "row": 4,
+      "name": "dunlop 165/13 lt5",
+      "sku": "B_DLT1",
+      "stock": 18,
+      "selling_price": 715000,
+      "cost_price": 628000
+    },
+    {
+      "row": 5,
+      "name": "Dunlop 185/14 LT5",
+      "sku": "B_003",
+      "stock": 24,
+      "selling_price": 870000,
+      "cost_price": 782000
+    },
+    {
+      "row": 6,
+      "name": "Dunlop 185/70 14 SP10",
+      "sku": "B_004",
+      "stock": 0,
+      "selling_price": 690000,
+      "cost_price": 605000
+    },
+    {
+      "row": 7,
+      "name": "dunlop 165/65 13 sp touring",
+      "sku": "B_D1301",
+      "stock": 0,
+      "selling_price": 540000,
+      "cost_price": 455000
+    },
+    {
+      "row": 8,
+      "name": "dunlop 165/80 13 himex",
+      "sku": "B_D1302",
+      "stock": 0,
+      "selling_price": 570000,
+      "cost_price": 485000
+    },
+    {
+      "row": 9,
+      "name": "Dunlop 175/70 13 SPtouring",
+      "sku": "B_007",
+      "stock": 5,
+      "selling_price": 590000,
+      "cost_price": 505000
+    },
+    {
+      "row": 10,
+      "name": "Dunlop 175/65 14 EC300",
+      "sku": "B_008",
+      "stock": 7,
+      "selling_price": 660000,
+      "cost_price": 570000
+    },
+    {
+      "row": 11,
+      "name": "dunlop 175/65 14 touring",
+      "sku": "B_009",
+      "stock": 0,
+      "selling_price": 620000,
+      "cost_price": 525000
+    },
+    {
+      "row": 12,
+      "name": "Dunlop 185/65 15 EC300",
+      "sku": "B_010",
+      "stock": 12,
+      "selling_price": 810000,
+      "cost_price": 712000
+    },
+    {
+      "row": 13,
+      "name": "Dunlop 205/65 16 ec300",
+      "sku": "B_011",
+      "stock": 2,
+      "selling_price": 910000,
+      "cost_price": 809000
+    },
+    {
+      "row": 14,
+      "name": "dunlop 185/60 15 ec300",
+      "sku": "B_012",
+      "stock": 0,
+      "selling_price": 860000,
+      "cost_price": 762500
+    },
+    {
+      "row": 15,
+      "name": "Dunlop 195/70 14 turing BE",
+      "sku": "B_013",
+      "stock": 8,
+      "selling_price": 675000,
+      "cost_price": 585000
+    },
+    {
+      "row": 16,
+      "name": "Dunlop 205/65 15 ec300",
+      "sku": "B_014",
+      "stock": 6,
+      "selling_price": 910000,
+      "cost_price": 807000
+    },
+    {
+      "row": 17,
+      "name": "DUNLOP 750/16 12pr",
+      "sku": "B_D16750",
+      "stock": 0,
+      "selling_price": 1550000,
+      "cost_price": 1447000
+    },
+    {
+      "row": 18,
+      "name": "GT 165/13 m.m",
+      "sku": "B_017",
+      "stock": 0,
+      "selling_price": 645000,
+      "cost_price": 556800
+    },
+    {
+      "row": 19,
+      "name": "GT  175/13 m.m",
+      "sku": "B_018",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 615300
+    },
+    {
+      "row": 20,
+      "name": "GT 185/14 m.m",
+      "sku": "B_019",
+      "stock": 6,
+      "selling_price": 800000,
+      "cost_price": 711000
+    },
+    {
+      "row": 21,
+      "name": "GT  165/65 13 ecotec",
+      "sku": "B_020",
+      "stock": 0,
+      "selling_price": 550000,
+      "cost_price": 412000
+    },
+    {
+      "row": 22,
+      "name": "GT 165/80 13 ecotec",
+      "sku": "B_021",
+      "stock": 0,
+      "selling_price": 580000,
+      "cost_price": 488320
+    },
+    {
+      "row": 23,
+      "name": "GT  175/65 14 champ ecotec",
+      "sku": "B_023",
+      "stock": 9,
+      "selling_price": 600000,
+      "cost_price": 512640
+    },
+    {
+      "row": 24,
+      "name": "GT 185/65 15 ecotec",
+      "sku": "B_024",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 609800
+    },
+    {
+      "row": 25,
+      "name": "GT  195/65 15 ecotec",
+      "sku": "B_026",
+      "stock": 6,
+      "selling_price": 720000,
+      "cost_price": 628100
+    },
+    {
+      "row": 26,
+      "name": "GT  195/70 14 ecotec",
+      "sku": "B_027",
+      "stock": 6,
+      "selling_price": 650000,
+      "cost_price": 560700
+    },
+    {
+      "row": 27,
+      "name": "GT 185/70 14 bxt plus",
+      "sku": "B_030",
+      "stock": 0,
+      "selling_price": 600000,
+      "cost_price": 507000
+    },
+    {
+      "row": 28,
+      "name": "GT 195/55 16 gtx pro2",
+      "sku": "B_031",
+      "stock": 4,
+      "selling_price": 820000,
+      "cost_price": 720000
+    },
+    {
+      "row": 29,
+      "name": "GT  185/55 16 gtx pro2",
+      "sku": "B_032",
+      "stock": 0,
+      "selling_price": 775000,
+      "cost_price": 672800
+    },
+    {
+      "row": 30,
+      "name": "GT  550 /13 8pr",
+      "sku": "B_033",
+      "stock": 7,
+      "selling_price": 560000,
+      "cost_price": 470000
+    },
+    {
+      "row": 31,
+      "name": "GT  500/12 8pr",
+      "sku": "B_034",
+      "stock": 1,
+      "selling_price": 415000,
+      "cost_price": 327000
+    },
+    {
+      "row": 32,
+      "name": "GT  640/13 8pr",
+      "sku": "B_035",
+      "stock": 1,
+      "selling_price": 590000,
+      "cost_price": 495000
+    },
+    {
+      "row": 33,
+      "name": "GT  600/13 8pr",
+      "sku": "B_036",
+      "stock": 5,
+      "selling_price": 625000,
+      "cost_price": 520000
+    },
+    {
+      "row": 34,
+      "name": "GT 700/14 8pr",
+      "sku": "B_037",
+      "stock": 0,
+      "selling_price": 710000,
+      "cost_price": 620000
+    },
+    {
+      "row": 35,
+      "name": "GT  750/15 12PR",
+      "sku": "B_038",
+      "stock": 1,
+      "selling_price": 1320000,
+      "cost_price": 1210000
+    },
+    {
+      "row": 36,
+      "name": "GT  750/16 happy duty",
+      "sku": "B_039",
+      "stock": 1,
+      "selling_price": 1660000,
+      "cost_price": 1560000
+    },
+    {
+      "row": 37,
+      "name": "Brgstn 165/13 duravis",
+      "sku": "B_040",
+      "stock": 5,
+      "selling_price": 765000,
+      "cost_price": 675000
+    },
+    {
+      "row": 38,
+      "name": "Brgstn  175/13 duravis",
+      "sku": "B_041",
+      "stock": 2,
+      "selling_price": 800000,
+      "cost_price": 710000
+    },
+    {
+      "row": 39,
+      "name": "Brgstn 165/80 13 ecopia",
+      "sku": "B_043",
+      "stock": 1,
+      "selling_price": 640000,
+      "cost_price": 545000
+    },
+    {
+      "row": 40,
+      "name": "Brgstn 185/70 14 ecopia 150",
+      "sku": "B_045",
+      "stock": 7,
+      "selling_price": 725000,
+      "cost_price": 635000
+    },
+    {
+      "row": 41,
+      "name": "Brgstn 175/65 14 EP150",
+      "sku": "B_046",
+      "stock": 6,
+      "selling_price": 700000,
+      "cost_price": 615000
+    },
+    {
+      "row": 42,
+      "name": "Brgstn 185/65 15 ecovia",
+      "sku": "B_047",
+      "stock": 8,
+      "selling_price": 845000,
+      "cost_price": 755000
+    },
+    {
+      "row": 43,
+      "name": "Brgstn 185/80 14 tecno",
+      "sku": "B_049",
+      "stock": 2,
+      "selling_price": 770000,
+      "cost_price": 685000
+    },
+    {
+      "row": 44,
+      "name": "Brgstn 195/70 14 ecopia",
+      "sku": "B_050",
+      "stock": 6,
+      "selling_price": 850000,
+      "cost_price": 760000
+    },
+    {
+      "row": 45,
+      "name": "Brgstn 195/55 16 tecno sport",
+      "sku": "B_051",
+      "stock": 2,
+      "selling_price": 940000,
+      "cost_price": 845000
+    },
+    {
+      "row": 46,
+      "name": "Brgstn 205/65 15 ep300",
+      "sku": "B_052",
+      "stock": 3,
+      "selling_price": 1030000,
+      "cost_price": 930000
+    },
+    {
+      "row": 47,
+      "name": "Brgstn 195/60 16 ecopia",
+      "sku": "B_053",
+      "stock": 0,
+      "selling_price": 1085000,
+      "cost_price": 980542
+    },
+    {
+      "row": 48,
+      "name": "Brgstn 185/55 15 tecno",
+      "sku": "B_054",
+      "stock": 2,
+      "selling_price": 800000,
+      "cost_price": 705000
+    },
+    {
+      "row": 49,
+      "name": "Brgstn 195/55 15 tecno",
+      "sku": "B_055",
+      "stock": 0,
+      "selling_price": 935000,
+      "cost_price": 834000
+    },
+    {
+      "row": 50,
+      "name": "Brgstn 185/60 15 ecopia",
+      "sku": "B_056",
+      "stock": 1,
+      "selling_price": 965000,
+      "cost_price": 865000
+    },
+    {
+      "row": 51,
+      "name": "Brgstn 750/16 MRN",
+      "sku": "B_058",
+      "stock": 9,
+      "selling_price": 1670000,
+      "cost_price": 1565000
+    },
+    {
+      "row": 52,
+      "name": "G.year 165/80 13 dp",
+      "sku": "B_059",
+      "stock": 0,
+      "selling_price": 580000,
+      "cost_price": 487500
+    },
+    {
+      "row": 53,
+      "name": "G.year 175/65 14 adp2",
+      "sku": "B_060",
+      "stock": 0,
+      "selling_price": 565000,
+      "cost_price": 475000
+    },
+    {
+      "row": 54,
+      "name": "G. year 185/65 15 adp2",
+      "sku": "B_061",
+      "stock": 0,
+      "selling_price": 635000,
+      "cost_price": 535000
+    },
+    {
+      "row": 55,
+      "name": "G.year 185/60 15 adp2",
+      "sku": "B_062",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 700000
+    },
+    {
+      "row": 56,
+      "name": "G.year 185/55 15 atm1",
+      "sku": "B_063",
+      "stock": 1,
+      "selling_price": 650000,
+      "cost_price": 550000
+    },
+    {
+      "row": 57,
+      "name": "G.year 205/65 15 adp2",
+      "sku": "B_064",
+      "stock": 0,
+      "selling_price": 725000,
+      "cost_price": 625000
+    },
+    {
+      "row": 58,
+      "name": "G.year 750/16 S501",
+      "sku": "B_066",
+      "stock": 0,
+      "selling_price": 2120000,
+      "cost_price": 2020000
+    },
+    {
+      "row": 59,
+      "name": "aspira 750/16 Kasar",
+      "sku": "B_067",
+      "stock": 0,
+      "selling_price": 1825000,
+      "cost_price": 1723600
+    },
+    {
+      "row": 60,
+      "name": "aspira 750/16 halus",
+      "sku": "B_068",
+      "stock": 0,
+      "selling_price": 1710000,
+      "cost_price": 1607040
+    },
+    {
+      "row": 61,
+      "name": "Advance 750/16 GL671A",
+      "sku": "B_070",
+      "stock": 0,
+      "selling_price": 1985000,
+      "cost_price": 1885000
+    },
+    {
+      "row": 62,
+      "name": "teckhing 750/16 lemes",
+      "sku": "B_071",
+      "stock": 1,
+      "selling_price": 2000000,
+      "cost_price": 1900000
+    },
+    {
+      "row": 63,
+      "name": "duratun 750/16 14pr",
+      "sku": "B_072",
+      "stock": 0,
+      "selling_price": 1800000,
+      "cost_price": 1670000
+    },
+    {
+      "row": 64,
+      "name": "forceum 175/13 8pr",
+      "sku": "B_075",
+      "stock": 0,
+      "selling_price": 620000,
+      "cost_price": 530000
+    },
+    {
+      "row": 65,
+      "name": "BD 12 aspira",
+      "sku": "B_076",
+      "stock": 0,
+      "selling_price": 85000,
+      "cost_price": 51000
+    },
+    {
+      "row": 66,
+      "name": "BD 13 aspira",
+      "sku": "B_077",
+      "stock": 0,
+      "selling_price": 95000,
+      "cost_price": 63000
+    },
+    {
+      "row": 67,
+      "name": "BD 13 NYB",
+      "sku": "B_078",
+      "stock": 0,
+      "selling_price": 80000,
+      "cost_price": 50000
+    },
+    {
+      "row": 68,
+      "name": "BD 14 NYB",
+      "sku": "B_079",
+      "stock": 9,
+      "selling_price": 110000,
+      "cost_price": 60500
+    },
+    {
+      "row": 69,
+      "name": "BD 8.25 bestone",
+      "sku": "B_080",
+      "stock": 0,
+      "selling_price": 190000,
+      "cost_price": 160000
+    },
+    {
+      "row": 70,
+      "name": "BD 13 eversave",
+      "sku": "B_081",
+      "stock": 0,
+      "selling_price": 105000,
+      "cost_price": 72000
+    },
+    {
+      "row": 71,
+      "name": "BD 13 GT",
+      "sku": "B_084",
+      "stock": 1,
+      "selling_price": 135000,
+      "cost_price": 102000
+    },
+    {
+      "row": 72,
+      "name": "BD 650/700 15 GT",
+      "sku": "B_086",
+      "stock": 0,
+      "selling_price": 200000,
+      "cost_price": 161840
+    },
+    {
+      "row": 73,
+      "name": "BD 750/16 16 GT",
+      "sku": "B_087",
+      "stock": 0,
+      "selling_price": 230000,
+      "cost_price": 182200
+    },
+    {
+      "row": 74,
+      "name": "BD 16 brigestone",
+      "sku": "B_089",
+      "stock": 20,
+      "selling_price": 280000,
+      "cost_price": 245000
+    },
+    {
+      "row": 75,
+      "name": "FLAP 16 GT",
+      "sku": "B_090",
+      "stock": 0,
+      "selling_price": 90000,
+      "cost_price": 43500
+    },
+    {
+      "row": 76,
+      "name": "FLAP 15 MRV",
+      "sku": "B_091",
+      "stock": 0,
+      "selling_price": 75000,
+      "cost_price": 55000
+    },
+    {
+      "row": 77,
+      "name": "FLAP 16 MRV",
+      "sku": "B_092",
+      "stock": 0,
+      "selling_price": 80000,
+      "cost_price": 60000
+    },
+    {
+      "row": 78,
+      "name": "Dunlop 175.13 LT5 25",
+      "sku": "B_094",
+      "stock": 47,
+      "selling_price": 740000,
+      "cost_price": 655000
+    },
+    {
+      "row": 79,
+      "name": "Brgstn 235 75 15 dueler H/T 689",
+      "sku": "B_095",
+      "stock": 4,
+      "selling_price": 1280000,
+      "cost_price": 1175000
+    },
+    {
+      "row": 80,
+      "name": "Brgstn 185 70 14 tecno",
+      "sku": "B_096",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 600000
+    },
+    {
+      "row": 81,
+      "name": "Brgstn 205 65 16 ecopia",
+      "sku": "B_097",
+      "stock": 2,
+      "selling_price": 1050000,
+      "cost_price": 943430
+    },
+    {
+      "row": 82,
+      "name": "GT 175 70 12 bxt plus",
+      "sku": "B_099",
+      "stock": 0,
+      "selling_price": 500000,
+      "cost_price": 405000
+    },
+    {
+      "row": 83,
+      "name": "GT 195 50 16 gtx pro",
+      "sku": "B_0100",
+      "stock": 0,
+      "selling_price": 730000,
+      "cost_price": 630000
+    },
+    {
+      "row": 84,
+      "name": "G.year 155 80 12 dp",
+      "sku": "B_0101",
+      "stock": 0,
+      "selling_price": 585000,
+      "cost_price": 473000
+    },
+    {
+      "row": 85,
+      "name": "G.year 185 70 14 adp2",
+      "sku": "B_0102",
+      "stock": 0,
+      "selling_price": 600000,
+      "cost_price": 510000
+    },
+    {
+      "row": 86,
+      "name": "G.year 175 13 8pr wdt",
+      "sku": "B_0103",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 635000
+    },
+    {
+      "row": 87,
+      "name": "G.year 195 65 15 adp2",
+      "sku": "B_0104",
+      "stock": 0,
+      "selling_price": 685000,
+      "cost_price": 585000
+    },
+    {
+      "row": 88,
+      "name": "G.year 205 55 16 atm gy",
+      "sku": "B_0105",
+      "stock": 0,
+      "selling_price": 775000,
+      "cost_price": 675000
+    },
+    {
+      "row": 89,
+      "name": "Sayap",
+      "sku": "S_003",
+      "stock": 10,
+      "selling_price": 240000,
+      "cost_price": 160000
+    },
+    {
+      "row": 90,
+      "name": "Dunlop 235 60 16 ST20",
+      "sku": "B_D162360",
+      "stock": 2,
+      "selling_price": 1330000,
+      "cost_price": 1230000
+    },
+    {
+      "row": 91,
+      "name": "GT 195 55 15 gtx pro",
+      "sku": "B_0110",
+      "stock": 0,
+      "selling_price": 740000,
+      "cost_price": 650000
+    },
+    {
+      "row": 92,
+      "name": "Dunlop 185 60 15 touring",
+      "sku": "B_0112",
+      "stock": 1,
+      "selling_price": 710000,
+      "cost_price": 620000
+    },
+    {
+      "row": 93,
+      "name": "GT 195 60 15 ecotec",
+      "sku": "B_0114",
+      "stock": 0,
+      "selling_price": 680000,
+      "cost_price": 589700
+    },
+    {
+      "row": 94,
+      "name": "GT 205 70 15 savero suv",
+      "sku": "B_0115",
+      "stock": 0,
+      "selling_price": 910000,
+      "cost_price": 790700
+    },
+    {
+      "row": 95,
+      "name": "FLAP 900.20 GT",
+      "sku": "B_0117",
+      "stock": 1,
+      "selling_price": 120000,
+      "cost_price": 91500
+    },
+    {
+      "row": 96,
+      "name": "Bd 900 20 GT",
+      "sku": "B_0118",
+      "stock": 6,
+      "selling_price": 380000,
+      "cost_price": 348000
+    },
+    {
+      "row": 97,
+      "name": "GiTi 750 16 GAZ 891",
+      "sku": "B_0120",
+      "stock": 1,
+      "selling_price": 2180000,
+      "cost_price": 2080000
+    },
+    {
+      "row": 98,
+      "name": "GiTi 750 16 GAR 890",
+      "sku": "B_0121",
+      "stock": 1,
+      "selling_price": 2130000,
+      "cost_price": 2030000
+    },
+    {
+      "row": 99,
+      "name": "GT 165 70 13 eco",
+      "sku": "B_0123",
+      "stock": 0,
+      "selling_price": 500000,
+      "cost_price": 400000
+    },
+    {
+      "row": 100,
+      "name": "Brgstn 195 70 14 tecno",
+      "sku": "B_0125",
+      "stock": 0,
+      "selling_price": 730000,
+      "cost_price": 630000
+    },
+    {
+      "row": 101,
+      "name": "Dunlop 185/70 14 SPRIL Z",
+      "sku": "B_0127",
+      "stock": 0,
+      "selling_price": 650000,
+      "cost_price": 554000
+    },
+    {
+      "row": 102,
+      "name": "Dunlop 165/80 13 SP R1 26",
+      "sku": "B_D1303",
+      "stock": 0,
+      "selling_price": 560000,
+      "cost_price": 465000
+    },
+    {
+      "row": 103,
+      "name": "Brgstn 195/65 15 ecopia",
+      "sku": "B_0129",
+      "stock": 8,
+      "selling_price": 940000,
+      "cost_price": 855000
+    },
+    {
+      "row": 104,
+      "name": "Brgstn 215/60 17 D687",
+      "sku": "B_0130",
+      "stock": 0,
+      "selling_price": 1270000,
+      "cost_price": 1142982
+    },
+    {
+      "row": 105,
+      "name": "Brgstn 195/60 15 techno",
+      "sku": "B_0133",
+      "stock": 1,
+      "selling_price": 810000,
+      "cost_price": 715000
+    },
+    {
+      "row": 106,
+      "name": "Brgstn 195/50 16 techno sport",
+      "sku": "B_0134",
+      "stock": 0,
+      "selling_price": 885000,
+      "cost_price": 784000
+    },
+    {
+      "row": 107,
+      "name": "Brgstn 205/45 17 techno sport",
+      "sku": "B_0135",
+      "stock": 2,
+      "selling_price": 1000000,
+      "cost_price": 890000
+    },
+    {
+      "row": 108,
+      "name": "Brgstn 185/65 16 techno",
+      "sku": "B_0137",
+      "stock": 0,
+      "selling_price": 765000,
+      "cost_price": 665000
+    },
+    {
+      "row": 109,
+      "name": "Brgstn 225/65 17 Dueler470",
+      "sku": "B_0139",
+      "stock": 1,
+      "selling_price": 1320000,
+      "cost_price": 1198000
+    },
+    {
+      "row": 110,
+      "name": "GT 185/55 15 Champ btx",
+      "sku": "B_0140",
+      "stock": 0,
+      "selling_price": 675000,
+      "cost_price": 575000
+    },
+    {
+      "row": 111,
+      "name": "GT 185/55 16 ecotec",
+      "sku": "B_0142",
+      "stock": 0,
+      "selling_price": 770000,
+      "cost_price": 669000
+    },
+    {
+      "row": 112,
+      "name": "GT 185/65 15 Champ Gtx",
+      "sku": "B_0143",
+      "stock": 0,
+      "selling_price": 650000,
+      "cost_price": 550000
+    },
+    {
+      "row": 113,
+      "name": "GT 185/70 14  ecotec",
+      "sku": "B_0144",
+      "stock": 7,
+      "selling_price": 660000,
+      "cost_price": 565760
+    },
+    {
+      "row": 114,
+      "name": "GT 185/80 14 ecotec",
+      "sku": "B_0145",
+      "stock": 2,
+      "selling_price": 665000,
+      "cost_price": 575200
+    },
+    {
+      "row": 115,
+      "name": "GT 195/60 16 ecotec",
+      "sku": "B_0147",
+      "stock": 0,
+      "selling_price": 840000,
+      "cost_price": 739000
+    },
+    {
+      "row": 116,
+      "name": "GT 205/65 15 Champ ecotec",
+      "sku": "B_0148",
+      "stock": 0,
+      "selling_price": 770000,
+      "cost_price": 666540
+    },
+    {
+      "row": 117,
+      "name": "GT 205/65 16 ecotec",
+      "sku": "B_0149",
+      "stock": 4,
+      "selling_price": 800000,
+      "cost_price": 694300
+    },
+    {
+      "row": 118,
+      "name": "Bd 900*20 bs",
+      "sku": "B_0154",
+      "stock": 0,
+      "selling_price": 525000,
+      "cost_price": 436500
+    },
+    {
+      "row": 119,
+      "name": "GT 1000x20 16PR RDF",
+      "sku": "B_0155",
+      "stock": 0,
+      "selling_price": 3390000,
+      "cost_price": 3190000
+    },
+    {
+      "row": 120,
+      "name": "Dunlop 265/60 18 grandtrek D1E",
+      "sku": "B_D1826560",
+      "stock": 0,
+      "selling_price": 1875000,
+      "cost_price": 1762000
+    },
+    {
+      "row": 121,
+      "name": "Brgstn  225/65 17 dueler HT 470",
+      "sku": "B_0159",
+      "stock": 0,
+      "selling_price": 1230000,
+      "cost_price": 1131000
+    },
+    {
+      "row": 122,
+      "name": "Dunlop 215/45 17 direza",
+      "sku": "B_0160",
+      "stock": 1,
+      "selling_price": 950000,
+      "cost_price": 844000
+    },
+    {
+      "row": 123,
+      "name": "GT 185 55 15 GTX Pro",
+      "sku": "B_0162",
+      "stock": 2,
+      "selling_price": 735000,
+      "cost_price": 640700
+    },
+    {
+      "row": 124,
+      "name": "Dunlop 185 70 14 enasev",
+      "sku": "B_0164",
+      "stock": 16,
+      "selling_price": 715000,
+      "cost_price": 623000
+    },
+    {
+      "row": 125,
+      "name": "Brgstn 185/70 14 b250",
+      "sku": "B_0165",
+      "stock": 0,
+      "selling_price": 1025000,
+      "cost_price": 905000
+    },
+    {
+      "row": 126,
+      "name": "GT 205/45 17 Gtx pro2",
+      "sku": "B_0166",
+      "stock": 5,
+      "selling_price": 890000,
+      "cost_price": 787500
+    },
+    {
+      "row": 127,
+      "name": "GT 235/75 15 SAV AT+",
+      "sku": "B_0167",
+      "stock": 0,
+      "selling_price": 1000000,
+      "cost_price": 887900
+    },
+    {
+      "row": 128,
+      "name": "GT 205/65 16 chp luxe",
+      "sku": "B_0168",
+      "stock": 0,
+      "selling_price": 810000,
+      "cost_price": 690000
+    },
+    {
+      "row": 129,
+      "name": "GT 185/60 14 ECOTEC",
+      "sku": "B_0169",
+      "stock": 0,
+      "selling_price": 600000,
+      "cost_price": 515000
+    },
+    {
+      "row": 130,
+      "name": "Brgstn 185 55 16 tecno sport",
+      "sku": "B_0170",
+      "stock": 0,
+      "selling_price": 875000,
+      "cost_price": 775000
+    },
+    {
+      "row": 131,
+      "name": "brgstn 900 20 emsa",
+      "sku": "B_0171",
+      "stock": 0,
+      "selling_price": 2800000,
+      "cost_price": 2665000
+    },
+    {
+      "row": 132,
+      "name": "brgstn 175/70 13 ecopia",
+      "sku": "B_0172",
+      "stock": 0,
+      "selling_price": 750000,
+      "cost_price": 667000
+    },
+    {
+      "row": 133,
+      "name": "Dunlop 215/50 17 dz102",
+      "sku": "B_D1721550D",
+      "stock": 1,
+      "selling_price": 1025000,
+      "cost_price": 925000
+    },
+    {
+      "row": 134,
+      "name": "Dunlop 215/55 17 sp sportrmaxx D1E",
+      "sku": "B_D1721555",
+      "stock": 0,
+      "selling_price": 1400000,
+      "cost_price": 1292000
+    },
+    {
+      "row": 135,
+      "name": "BD 15 truckoor",
+      "sku": "B_0176",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 120000
+    },
+    {
+      "row": 136,
+      "name": "BD 16 Truckoor",
+      "sku": "B_0177",
+      "stock": 0,
+      "selling_price": 180000,
+      "cost_price": 150000
+    },
+    {
+      "row": 137,
+      "name": "brgstn 205/55 16 ecopia",
+      "sku": "B_0178",
+      "stock": 0,
+      "selling_price": 1250000,
+      "cost_price": 1124000
+    },
+    {
+      "row": 138,
+      "name": "GT 195/14 8PR m.m",
+      "sku": "B_0179",
+      "stock": 0,
+      "selling_price": 850000,
+      "cost_price": 742000
+    },
+    {
+      "row": 139,
+      "name": "GT 900.20 14PR MILER 88N RDF",
+      "sku": "B_0180",
+      "stock": 0,
+      "selling_price": 2750000,
+      "cost_price": 2575000
+    },
+    {
+      "row": 140,
+      "name": "Acelera 175/13",
+      "sku": "B_0182",
+      "stock": 0,
+      "selling_price": 615000,
+      "cost_price": 530000
+    },
+    {
+      "row": 141,
+      "name": "Dunlop 195/65 15 EC300",
+      "sku": "B_0183",
+      "stock": 8,
+      "selling_price": 840000,
+      "cost_price": 742000
+    },
+    {
+      "row": 142,
+      "name": "Bridgestone 1000*20",
+      "sku": "B_0185",
+      "stock": 0,
+      "selling_price": 3560000,
+      "cost_price": 3365000
+    },
+    {
+      "row": 143,
+      "name": "FLAP 1000*20 gt",
+      "sku": "B_0186",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 100500
+    },
+    {
+      "row": 144,
+      "name": "GT 265 65 17 SAV AT+",
+      "sku": "B_0187",
+      "stock": 0,
+      "selling_price": 1250000,
+      "cost_price": 1115000
+    },
+    {
+      "row": 145,
+      "name": "FLAP 16 Bridgestone",
+      "sku": "B_0188",
+      "stock": 1,
+      "selling_price": 160000,
+      "cost_price": 140000
+    },
+    {
+      "row": 146,
+      "name": "bd 1000*20",
+      "sku": "B_0190",
+      "stock": 0,
+      "selling_price": 0,
+      "cost_price": 0
+    },
+    {
+      "row": 147,
+      "name": "westlake 750/16 14 CR",
+      "sku": "B_0191",
+      "stock": 0,
+      "selling_price": 1900000,
+      "cost_price": 1800000
+    },
+    {
+      "row": 148,
+      "name": "FLAP 1000 X 20 Bridgestone",
+      "sku": "B_0192",
+      "stock": 0,
+      "selling_price": 300000,
+      "cost_price": 253000
+    },
+    {
+      "row": 149,
+      "name": "Dunlop 205 70 15 LM705",
+      "sku": "B_0193",
+      "stock": 0,
+      "selling_price": 880000,
+      "cost_price": 778000
+    },
+    {
+      "row": 150,
+      "name": "westlake 11/22,5",
+      "sku": "B_0194",
+      "stock": 0,
+      "selling_price": 3750000,
+      "cost_price": 3500000
+    },
+    {
+      "row": 151,
+      "name": "brgstn 235/60 16  D687",
+      "sku": "B_0195",
+      "stock": 0,
+      "selling_price": 1560000,
+      "cost_price": 1460000
+    },
+    {
+      "row": 152,
+      "name": "BD 14 GT",
+      "sku": "B_0196",
+      "stock": 3,
+      "selling_price": 160000,
+      "cost_price": 125120
+    },
+    {
+      "row": 153,
+      "name": "GT 235/75 16 SAV M/T",
+      "sku": "B_0197",
+      "stock": 0,
+      "selling_price": 1485000,
+      "cost_price": 1373500
+    },
+    {
+      "row": 154,
+      "name": "GT 225/75 16 MAXMILLER",
+      "sku": "B_0198",
+      "stock": 0,
+      "selling_price": 1325000,
+      "cost_price": 1225000
+    },
+    {
+      "row": 155,
+      "name": "GT 185/60 15 gtx",
+      "sku": "B_0199",
+      "stock": 6,
+      "selling_price": 680000,
+      "cost_price": 587200
+    },
+    {
+      "row": 156,
+      "name": "Dunlop 185/80 14 sp touring",
+      "sku": "B_0201",
+      "stock": 3,
+      "selling_price": 675000,
+      "cost_price": 585000
+    },
+    {
+      "row": 157,
+      "name": "Brgstn 175/65 14 tecno",
+      "sku": "B_0203",
+      "stock": 0,
+      "selling_price": 670000,
+      "cost_price": 571000
+    },
+    {
+      "row": 158,
+      "name": "Dunlop 185/55 15 ec 300",
+      "sku": "B_0204",
+      "stock": 4,
+      "selling_price": 830000,
+      "cost_price": 729000
+    },
+    {
+      "row": 159,
+      "name": "brgstn 205/55 16 tecno sport",
+      "sku": "B_0206",
+      "stock": 0,
+      "selling_price": 980000,
+      "cost_price": 889370
+    },
+    {
+      "row": 160,
+      "name": "g.year 195/70 14 adp2",
+      "sku": "B_0208",
+      "stock": 0,
+      "selling_price": 685000,
+      "cost_price": 595000
+    },
+    {
+      "row": 161,
+      "name": "Advance 750 16 k.tahu GL909A",
+      "sku": "B_0209",
+      "stock": 6,
+      "selling_price": 2260000,
+      "cost_price": 2160000
+    },
+    {
+      "row": 162,
+      "name": "GT 235/60 16 Savero SUV",
+      "sku": "B_0211",
+      "stock": 0,
+      "selling_price": 965000,
+      "cost_price": 861200
+    },
+    {
+      "row": 163,
+      "name": "accelera 195 15",
+      "sku": "B_0212",
+      "stock": 3,
+      "selling_price": 820000,
+      "cost_price": 730000
+    },
+    {
+      "row": 164,
+      "name": "accelera 175/65 14",
+      "sku": "B_0213",
+      "stock": 0,
+      "selling_price": 525000,
+      "cost_price": 435000
+    },
+    {
+      "row": 165,
+      "name": "accelera 185/70 14",
+      "sku": "B_0214",
+      "stock": 0,
+      "selling_price": 570000,
+      "cost_price": 475000
+    },
+    {
+      "row": 166,
+      "name": "forceum 185/70 14",
+      "sku": "B_0215",
+      "stock": 0,
+      "selling_price": 550000,
+      "cost_price": 451000
+    },
+    {
+      "row": 167,
+      "name": "Dunlop 215/65 R 16 ST20",
+      "sku": "B_D1621565",
+      "stock": 2,
+      "selling_price": 1100000,
+      "cost_price": 993000
+    },
+    {
+      "row": 168,
+      "name": "Flap 15 Brgstone",
+      "sku": "B_0218",
+      "stock": 0,
+      "selling_price": 140000,
+      "cost_price": 110000
+    },
+    {
+      "row": 169,
+      "name": "MRF 750/16",
+      "sku": "B_0219",
+      "stock": 0,
+      "selling_price": 2085000,
+      "cost_price": 1983570
+    },
+    {
+      "row": 170,
+      "name": "BD 15 GT pentil pendek",
+      "sku": "B_0220",
+      "stock": 0,
+      "selling_price": 190000,
+      "cost_price": 160000
+    },
+    {
+      "row": 171,
+      "name": "Brgstn 215/70 15 D689",
+      "sku": "B_0221",
+      "stock": 0,
+      "selling_price": 1200000,
+      "cost_price": 1085000
+    },
+    {
+      "row": 172,
+      "name": "Brgstn 185 80 14 ecopia",
+      "sku": "B_0222",
+      "stock": 0,
+      "selling_price": 785000,
+      "cost_price": 685000
+    },
+    {
+      "row": 173,
+      "name": "Flap 15 truckor",
+      "sku": "B_0223",
+      "stock": 1,
+      "selling_price": 70000,
+      "cost_price": 37000
+    },
+    {
+      "row": 174,
+      "name": "Flap 16 Truckor",
+      "sku": "B_0224",
+      "stock": 0,
+      "selling_price": 65000,
+      "cost_price": 40500
+    },
+    {
+      "row": 175,
+      "name": "Hankook 175/13",
+      "sku": "B_0226",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 615000
+    },
+    {
+      "row": 176,
+      "name": "Hankook 185/14",
+      "sku": "B_0227",
+      "stock": 0,
+      "selling_price": 780000,
+      "cost_price": 690000
+    },
+    {
+      "row": 177,
+      "name": "Hankook 185/70 14",
+      "sku": "B_0228",
+      "stock": 0,
+      "selling_price": 600000,
+      "cost_price": 517000
+    },
+    {
+      "row": 178,
+      "name": "BD Asprira 16",
+      "sku": "B_0229",
+      "stock": 15,
+      "selling_price": 180000,
+      "cost_price": 141000
+    },
+    {
+      "row": 179,
+      "name": "Dunlop 215 60 17 ec300",
+      "sku": "B_0230",
+      "stock": 2,
+      "selling_price": 1050000,
+      "cost_price": 950000
+    },
+    {
+      "row": 180,
+      "name": "Advance 750/15 GL279A",
+      "sku": "B_0231",
+      "stock": 0,
+      "selling_price": 1865000,
+      "cost_price": 1765000
+    },
+    {
+      "row": 181,
+      "name": "BD 16 NYB",
+      "sku": "B_0232",
+      "stock": 0,
+      "selling_price": 180000,
+      "cost_price": 140000
+    },
+    {
+      "row": 182,
+      "name": "Flap 16 NYB",
+      "sku": "B_0233",
+      "stock": 0,
+      "selling_price": 75000,
+      "cost_price": 45000
+    },
+    {
+      "row": 183,
+      "name": "BD 15 NYB",
+      "sku": "B_0234",
+      "stock": 5,
+      "selling_price": 150000,
+      "cost_price": 117000
+    },
+    {
+      "row": 184,
+      "name": "Flap 15 Cleon",
+      "sku": "B_0235",
+      "stock": 0,
+      "selling_price": 65000,
+      "cost_price": 50000
+    },
+    {
+      "row": 185,
+      "name": "dunlop 205 60 16 Touring",
+      "sku": "B_0236",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 698000
+    },
+    {
+      "row": 186,
+      "name": "Tiron 750 15 HS317/6",
+      "sku": "B_0237",
+      "stock": 0,
+      "selling_price": 1580000,
+      "cost_price": 1475000
+    },
+    {
+      "row": 187,
+      "name": "Gt 185 65 15 Bxt Pro",
+      "sku": "B_0238",
+      "stock": 0,
+      "selling_price": 650000,
+      "cost_price": 0
+    },
+    {
+      "row": 188,
+      "name": "acelera 165 60 14 eco plush",
+      "sku": "B_0239",
+      "stock": 0,
+      "selling_price": 535000,
+      "cost_price": 431000
+    },
+    {
+      "row": 189,
+      "name": "G. year 205 65 16 adp2",
+      "sku": "B_0241",
+      "stock": 8,
+      "selling_price": 800000,
+      "cost_price": 700000
+    },
+    {
+      "row": 190,
+      "name": "Forceum 185 65 15",
+      "sku": "B_0243",
+      "stock": 0,
+      "selling_price": 600000,
+      "cost_price": 500000
+    },
+    {
+      "row": 191,
+      "name": "Forceum 175 65 14",
+      "sku": "B_0245",
+      "stock": 0,
+      "selling_price": 520000,
+      "cost_price": 435000
+    },
+    {
+      "row": 192,
+      "name": "Forceum 195 65 15",
+      "sku": "B_0246",
+      "stock": 1,
+      "selling_price": 625000,
+      "cost_price": 525000
+    },
+    {
+      "row": 193,
+      "name": "Hankook 195 70 14",
+      "sku": "B_0248",
+      "stock": 0,
+      "selling_price": 650000,
+      "cost_price": 555000
+    },
+    {
+      "row": 194,
+      "name": "Hankook 11R22.55 16 AH31K",
+      "sku": "B_0249",
+      "stock": 0,
+      "selling_price": 4050000,
+      "cost_price": 3750000
+    },
+    {
+      "row": 195,
+      "name": "dunlop 10.00 20",
+      "sku": "B_D2002",
+      "stock": 0,
+      "selling_price": 3300000,
+      "cost_price": 3100000
+    },
+    {
+      "row": 196,
+      "name": "Dunlop 900 20",
+      "sku": "B_D20900",
+      "stock": 0,
+      "selling_price": 2430000,
+      "cost_price": 2280000
+    },
+    {
+      "row": 197,
+      "name": "GT 215 45 17 gtx pro",
+      "sku": "B_0252",
+      "stock": 0,
+      "selling_price": 860000,
+      "cost_price": 757300
+    },
+    {
+      "row": 198,
+      "name": "GT 225 65 17 Savero",
+      "sku": "B_0253",
+      "stock": 0,
+      "selling_price": 915000,
+      "cost_price": 813300
+    },
+    {
+      "row": 199,
+      "name": "Dunlop 225 65 17 St30",
+      "sku": "B_D1722565",
+      "stock": 0,
+      "selling_price": 1050000,
+      "cost_price": 930000
+    },
+    {
+      "row": 200,
+      "name": "Brgstn 185 65 15 Tecno",
+      "sku": "B_0255",
+      "stock": 0,
+      "selling_price": 770000,
+      "cost_price": 670000
+    },
+    {
+      "row": 201,
+      "name": "Accelera 185 14",
+      "sku": "B_0256",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 600000
+    },
+    {
+      "row": 202,
+      "name": "Forceum 185 14",
+      "sku": "B_0257",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 600000
+    },
+    {
+      "row": 203,
+      "name": "Pentil",
+      "sku": "B_0258",
+      "stock": 92153,
+      "selling_price": 10000,
+      "cost_price": 0
+    },
+    {
+      "row": 204,
+      "name": "Duraturn 750 16  Kasar",
+      "sku": "B_0259",
+      "stock": 0,
+      "selling_price": 1915000,
+      "cost_price": 1765000
+    },
+    {
+      "row": 205,
+      "name": "Duraturn 11R",
+      "sku": "B_0260",
+      "stock": 0,
+      "selling_price": 3350000,
+      "cost_price": 3220000
+    },
+    {
+      "row": 206,
+      "name": "Tiron 750 16 HS317 HD",
+      "sku": "B_0261",
+      "stock": 0,
+      "selling_price": 1750000,
+      "cost_price": 1650000
+    },
+    {
+      "row": 207,
+      "name": "BD 15 NYB pentli pendek",
+      "sku": "B_0262",
+      "stock": 0,
+      "selling_price": 110000,
+      "cost_price": 80000
+    },
+    {
+      "row": 208,
+      "name": "Flap 16 Cleon",
+      "sku": "B_0263",
+      "stock": 0,
+      "selling_price": 65000,
+      "cost_price": 45000
+    },
+    {
+      "row": 209,
+      "name": "GT 145 80 13 Eco",
+      "sku": "B_0265",
+      "stock": 0,
+      "selling_price": 500000,
+      "cost_price": 375000
+    },
+    {
+      "row": 210,
+      "name": "Brgstn 195 70 14 Turanza T005A",
+      "sku": "B_0266",
+      "stock": 0,
+      "selling_price": 995000,
+      "cost_price": 873689
+    },
+    {
+      "row": 211,
+      "name": "Dunlop 185 55 16 Ec300 D1E",
+      "sku": "B_0267",
+      "stock": 3,
+      "selling_price": 950000,
+      "cost_price": 849000
+    },
+    {
+      "row": 212,
+      "name": "Dunlop 195 60 16 EC300",
+      "sku": "B_0268",
+      "stock": 0,
+      "selling_price": 985000,
+      "cost_price": 881000
+    },
+    {
+      "row": 213,
+      "name": "Baut Chamber 17",
+      "sku": "B_0269",
+      "stock": 2,
+      "selling_price": 2500000,
+      "cost_price": 0
+    },
+    {
+      "row": 214,
+      "name": "GT 235 50 18  Champiro HPY",
+      "sku": "B_0270",
+      "stock": 0,
+      "selling_price": 1240000,
+      "cost_price": 1108560
+    },
+    {
+      "row": 215,
+      "name": "Duraturn 750 16 y226",
+      "sku": "B_0271",
+      "stock": 0,
+      "selling_price": 1750000,
+      "cost_price": 1650000
+    },
+    {
+      "row": 216,
+      "name": "BD 14 aspira",
+      "sku": "B_0272",
+      "stock": 0,
+      "selling_price": 120000,
+      "cost_price": 87000
+    },
+    {
+      "row": 217,
+      "name": "Dunlop 205 45 17 Direza",
+      "sku": "B_0274",
+      "stock": 0,
+      "selling_price": 910000,
+      "cost_price": 812000
+    },
+    {
+      "row": 218,
+      "name": "Tambal Tubles",
+      "sku": "B_0275",
+      "stock": 99871,
+      "selling_price": 20000,
+      "cost_price": 0
+    },
+    {
+      "row": 219,
+      "name": "GT 650 10 10pr Forklift",
+      "sku": "B_0276",
+      "stock": 0,
+      "selling_price": 925000,
+      "cost_price": 774000
+    },
+    {
+      "row": 220,
+      "name": "Brgstn 195 14 Duravis",
+      "sku": "B_0277",
+      "stock": 0,
+      "selling_price": 1030000,
+      "cost_price": 930000
+    },
+    {
+      "row": 221,
+      "name": "Flap 900 Brgstn",
+      "sku": "B_0278",
+      "stock": 1,
+      "selling_price": 260000,
+      "cost_price": 228000
+    },
+    {
+      "row": 222,
+      "name": "BD 900 X 20 Bridgestone",
+      "sku": "B_0279",
+      "stock": 0,
+      "selling_price": 540000,
+      "cost_price": 510000
+    },
+    {
+      "row": 223,
+      "name": "Bongkar Pasang R16 17 18",
+      "sku": "B_0280",
+      "stock": 4802,
+      "selling_price": 50000,
+      "cost_price": 0
+    },
+    {
+      "row": 224,
+      "name": "GT 185 60 14 Gtx Pro",
+      "sku": "B_0281",
+      "stock": 0,
+      "selling_price": 600000,
+      "cost_price": 516500
+    },
+    {
+      "row": 225,
+      "name": "Brgstn 195 55 16 Ecopia",
+      "sku": "B_0282",
+      "stock": 0,
+      "selling_price": 0,
+      "cost_price": 960000
+    },
+    {
+      "row": 226,
+      "name": "dunlop 235/50 18 dz 102",
+      "sku": "B_D182350",
+      "stock": 0,
+      "selling_price": 1150000,
+      "cost_price": 1046000
+    },
+    {
+      "row": 227,
+      "name": "GT 205 50 17 cmp ECOTEC",
+      "sku": "B_0284",
+      "stock": 0,
+      "selling_price": 780000,
+      "cost_price": 671580
+    },
+    {
+      "row": 228,
+      "name": "GT 27X8.50 R14 KOMODO MT",
+      "sku": "B_0285",
+      "stock": 0,
+      "selling_price": 950000,
+      "cost_price": 803000
+    },
+    {
+      "row": 229,
+      "name": "GT Forklift 600.9 10PR GRIP",
+      "sku": "B_0286",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 586800
+    },
+    {
+      "row": 230,
+      "name": "BD 600.9 Forklift GT",
+      "sku": "B_0287",
+      "stock": 0,
+      "selling_price": 115000,
+      "cost_price": 89780
+    },
+    {
+      "row": 231,
+      "name": "Flap 600 9 GT",
+      "sku": "B_0288",
+      "stock": 0,
+      "selling_price": 60000,
+      "cost_price": 36850
+    },
+    {
+      "row": 232,
+      "name": "Nitrogen",
+      "sku": "B_0289",
+      "stock": 99369,
+      "selling_price": 25000,
+      "cost_price": 0
+    },
+    {
+      "row": 233,
+      "name": "Flap 15 GT",
+      "sku": "B_0290",
+      "stock": 0,
+      "selling_price": 70000,
+      "cost_price": 39440
+    },
+    {
+      "row": 234,
+      "name": "Dunlop 195 50 16 ec300",
+      "sku": "B_0291",
+      "stock": 0,
+      "selling_price": 920000,
+      "cost_price": 814000
+    },
+    {
+      "row": 235,
+      "name": "Brgstn 235 70 15 Dueler",
+      "sku": "B_0292",
+      "stock": 0,
+      "selling_price": 1300000,
+      "cost_price": 1170500
+    },
+    {
+      "row": 236,
+      "name": "pentil + pasang",
+      "sku": "B_0293",
+      "stock": 9999862,
+      "selling_price": 35000,
+      "cost_price": 0
+    },
+    {
+      "row": 237,
+      "name": "BD 15 Aspira P. Pendek",
+      "sku": "B_0294",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 111800
+    },
+    {
+      "row": 238,
+      "name": "Flap 16 Aspira",
+      "sku": "B_0295",
+      "stock": 0,
+      "selling_price": 65000,
+      "cost_price": 45000
+    },
+    {
+      "row": 239,
+      "name": "GT 205 60 16 Gtx Pro",
+      "sku": "B_0296",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 695000
+    },
+    {
+      "row": 240,
+      "name": "Bridgestone 250 15 16PR JL",
+      "sku": "B_0297",
+      "stock": 0,
+      "selling_price": 3650000,
+      "cost_price": 3485000
+    },
+    {
+      "row": 241,
+      "name": "Balancing",
+      "sku": "B_0298",
+      "stock": 9996348,
+      "selling_price": 30000,
+      "cost_price": 5000
+    },
+    {
+      "row": 242,
+      "name": "Spooring",
+      "sku": "B_0299",
+      "stock": 997910,
+      "selling_price": 175000,
+      "cost_price": 0
+    },
+    {
+      "row": 243,
+      "name": "Spooring  ss/cary los bak",
+      "sku": "B_0300",
+      "stock": 99230,
+      "selling_price": 130000,
+      "cost_price": 0
+    },
+    {
+      "row": 244,
+      "name": "Bongkar Pasang",
+      "sku": "B_0301",
+      "stock": 99999074,
+      "selling_price": 50000,
+      "cost_price": 0
+    },
+    {
+      "row": 245,
+      "name": "Service",
+      "sku": "B_0302",
+      "stock": 999207,
+      "selling_price": 500000,
+      "cost_price": 0
+    },
+    {
+      "row": 246,
+      "name": "Baut Camber",
+      "sku": "B_0303",
+      "stock": 998960,
+      "selling_price": 250000,
+      "cost_price": 75000
+    },
+    {
+      "row": 247,
+      "name": "Baut Camber ss/cary",
+      "sku": "B_0304",
+      "stock": 99715,
+      "selling_price": 200000,
+      "cost_price": 0
+    },
+    {
+      "row": 248,
+      "name": "BD 1000 Brgstn",
+      "sku": "B_0305",
+      "stock": 3,
+      "selling_price": 600000,
+      "cost_price": 532000
+    },
+    {
+      "row": 249,
+      "name": "BD 1000 GT",
+      "sku": "B_0306",
+      "stock": 0,
+      "selling_price": 460000,
+      "cost_price": 405000
+    },
+    {
+      "row": 250,
+      "name": "Hankook 175 65 14",
+      "sku": "B_0307",
+      "stock": 0,
+      "selling_price": 585000,
+      "cost_price": 506000
+    },
+    {
+      "row": 251,
+      "name": "Hankook 185 55 16",
+      "sku": "B_0308",
+      "stock": 0,
+      "selling_price": 660000,
+      "cost_price": 560000
+    },
+    {
+      "row": 252,
+      "name": "Brgstn 205 70 15",
+      "sku": "B_0309",
+      "stock": 0,
+      "selling_price": 900000,
+      "cost_price": 795000
+    },
+    {
+      "row": 253,
+      "name": "Flap 16 DB",
+      "sku": "B_0310",
+      "stock": 0,
+      "selling_price": 60000,
+      "cost_price": 30000
+    },
+    {
+      "row": 254,
+      "name": "Acelera 205 40 17",
+      "sku": "B_0311",
+      "stock": 0,
+      "selling_price": 820000,
+      "cost_price": 690000
+    },
+    {
+      "row": 255,
+      "name": "GT 205 55 16 Gtx Pro",
+      "sku": "B_0312",
+      "stock": 0,
+      "selling_price": 880000,
+      "cost_price": 775500
+    },
+    {
+      "row": 256,
+      "name": "Hankook 195 55 16",
+      "sku": "B_0313",
+      "stock": 0,
+      "selling_price": 725000,
+      "cost_price": 623000
+    },
+    {
+      "row": 257,
+      "name": "Duratun 750 16  ( Set )",
+      "sku": "B_0314",
+      "stock": 0,
+      "selling_price": 2200000,
+      "cost_price": 0
+    },
+    {
+      "row": 258,
+      "name": "Dunlop 205 55 17 Enasave D3E",
+      "sku": "B_0315",
+      "stock": 2,
+      "selling_price": 1150000,
+      "cost_price": 1040000
+    },
+    {
+      "row": 259,
+      "name": "Dunlop 215 70 15 LM",
+      "sku": "B_0316",
+      "stock": 0,
+      "selling_price": 940000,
+      "cost_price": 841000
+    },
+    {
+      "row": 260,
+      "name": "Dunlop 205 65 15 Sp Sport",
+      "sku": "B_0317",
+      "stock": 0,
+      "selling_price": 920000,
+      "cost_price": 818000
+    },
+    {
+      "row": 261,
+      "name": "GT 750 15  ( 1 set )",
+      "sku": "B_0319",
+      "stock": 0,
+      "selling_price": 1600000,
+      "cost_price": 0
+    },
+    {
+      "row": 262,
+      "name": "Pelk Kaleng 13",
+      "sku": "B_0320",
+      "stock": 0,
+      "selling_price": 200000,
+      "cost_price": 150000
+    },
+    {
+      "row": 263,
+      "name": "BD 700 650  15 Brdgstn",
+      "sku": "B_0322",
+      "stock": 0,
+      "selling_price": 260000,
+      "cost_price": 230000
+    },
+    {
+      "row": 264,
+      "name": "Acelera 165 65 13",
+      "sku": "B_0323",
+      "stock": 0,
+      "selling_price": 455000,
+      "cost_price": 375000
+    },
+    {
+      "row": 265,
+      "name": "Acelera 165 80 13",
+      "sku": "B_0324",
+      "stock": 0,
+      "selling_price": 480000,
+      "cost_price": 400000
+    },
+    {
+      "row": 266,
+      "name": "Acelera 175 70 13",
+      "sku": "B_0325",
+      "stock": 0,
+      "selling_price": 475000,
+      "cost_price": 395000
+    },
+    {
+      "row": 267,
+      "name": "GT LT235 75 15 sav MT",
+      "sku": "B_0326",
+      "stock": 0,
+      "selling_price": 1170000,
+      "cost_price": 1050000
+    },
+    {
+      "row": 268,
+      "name": "GT 205/70 15 ecotec",
+      "sku": "B_0327",
+      "stock": 1,
+      "selling_price": 800000,
+      "cost_price": 690000
+    },
+    {
+      "row": 269,
+      "name": "Dunlop 175 60 15 sp touring",
+      "sku": "B_0328",
+      "stock": 0,
+      "selling_price": 680000,
+      "cost_price": 576500
+    },
+    {
+      "row": 270,
+      "name": "Dunlop 205/55 16 ec300",
+      "sku": "B_0329",
+      "stock": 2,
+      "selling_price": 1130000,
+      "cost_price": 1028000
+    },
+    {
+      "row": 271,
+      "name": "GT 215/55 17 Champ GTX pro",
+      "sku": "B_0330",
+      "stock": 0,
+      "selling_price": 1010000,
+      "cost_price": 904050
+    },
+    {
+      "row": 272,
+      "name": "brgstn  215/50 17 tecno",
+      "sku": "B_0331",
+      "stock": 0,
+      "selling_price": 1130000,
+      "cost_price": 1008000
+    },
+    {
+      "row": 273,
+      "name": "BD 16 KCN",
+      "sku": "B_0332",
+      "stock": 0,
+      "selling_price": 180000,
+      "cost_price": 140000
+    },
+    {
+      "row": 274,
+      "name": "FLAP 16 INDOTUBE",
+      "sku": "B_0333",
+      "stock": 1,
+      "selling_price": 55000,
+      "cost_price": 35000
+    },
+    {
+      "row": 275,
+      "name": "FLAP 15 INDOTUBE",
+      "sku": "B_0334",
+      "stock": 0,
+      "selling_price": 75000,
+      "cost_price": 34000
+    },
+    {
+      "row": 276,
+      "name": "GT 155/80 12 Champ BXT plus",
+      "sku": "B_0335",
+      "stock": 0,
+      "selling_price": 460000,
+      "cost_price": 361000
+    },
+    {
+      "row": 277,
+      "name": "Hankook 215/70 16",
+      "sku": "B_0336",
+      "stock": 0,
+      "selling_price": 1070000,
+      "cost_price": 945000
+    },
+    {
+      "row": 278,
+      "name": "BD 15 KCN",
+      "sku": "B_0337",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 100000
+    },
+    {
+      "row": 279,
+      "name": "Dunlop 155/80 12 sp10",
+      "sku": "B_D1201",
+      "stock": 0,
+      "selling_price": 500000,
+      "cost_price": 415000
+    },
+    {
+      "row": 280,
+      "name": "dunlop 195/60 15 Sp Touring",
+      "sku": "B_0339",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 609000
+    },
+    {
+      "row": 281,
+      "name": "Dunlop 195/14 LT",
+      "sku": "B_0340",
+      "stock": 0,
+      "selling_price": 1000000,
+      "cost_price": 895000
+    },
+    {
+      "row": 282,
+      "name": "SAILUN 175/13 8PR",
+      "sku": "B_0342",
+      "stock": 0,
+      "selling_price": 640000,
+      "cost_price": 555000
+    },
+    {
+      "row": 283,
+      "name": "",
+      "sku": "S_005",
+      "stock": 1,
+      "selling_price": 140000,
+      "cost_price": 120000
+    },
+    {
+      "row": 284,
+      "name": "BD 16 bestone",
+      "sku": "DLL_002",
+      "stock": 4,
+      "selling_price": 165000,
+      "cost_price": 135000
+    },
+    {
+      "row": 285,
+      "name": "BD 15 indotube p.pendek",
+      "sku": "B_0343",
+      "stock": 0,
+      "selling_price": 125000,
+      "cost_price": 91000
+    },
+    {
+      "row": 286,
+      "name": "FLAP 20 R INDOTUBE",
+      "sku": "B_0344",
+      "stock": 6,
+      "selling_price": 120000,
+      "cost_price": 90000
+    },
+    {
+      "row": 287,
+      "name": "Brgstn 265/65 17 dueler684",
+      "sku": "B_0345",
+      "stock": 0,
+      "selling_price": 1870000,
+      "cost_price": 1764941
+    },
+    {
+      "row": 288,
+      "name": "BD 15 Bridgestone",
+      "sku": "DLL_004",
+      "stock": 14,
+      "selling_price": 270000,
+      "cost_price": 235000
+    },
+    {
+      "row": 289,
+      "name": "SAILUN 750/16 14PR 812",
+      "sku": "B_0347",
+      "stock": 0,
+      "selling_price": 2200000,
+      "cost_price": 2050000
+    },
+    {
+      "row": 290,
+      "name": "BD 13 TRUCKOOR",
+      "sku": "B_0348",
+      "stock": 2,
+      "selling_price": 95000,
+      "cost_price": 61600
+    },
+    {
+      "row": 291,
+      "name": "BD 14 TRUCKOOR",
+      "sku": "B_0349",
+      "stock": 1,
+      "selling_price": 115000,
+      "cost_price": 81200
+    },
+    {
+      "row": 292,
+      "name": "Brgstn 195/15",
+      "sku": "B_0352",
+      "stock": 1,
+      "selling_price": 1100000,
+      "cost_price": 995000
+    },
+    {
+      "row": 293,
+      "name": "G.YEAR 750/15 SET",
+      "sku": "B_0354",
+      "stock": 0,
+      "selling_price": 2070000,
+      "cost_price": 1950000
+    },
+    {
+      "row": 294,
+      "name": "GT 185/65 14",
+      "sku": "B_0356",
+      "stock": 0,
+      "selling_price": 610000,
+      "cost_price": 505300
+    },
+    {
+      "row": 295,
+      "name": "GT 235/70 15 SAVERO",
+      "sku": "B_0357",
+      "stock": 0,
+      "selling_price": 1100000,
+      "cost_price": 973500
+    },
+    {
+      "row": 296,
+      "name": "Dunlop 175/70 12",
+      "sku": "B_0358",
+      "stock": 0,
+      "selling_price": 515000,
+      "cost_price": 415000
+    },
+    {
+      "row": 297,
+      "name": "velg 13 ss",
+      "sku": "B_0359",
+      "stock": 0,
+      "selling_price": 250000,
+      "cost_price": 100000
+    },
+    {
+      "row": 298,
+      "name": "BD 12 NYB",
+      "sku": "B_0360",
+      "stock": 0,
+      "selling_price": 70000,
+      "cost_price": 47000
+    },
+    {
+      "row": 299,
+      "name": "Dunlop 195/55 16 ec300",
+      "sku": "B_0362",
+      "stock": 2,
+      "selling_price": 990000,
+      "cost_price": 888000
+    },
+    {
+      "row": 300,
+      "name": "dunlop 195/65 15 SPTRLZ",
+      "sku": "B_0363",
+      "stock": 0,
+      "selling_price": 730000,
+      "cost_price": 638500
+    },
+    {
+      "row": 301,
+      "name": "GT 30*9.50 R15 SAVERO MT",
+      "sku": "B_0364",
+      "stock": 0,
+      "selling_price": 1255000,
+      "cost_price": 1132800
+    },
+    {
+      "row": 302,
+      "name": "Gt 195/50 15 champ gtx pro",
+      "sku": "B_0365",
+      "stock": 2,
+      "selling_price": 720000,
+      "cost_price": 616000
+    },
+    {
+      "row": 303,
+      "name": "Brigestone 650/10 10PR JL",
+      "sku": "B_0366",
+      "stock": 0,
+      "selling_price": 1950000,
+      "cost_price": 1650000
+    },
+    {
+      "row": 304,
+      "name": "Hankook 205/55 16",
+      "sku": "B_0367",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 685000
+    },
+    {
+      "row": 305,
+      "name": "brgstn 235/60 18 Dueller",
+      "sku": "B_0368",
+      "stock": 0,
+      "selling_price": 1860000,
+      "cost_price": 1748006
+    },
+    {
+      "row": 306,
+      "name": "Accelera 225 40 19",
+      "sku": "B_0369",
+      "stock": 0,
+      "selling_price": 1270000,
+      "cost_price": 1117000
+    },
+    {
+      "row": 307,
+      "name": "Flap 12 powerclip Gt",
+      "sku": "B_0370",
+      "stock": 0,
+      "selling_price": 100000,
+      "cost_price": 75000
+    },
+    {
+      "row": 308,
+      "name": "BD 700.12 Forklif GT",
+      "sku": "B_0371",
+      "stock": 0,
+      "selling_price": 175000,
+      "cost_price": 140700
+    },
+    {
+      "row": 309,
+      "name": "GT 215/50 17 GTX PRO",
+      "sku": "B_0372",
+      "stock": 0,
+      "selling_price": 920000,
+      "cost_price": 793000
+    },
+    {
+      "row": 310,
+      "name": "GT 265/60 18 SAV A/T+",
+      "sku": "B_0374",
+      "stock": 0,
+      "selling_price": 1440000,
+      "cost_price": 1290000
+    },
+    {
+      "row": 311,
+      "name": "Maxxis 245/70 16 AT811",
+      "sku": "B_0375",
+      "stock": 0,
+      "selling_price": 1900000,
+      "cost_price": 1750000
+    },
+    {
+      "row": 312,
+      "name": "Dunlop 185/65 15 sp 300",
+      "sku": "B_0376",
+      "stock": 0,
+      "selling_price": 775000,
+      "cost_price": 682000
+    },
+    {
+      "row": 313,
+      "name": "Bd 650 10 GT",
+      "sku": "B_0377",
+      "stock": 0,
+      "selling_price": 175000,
+      "cost_price": 123000
+    },
+    {
+      "row": 314,
+      "name": "Balancing",
+      "sku": "S_006",
+      "stock": 9998937,
+      "selling_price": 60000,
+      "cost_price": 10000
+    },
+    {
+      "row": 315,
+      "name": "GT 750/16 LUG PRO",
+      "sku": "B_0378",
+      "stock": 0,
+      "selling_price": 1820000,
+      "cost_price": 1700000
+    },
+    {
+      "row": 316,
+      "name": "TIEROD SE 7451R/L",
+      "sku": "S_007",
+      "stock": 1,
+      "selling_price": 225000,
+      "cost_price": 185500
+    },
+    {
+      "row": 317,
+      "name": "FLAP 10 GT",
+      "sku": "B_0381",
+      "stock": 0,
+      "selling_price": 85000,
+      "cost_price": 47000
+    },
+    {
+      "row": 318,
+      "name": "velg 16*6 6 topy 9ml",
+      "sku": "B_0383",
+      "stock": 0,
+      "selling_price": 900000,
+      "cost_price": 750000
+    },
+    {
+      "row": 319,
+      "name": "Tierod  Aspira 48810/20 + Pasang",
+      "sku": "S_008",
+      "stock": 2,
+      "selling_price": 200000,
+      "cost_price": 95500
+    },
+    {
+      "row": 320,
+      "name": "Velg 16 Robahan canter",
+      "sku": "S_009",
+      "stock": 0,
+      "selling_price": 1200000,
+      "cost_price": 960000
+    },
+    {
+      "row": 321,
+      "name": "Velg 16x6 L5 topy",
+      "sku": "S_0010",
+      "stock": 1,
+      "selling_price": 1000000,
+      "cost_price": 750000
+    },
+    {
+      "row": 322,
+      "name": "Brgstn 185 14 Duravis",
+      "sku": "B_0384",
+      "stock": 5,
+      "selling_price": 920000,
+      "cost_price": 825000
+    },
+    {
+      "row": 323,
+      "name": "GT 215/55 17 SAVERO SUV",
+      "sku": "B_0385",
+      "stock": 0,
+      "selling_price": 830000,
+      "cost_price": 726400
+    },
+    {
+      "row": 324,
+      "name": "Dunlop 225/60 18 sportmaxx",
+      "sku": "B_D1822560",
+      "stock": 0,
+      "selling_price": 1450000,
+      "cost_price": 1346000
+    },
+    {
+      "row": 325,
+      "name": "Flap 15 NYB",
+      "sku": "B_0388",
+      "stock": 0,
+      "selling_price": 60000,
+      "cost_price": 37000
+    },
+    {
+      "row": 326,
+      "name": "Ring 16",
+      "sku": "B_0389",
+      "stock": 2,
+      "selling_price": 225000,
+      "cost_price": 125000
+    },
+    {
+      "row": 327,
+      "name": "Brgstn 185/60 15 Techno",
+      "sku": "B_0390",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 695000
+    },
+    {
+      "row": 328,
+      "name": "Brgstn 235/50 18 Turanza",
+      "sku": "B_0391",
+      "stock": 0,
+      "selling_price": 1600000,
+      "cost_price": 1475000
+    },
+    {
+      "row": 329,
+      "name": "Accerela 265/50 20 omicron",
+      "sku": "B_0392",
+      "stock": 0,
+      "selling_price": 2000000,
+      "cost_price": 1890000
+    },
+    {
+      "row": 330,
+      "name": "aeoulus 750 16",
+      "sku": "B_0393",
+      "stock": 0,
+      "selling_price": 2300000,
+      "cost_price": 2050000
+    },
+    {
+      "row": 331,
+      "name": "GT 750/16 SUPER 88N",
+      "sku": "B_0394",
+      "stock": 0,
+      "selling_price": 1550000,
+      "cost_price": 1450000
+    },
+    {
+      "row": 332,
+      "name": "Brgstn 215/45 17 Tecno sport",
+      "sku": "B_0395",
+      "stock": 2,
+      "selling_price": 1140000,
+      "cost_price": 1040000
+    },
+    {
+      "row": 333,
+      "name": "GT 215/65 16 ecotec",
+      "sku": "B_0396",
+      "stock": 0,
+      "selling_price": 850000,
+      "cost_price": 750000
+    },
+    {
+      "row": 334,
+      "name": "Brgstn 215/55 17 Turansa T0005A",
+      "sku": "B_0397",
+      "stock": 0,
+      "selling_price": 1430000,
+      "cost_price": 1227000
+    },
+    {
+      "row": 335,
+      "name": "Brgstn 225/50 18 Alenza",
+      "sku": "B_0398",
+      "stock": 0,
+      "selling_price": 1750000,
+      "cost_price": 1638000
+    },
+    {
+      "row": 336,
+      "name": "GT 205/50 16 SX2",
+      "sku": "B_0399",
+      "stock": 0,
+      "selling_price": 975000,
+      "cost_price": 855000
+    },
+    {
+      "row": 337,
+      "name": "Sailun 750/16 14PR 711",
+      "sku": "B_0400",
+      "stock": 0,
+      "selling_price": 2200000,
+      "cost_price": 2050000
+    },
+    {
+      "row": 338,
+      "name": "G.year 825/16",
+      "sku": "B_0401",
+      "stock": 0,
+      "selling_price": 2180000,
+      "cost_price": 1981000
+    },
+    {
+      "row": 339,
+      "name": "Dunlop 185/65 15 SP TOURING",
+      "sku": "B_0402",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 0
+    },
+    {
+      "row": 340,
+      "name": "Hankook 31*10,5 R15 RF12",
+      "sku": "B_0403",
+      "stock": 0,
+      "selling_price": 1600000,
+      "cost_price": 1410000
+    },
+    {
+      "row": 341,
+      "name": "hankook 165/13 8pr",
+      "sku": "B_0404",
+      "stock": 0,
+      "selling_price": 660000,
+      "cost_price": 550000
+    },
+    {
+      "row": 342,
+      "name": "Brgstn 215/50 17 Turanza T005A",
+      "sku": "B_0405",
+      "stock": 0,
+      "selling_price": 1500000,
+      "cost_price": 1347000
+    },
+    {
+      "row": 343,
+      "name": "GT 215/60 17 SAVERO SUV",
+      "sku": "B_0406",
+      "stock": 0,
+      "selling_price": 910000,
+      "cost_price": 808300
+    },
+    {
+      "row": 344,
+      "name": "GT 11.00*20 super 88",
+      "sku": "B_0407",
+      "stock": 0,
+      "selling_price": 3850000,
+      "cost_price": 3650000
+    },
+    {
+      "row": 345,
+      "name": "GT 11.00*20 16PR Miller RDF",
+      "sku": "B_0408",
+      "stock": 1,
+      "selling_price": 4000000,
+      "cost_price": 3750000
+    },
+    {
+      "row": 346,
+      "name": "Bd 11.00*20 GT",
+      "sku": "B_0409",
+      "stock": 0,
+      "selling_price": 550000,
+      "cost_price": 450000
+    },
+    {
+      "row": 347,
+      "name": "FLAP 11.00*20 GT",
+      "sku": "B_0410",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 90000
+    },
+    {
+      "row": 348,
+      "name": "Bridgestone 650 10",
+      "sku": "B_0411",
+      "stock": 0,
+      "selling_price": 1650000,
+      "cost_price": 1400000
+    },
+    {
+      "row": 349,
+      "name": "BD 10 powerclip GT",
+      "sku": "B_0412",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 109200
+    },
+    {
+      "row": 350,
+      "name": "Forcium 165/80 13 MT",
+      "sku": "B_0413",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 573315
+    },
+    {
+      "row": 351,
+      "name": "Duratun 750/16  Y601",
+      "sku": "B_0414",
+      "stock": 0,
+      "selling_price": 1915000,
+      "cost_price": 1815000
+    },
+    {
+      "row": 352,
+      "name": "Duratun 750/15 G51",
+      "sku": "B_0415",
+      "stock": 0,
+      "selling_price": 1695000,
+      "cost_price": 1595500
+    },
+    {
+      "row": 353,
+      "name": "Velg 15 Topy",
+      "sku": "DLL_005",
+      "stock": 1,
+      "selling_price": 725000,
+      "cost_price": 535000
+    },
+    {
+      "row": 354,
+      "name": "Brgstn 225/75 16 Duravis",
+      "sku": "B_0416",
+      "stock": 0,
+      "selling_price": 1370000,
+      "cost_price": 1270000
+    },
+    {
+      "row": 355,
+      "name": "G.year 750 16 HM SDG HD",
+      "sku": "B_0417",
+      "stock": 0,
+      "selling_price": 1920000,
+      "cost_price": 1800000
+    },
+    {
+      "row": 356,
+      "name": "Dunlop 195/50 16 Direza",
+      "sku": "B_0418",
+      "stock": 0,
+      "selling_price": 900000,
+      "cost_price": 795000
+    },
+    {
+      "row": 357,
+      "name": "Michelin 175/13 XCD2",
+      "sku": "B_0419",
+      "stock": 0,
+      "selling_price": 1450000,
+      "cost_price": 1325000
+    },
+    {
+      "row": 358,
+      "name": "Advance 750/16 GL279A+ CACING",
+      "sku": "B_0420",
+      "stock": 0,
+      "selling_price": 1950000,
+      "cost_price": 1840000
+    },
+    {
+      "row": 359,
+      "name": "Dunlop 215/50 17 LM705",
+      "sku": "B_D1721550L",
+      "stock": 0,
+      "selling_price": 1235000,
+      "cost_price": 1135000
+    },
+    {
+      "row": 360,
+      "name": "Dunlop 265/65 17 AT25",
+      "sku": "B_D1726565",
+      "stock": 2,
+      "selling_price": 1750000,
+      "cost_price": 1635000
+    },
+    {
+      "row": 361,
+      "name": "Brgstn 205/65 15 Turanza T05",
+      "sku": "B_0423",
+      "stock": 0,
+      "selling_price": 1200000,
+      "cost_price": 1085500
+    },
+    {
+      "row": 362,
+      "name": "Accelera 215/35 18",
+      "sku": "B_0424",
+      "stock": 0,
+      "selling_price": 870000,
+      "cost_price": 760239
+    },
+    {
+      "row": 363,
+      "name": "Hankook 255/45 20",
+      "sku": "B_0425",
+      "stock": 0,
+      "selling_price": 1980000,
+      "cost_price": 1830000
+    },
+    {
+      "row": 364,
+      "name": "Sailun 185/14",
+      "sku": "B_0426",
+      "stock": 0,
+      "selling_price": 760000,
+      "cost_price": 678000
+    },
+    {
+      "row": 365,
+      "name": "Accelera 235/75 15 AT 75",
+      "sku": "B_0427",
+      "stock": 0,
+      "selling_price": 1150000,
+      "cost_price": 895000
+    },
+    {
+      "row": 366,
+      "name": "Brgstn 185/80 14 Techno 248",
+      "sku": "B_0428",
+      "stock": 0,
+      "selling_price": 975000,
+      "cost_price": 872435
+    },
+    {
+      "row": 367,
+      "name": "BD 13 IBK",
+      "sku": "B_0429",
+      "stock": 0,
+      "selling_price": 85000,
+      "cost_price": 45310
+    },
+    {
+      "row": 368,
+      "name": "GT 31X10.50 R15 SAVERO MT",
+      "sku": "B_0430",
+      "stock": 0,
+      "selling_price": 1410000,
+      "cost_price": 1285000
+    },
+    {
+      "row": 369,
+      "name": "Advance 750/16 GL672D",
+      "sku": "B_0431",
+      "stock": 5,
+      "selling_price": 2080000,
+      "cost_price": 1980000
+    },
+    {
+      "row": 370,
+      "name": "Maxxis 285/60 18 AT",
+      "sku": "B_0432",
+      "stock": 0,
+      "selling_price": 2410000,
+      "cost_price": 2300000
+    },
+    {
+      "row": 371,
+      "name": "BD 8.25 Truckoor",
+      "sku": "B_0433",
+      "stock": 3,
+      "selling_price": 230000,
+      "cost_price": 195000
+    },
+    {
+      "row": 372,
+      "name": "Laufen 175/65 14 G FIT AS",
+      "sku": "B_0434",
+      "stock": 0,
+      "selling_price": 540000,
+      "cost_price": 450000
+    },
+    {
+      "row": 373,
+      "name": "Laufen 185/70 14 G FIT AS",
+      "sku": "B_0435",
+      "stock": 0,
+      "selling_price": 560000,
+      "cost_price": 467000
+    },
+    {
+      "row": 374,
+      "name": "Laufen 205/65 15 G FIT AS",
+      "sku": "B_0436",
+      "stock": 0,
+      "selling_price": 685000,
+      "cost_price": 599000
+    },
+    {
+      "row": 375,
+      "name": "Brgstn 215/60 17 Alenza",
+      "sku": "B_0437",
+      "stock": 0,
+      "selling_price": 1450000,
+      "cost_price": 1348480
+    },
+    {
+      "row": 376,
+      "name": "Michellin 205/75 14",
+      "sku": "B_0438",
+      "stock": 0,
+      "selling_price": 1650000,
+      "cost_price": 1550000
+    },
+    {
+      "row": 377,
+      "name": "GiTi 11R 22.5 GSR225",
+      "sku": "B_0439",
+      "stock": 0,
+      "selling_price": 4050000,
+      "cost_price": 3800000
+    },
+    {
+      "row": 378,
+      "name": "Dunlop 195/65 16 eC300 DE",
+      "sku": "B_0440",
+      "stock": 1,
+      "selling_price": 870000,
+      "cost_price": 768000
+    },
+    {
+      "row": 379,
+      "name": "GT 215/65 16 SAVERO SUV",
+      "sku": "B_0441",
+      "stock": 1,
+      "selling_price": 840000,
+      "cost_price": 739000
+    },
+    {
+      "row": 380,
+      "name": "GT Forklift 700.12 12PR GRIP",
+      "sku": "B_0442",
+      "stock": 0,
+      "selling_price": 1200000,
+      "cost_price": 1003000
+    },
+    {
+      "row": 381,
+      "name": "Flap 700 12 GT",
+      "sku": "B_0443",
+      "stock": 0,
+      "selling_price": 75000,
+      "cost_price": 36800
+    },
+    {
+      "row": 382,
+      "name": "Long Tierod APV",
+      "sku": "S_0011",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 70000
+    },
+    {
+      "row": 383,
+      "name": "BAUT RODA 12X15",
+      "sku": "S_0012",
+      "stock": 8,
+      "selling_price": 15000,
+      "cost_price": 0
+    },
+    {
+      "row": 384,
+      "name": "GT 205/70 15 SAV AT",
+      "sku": "B_0444",
+      "stock": 0,
+      "selling_price": 1035000,
+      "cost_price": 935000
+    },
+    {
+      "row": 385,
+      "name": "Tierod Grandmax + Pasang",
+      "sku": "S_013",
+      "stock": 0,
+      "selling_price": 280000,
+      "cost_price": 200000
+    },
+    {
+      "row": 386,
+      "name": "Flap 1100/1000 Indotube",
+      "sku": "B_0445",
+      "stock": 0,
+      "selling_price": 135000,
+      "cost_price": 85000
+    },
+    {
+      "row": 387,
+      "name": "Michellin 195/75 14 XCD2",
+      "sku": "B_0446",
+      "stock": 0,
+      "selling_price": 1725000,
+      "cost_price": 1600000
+    },
+    {
+      "row": 388,
+      "name": "Hankook 185/65 15",
+      "sku": "B_0447",
+      "stock": 0,
+      "selling_price": 660000,
+      "cost_price": 565000
+    },
+    {
+      "row": 389,
+      "name": "Brgstn 205/65 15 Turanza T6",
+      "sku": "B_0448",
+      "stock": 0,
+      "selling_price": 1270000,
+      "cost_price": 1167219
+    },
+    {
+      "row": 390,
+      "name": "Karet Support",
+      "sku": "S_014",
+      "stock": 1,
+      "selling_price": 300000,
+      "cost_price": 150000
+    },
+    {
+      "row": 391,
+      "name": "Hankook 27*8.50 R14 Dynamic MT",
+      "sku": "B_0449",
+      "stock": 0,
+      "selling_price": 1020000,
+      "cost_price": 896000
+    },
+    {
+      "row": 392,
+      "name": "Velg XM 6.00 16 LB6 12mm",
+      "sku": "B_0450",
+      "stock": 2,
+      "selling_price": 780000,
+      "cost_price": 680000
+    },
+    {
+      "row": 393,
+      "name": "BD 14 IBK",
+      "sku": "B_0451",
+      "stock": 24,
+      "selling_price": 100000,
+      "cost_price": 55000
+    },
+    {
+      "row": 394,
+      "name": "Press Bos Stir",
+      "sku": "S_015",
+      "stock": 5,
+      "selling_price": 250000,
+      "cost_price": 90000
+    },
+    {
+      "row": 395,
+      "name": "JASA JEMPUT PASANG",
+      "sku": "S_016",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 0
+    },
+    {
+      "row": 396,
+      "name": "Laufen 175/13 X FIT VAN",
+      "sku": "B_0452",
+      "stock": 0,
+      "selling_price": 690000,
+      "cost_price": 605000
+    },
+    {
+      "row": 397,
+      "name": "BD 16 SJ",
+      "sku": "B_0453",
+      "stock": 0,
+      "selling_price": 200000,
+      "cost_price": 145000
+    },
+    {
+      "row": 398,
+      "name": "Flap 16 Plus Plat",
+      "sku": "B_0454",
+      "stock": 0,
+      "selling_price": 75000,
+      "cost_price": 45000
+    },
+    {
+      "row": 399,
+      "name": "Brgstn 215/55 17 Turanza E33",
+      "sku": "B_0455",
+      "stock": 0,
+      "selling_price": 1820000,
+      "cost_price": 1699085
+    },
+    {
+      "row": 400,
+      "name": "GT 700/16 Super 88",
+      "sku": "B_0456",
+      "stock": 0,
+      "selling_price": 1260000,
+      "cost_price": 1160000
+    },
+    {
+      "row": 401,
+      "name": "Hankook 195/65 15",
+      "sku": "B_0457",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 593000
+    },
+    {
+      "row": 402,
+      "name": "Hankook 225/55 19",
+      "sku": "B_0458",
+      "stock": 0,
+      "selling_price": 1900000,
+      "cost_price": 1740000
+    },
+    {
+      "row": 403,
+      "name": "Accelera 215/55 17",
+      "sku": "B_0459",
+      "stock": 0,
+      "selling_price": 930000,
+      "cost_price": 805000
+    },
+    {
+      "row": 404,
+      "name": "Velg 14 L5 Kosei",
+      "sku": "DLL_006",
+      "stock": 0,
+      "selling_price": 550000,
+      "cost_price": 450000
+    },
+    {
+      "row": 405,
+      "name": "Hankook 225/60 18",
+      "sku": "B_0461",
+      "stock": 0,
+      "selling_price": 1180000,
+      "cost_price": 1090000
+    },
+    {
+      "row": 406,
+      "name": "Laufen 185/65 15 G FIT AS",
+      "sku": "B_0462",
+      "stock": 0,
+      "selling_price": 610000,
+      "cost_price": 520000
+    },
+    {
+      "row": 407,
+      "name": "Velg XM  600 16 LB6 10mm",
+      "sku": "DLL_007",
+      "stock": 0,
+      "selling_price": 750000,
+      "cost_price": 650000
+    },
+    {
+      "row": 408,
+      "name": "Tierod Grandmax + Pasang",
+      "sku": "S_017",
+      "stock": 1,
+      "selling_price": 280000,
+      "cost_price": 200000
+    },
+    {
+      "row": 409,
+      "name": "TIRON 750 16 HS317",
+      "sku": "B_0463",
+      "stock": 0,
+      "selling_price": 1660000,
+      "cost_price": 1560000
+    },
+    {
+      "row": 410,
+      "name": "Goodride 750/16",
+      "sku": "B_0464",
+      "stock": 0,
+      "selling_price": 1350000,
+      "cost_price": 1250000
+    },
+    {
+      "row": 411,
+      "name": "BD 14",
+      "sku": "B_0465",
+      "stock": 1,
+      "selling_price": 120000,
+      "cost_price": 87000
+    },
+    {
+      "row": 412,
+      "name": "Laufen 215/55 17 S FIT AS",
+      "sku": "B_0466",
+      "stock": 0,
+      "selling_price": 910000,
+      "cost_price": 802000
+    },
+    {
+      "row": 413,
+      "name": "Cek ban",
+      "sku": "S_018",
+      "stock": 12343,
+      "selling_price": 50000,
+      "cost_price": 0
+    },
+    {
+      "row": 414,
+      "name": "BD 15 IBK Pentil pendek",
+      "sku": "B_0467",
+      "stock": 9,
+      "selling_price": 115000,
+      "cost_price": 81000
+    },
+    {
+      "row": 415,
+      "name": "Forklift 28 x 9 15 12 PR",
+      "sku": "B_0468",
+      "stock": 0,
+      "selling_price": 2500000,
+      "cost_price": 2200000
+    },
+    {
+      "row": 416,
+      "name": "BD 28 x 15 GT",
+      "sku": "B_0469",
+      "stock": 0,
+      "selling_price": 250000,
+      "cost_price": 204000
+    },
+    {
+      "row": 417,
+      "name": "GT 185/60 15",
+      "sku": "B_0470",
+      "stock": 0,
+      "selling_price": 720000,
+      "cost_price": 630000
+    },
+    {
+      "row": 418,
+      "name": "GT 265/70 17 Komodo MT",
+      "sku": "B_0472",
+      "stock": 0,
+      "selling_price": 1630000,
+      "cost_price": 1481800
+    },
+    {
+      "row": 419,
+      "name": "BD 16 IBK",
+      "sku": "B_0473",
+      "stock": 0,
+      "selling_price": 200000,
+      "cost_price": 155000
+    },
+    {
+      "row": 420,
+      "name": "Flap 16 IBK",
+      "sku": "B_0474",
+      "stock": 0,
+      "selling_price": 80000,
+      "cost_price": 40500
+    },
+    {
+      "row": 421,
+      "name": "BD 15 IBK",
+      "sku": "B_0475",
+      "stock": 1,
+      "selling_price": 150000,
+      "cost_price": 85695
+    },
+    {
+      "row": 422,
+      "name": "BD 16 IBK Light",
+      "sku": "B_0476",
+      "stock": 6,
+      "selling_price": 185000,
+      "cost_price": 141160
+    },
+    {
+      "row": 423,
+      "name": "GT 225/60 17 Savero SUV",
+      "sku": "B_0477",
+      "stock": 0,
+      "selling_price": 960000,
+      "cost_price": 855500
+    },
+    {
+      "row": 424,
+      "name": "Sailun 185/65 15 Artezzo",
+      "sku": "B_0478",
+      "stock": 0,
+      "selling_price": 610000,
+      "cost_price": 520000
+    },
+    {
+      "row": 425,
+      "name": "Sailun 195/65 15 Artezzo",
+      "sku": "B_0479",
+      "stock": 0,
+      "selling_price": 625000,
+      "cost_price": 535000
+    },
+    {
+      "row": 426,
+      "name": "Laufen 195/65 15 G Fit S",
+      "sku": "B_0480",
+      "stock": 0,
+      "selling_price": 640000,
+      "cost_price": 548000
+    },
+    {
+      "row": 427,
+      "name": "GT 235/75 15 SAVERO MT",
+      "sku": "B_0481",
+      "stock": 0,
+      "selling_price": 1210000,
+      "cost_price": 1097400
+    },
+    {
+      "row": 428,
+      "name": "Dunlop 185/65 14 R1",
+      "sku": "B_0482",
+      "stock": 1,
+      "selling_price": 620000,
+      "cost_price": 530000
+    },
+    {
+      "row": 429,
+      "name": "Advance 1000x20 GL662",
+      "sku": "B_0483",
+      "stock": 0,
+      "selling_price": 4450000,
+      "cost_price": 4200000
+    },
+    {
+      "row": 430,
+      "name": "Tiron 1100x20 16 PR",
+      "sku": "B_0484",
+      "stock": 0,
+      "selling_price": 4300000,
+      "cost_price": 4150000
+    },
+    {
+      "row": 431,
+      "name": "Hankook 165/80 13",
+      "sku": "B_0485",
+      "stock": 0,
+      "selling_price": 540000,
+      "cost_price": 439000
+    },
+    {
+      "row": 432,
+      "name": "Karet Segi tiga",
+      "sku": "DLL_008",
+      "stock": 0,
+      "selling_price": 20000,
+      "cost_price": 10000
+    },
+    {
+      "row": 433,
+      "name": "Mangkok karet support",
+      "sku": "S_019",
+      "stock": 2,
+      "selling_price": 30000,
+      "cost_price": 15000
+    },
+    {
+      "row": 434,
+      "name": "Brgstn 750/15 MRD",
+      "sku": "B_0486",
+      "stock": 6,
+      "selling_price": 1370000,
+      "cost_price": 1265000
+    },
+    {
+      "row": 435,
+      "name": "Shell Helix HX3",
+      "sku": "O_001",
+      "stock": 0,
+      "selling_price": 235000,
+      "cost_price": 185000
+    },
+    {
+      "row": 436,
+      "name": "Dunlop 205/70 15 Bluerespon",
+      "sku": "B_0487",
+      "stock": 1,
+      "selling_price": 900000,
+      "cost_price": 795000
+    },
+    {
+      "row": 437,
+      "name": "Laufen 165/80 13",
+      "sku": "B_0488",
+      "stock": 0,
+      "selling_price": 580000,
+      "cost_price": 485000
+    },
+    {
+      "row": 438,
+      "name": "Karet Support JF",
+      "sku": "DLL_009",
+      "stock": 4,
+      "selling_price": 50000,
+      "cost_price": 28000
+    },
+    {
+      "row": 439,
+      "name": "Lonceng Suzuki",
+      "sku": "DLL_0010",
+      "stock": 9,
+      "selling_price": 50000,
+      "cost_price": 22500
+    },
+    {
+      "row": 440,
+      "name": "Velg CEMAX 750 20",
+      "sku": "DLL_0011",
+      "stock": 0,
+      "selling_price": 1270000,
+      "cost_price": 1170000
+    },
+    {
+      "row": 441,
+      "name": "Tierod SS JF",
+      "sku": "DLL_012",
+      "stock": 10,
+      "selling_price": 230000,
+      "cost_price": 133650
+    },
+    {
+      "row": 442,
+      "name": "RACK END AVANZA",
+      "sku": "DLL_013",
+      "stock": 1,
+      "selling_price": 380000,
+      "cost_price": 194400
+    },
+    {
+      "row": 443,
+      "name": "RACK END ALL NEW AVANZA",
+      "sku": "DLL_014",
+      "stock": 1,
+      "selling_price": 380000,
+      "cost_price": 194400
+    },
+    {
+      "row": 444,
+      "name": "Karet Support Carry Suzuki",
+      "sku": "DLL_015",
+      "stock": 8,
+      "selling_price": 100000,
+      "cost_price": 80000
+    },
+    {
+      "row": 445,
+      "name": "Flap 12 Forklift",
+      "sku": "B_0489",
+      "stock": 1,
+      "selling_price": 100000,
+      "cost_price": 80000
+    },
+    {
+      "row": 446,
+      "name": "BD 10 Forklift Bridgestone",
+      "sku": "B_0490",
+      "stock": 0,
+      "selling_price": 180000,
+      "cost_price": 130000
+    },
+    {
+      "row": 447,
+      "name": "Link Stabilizer",
+      "sku": "S_020",
+      "stock": 0,
+      "selling_price": 300000,
+      "cost_price": 175000
+    }
+  ],
+  "matches": [
+    {
+      "row": 3,
+      "existing_id": "d2beaa53-6f03-549b-b9f5-9bf30a39f4ef",
+      "existing_name": "GT 175/70 13 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 4,
+      "existing_id": "850fb98f-86d3-511c-9613-8173be2b97b7",
+      "existing_name": "Dunlop 165/13 LT5",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 5,
+      "existing_id": "ad7540e6-5b8c-5bed-81bc-62544ed90830",
+      "existing_name": "Dunlop 185/14 LT5",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 6,
+      "existing_id": "4d95f566-923e-52d3-a76d-a4341d9645bb",
+      "existing_name": "Dunlop 185/70 14 SP10",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 7,
+      "existing_id": "b0c95ec6-aba0-5d70-8770-029321cf3d44",
+      "existing_name": "Dunlop 165/65 13 SP TOURING",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 8,
+      "existing_id": "14c36937-7755-5936-9cdd-beac835125d9",
+      "existing_name": "Dunlop 165/80 13 HIMEX",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 10,
+      "existing_id": "b7aeb575-3ccf-5c78-98ad-7678d87a2c6b",
+      "existing_name": "Dunlop 175/65 14 EC300",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 11,
+      "existing_id": "20ef152d-6d24-5b92-a00b-3fadab65beb6",
+      "existing_name": "Dunlop 175/65 14 TOURING",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 12,
+      "existing_id": "fc856e13-9327-5d4e-8d78-380e9a32e1aa",
+      "existing_name": "Dunlop 185/65 15 EC300",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 13,
+      "existing_id": "9dee023a-0244-5cdf-a9cb-07783a678ce0",
+      "existing_name": "Dunlop 205/65 16 EC300",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 14,
+      "existing_id": "6d73101d-dc95-5e2f-87fd-9b213f23e36e",
+      "existing_name": "Dunlop 185/60 15 EC300",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 16,
+      "existing_id": "0ff0b046-ba7e-59bf-a1d3-b60df59e25ed",
+      "existing_name": "Dunlop 205/65 15 EC300",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 17,
+      "existing_id": "bbfec615-5964-55c2-8699-5adbe7439031",
+      "existing_name": "Dunlop 750/16 12PR",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 21,
+      "existing_id": "08dc35df-b6eb-5e1e-90dc-eb09efa59f76",
+      "existing_name": "GT 165/65 13 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 22,
+      "existing_id": "852e0d14-5dbb-591b-8ff8-26eb94683ef0",
+      "existing_name": "GT 165/80 13 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 24,
+      "existing_id": "013dacae-2f48-530a-a8b9-75acf640fcfd",
+      "existing_name": "GT 185/65 15 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 25,
+      "existing_id": "7d75fe8d-4efd-5915-ad14-ab6b3d8bc80a",
+      "existing_name": "GT 195/65 15 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 26,
+      "existing_id": "7e5ca41f-733b-54ee-89fc-b326d4f909bf",
+      "existing_name": "GT 195/70 14 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 27,
+      "existing_id": "ba677a6c-f1f2-5b65-a172-fe6e21f25c4e",
+      "existing_name": "GT 185/70 14 BXT PLUS",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 31,
+      "existing_id": "c1b101ac-3b36-5a6a-b769-aa0cd6e40c18",
+      "existing_name": "GT 500/12 8PR",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 32,
+      "existing_id": "e1c4e789-0154-5c47-a980-eb890ce09560",
+      "existing_name": "GT 640/13 8PR",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 33,
+      "existing_id": "395a21ea-1f62-51ed-852a-7c65605abb91",
+      "existing_name": "GT 600/13 8PR",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 34,
+      "existing_id": "e4b9d026-b749-5ea4-9ab1-e60c9a822e92",
+      "existing_name": "GT 700/14 8PR",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 35,
+      "existing_id": "1b4f6b9d-28e2-57ab-867d-3064d6c12d8f",
+      "existing_name": "GT 750/15 12PR",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 36,
+      "existing_id": "9ae86194-caef-5419-ae0d-abc532a585eb",
+      "existing_name": "GT 750/16 HAPPY DUTY",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 54,
+      "existing_id": "440c7faa-dbd4-51cc-8392-ea6469d60ab5",
+      "existing_name": "G. YEAR 185/65 15 ADP2",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 59,
+      "existing_id": "411f4d25-bb09-5d79-a762-373fe54461ad",
+      "existing_name": "Aspira 750/16 Kasar",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 60,
+      "existing_id": "26740a0d-4256-56c8-a984-8e968183a36b",
+      "existing_name": "Aspira 750/16 Halus",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 63,
+      "existing_id": "904fc43f-4561-51ee-b00f-e6d645f2dfee",
+      "existing_name": "Duratun 750/16 14pr",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 65,
+      "existing_id": "caf3fda9-d073-5249-ab82-7704010928c6",
+      "existing_name": "BD 12 Aspira",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 66,
+      "existing_id": "a32ddc45-add3-59bf-ae32-19b9be4312ff",
+      "existing_name": "BD 13 Aspira",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 67,
+      "existing_id": "cbf2d4da-3be2-55cb-bf86-dbdf57916da6",
+      "existing_name": "BD 13 NYB",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 68,
+      "existing_id": "66d1c175-a4bf-5163-ab18-62b8e288cbcf",
+      "existing_name": "BD 14 NYB",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 69,
+      "existing_id": "b36e2815-b902-5654-978e-e5dbd3e81a7a",
+      "existing_name": "BD 8.25 Bestone",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 70,
+      "existing_id": "7b76846f-012e-5a20-a758-bae833c9d221",
+      "existing_name": "BD 13 Eversave",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 71,
+      "existing_id": "3805efe0-0a0e-5496-9527-0738e3a1ffd3",
+      "existing_name": "BD 13 GT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 75,
+      "existing_id": "d5b959ac-f983-5c06-9197-3667246fd5a6",
+      "existing_name": "Flap 16 GT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 76,
+      "existing_id": "991aa6ef-4c0d-5704-b5c4-f9e8815b5e69",
+      "existing_name": "Flap 15 MRV",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 77,
+      "existing_id": "947b0952-679d-56cb-8a22-5ba6768da371",
+      "existing_name": "Flap 16 MRV",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 111,
+      "existing_id": "499a086e-acd9-5b00-b89d-95c7587fcc40",
+      "existing_name": "GT 185/55 16 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 113,
+      "existing_id": "09f3c0b7-6e1c-54c5-b8fc-94c83c8c9909",
+      "existing_name": "GT 185/70 14 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 114,
+      "existing_id": "c7a22756-259b-5d61-9dc0-9645adae33fa",
+      "existing_name": "GT 185/80 14 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 115,
+      "existing_id": "4f8754db-4c53-5f3e-b297-18b0f7d77769",
+      "existing_name": "GT 195/60 16 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 117,
+      "existing_id": "53b51534-12d6-5c95-b7be-7d32ce8b04bb",
+      "existing_name": "GT 205/65 16 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 122,
+      "existing_id": "21d8842e-c297-549e-ac56-025eeb7f89cd",
+      "existing_name": "Dunlop 215/45 17 DIREZA",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 127,
+      "existing_id": "5a2a2a22-efa6-55ef-9229-6aa852d5df36",
+      "existing_name": "GT 235/75 15 SAV AT+",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 129,
+      "existing_id": "f57c50f5-97ae-5e19-9ecd-65b0ebcfbce3",
+      "existing_name": "GT 185/60 14 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 133,
+      "existing_id": "e6f4fdb8-0c5b-5917-aa03-595f48faaefc",
+      "existing_name": "Dunlop 215/50 17 DZ102",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 135,
+      "existing_id": "c155af5c-e415-5ee4-91ba-36ddcd58a804",
+      "existing_name": "BD 15 Truckoor",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 136,
+      "existing_id": "bac534bb-02a1-5ade-83b6-32466d014fa3",
+      "existing_name": "BD 16 Truckoor",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 141,
+      "existing_id": "1d1d2d80-7246-5cee-afe5-d25e345274a9",
+      "existing_name": "Dunlop 195/65 15 EC300",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 142,
+      "existing_id": "b02a5d7f-ac00-5d3d-a4e0-33901a52749a",
+      "existing_name": "Bridgestone 1000*20",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 143,
+      "existing_id": "c76293c5-c4fc-5375-af86-10265eb4782d",
+      "existing_name": "Flap 1000*20 GT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 145,
+      "existing_id": "579a0ada-0130-5595-b9f8-018191f2ca42",
+      "existing_name": "Flap 16 Bridgestone",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 146,
+      "existing_id": "abfa8eb6-4435-5c88-b9ee-12d4348f02f7",
+      "existing_name": "BD 1000*20",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 152,
+      "existing_id": "a6515790-0ece-5368-99dd-1395f1bfcec8",
+      "existing_name": "BD 14 GT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 153,
+      "existing_id": "156be87b-9492-5d67-b03a-3c00256dfadc",
+      "existing_name": "GT 235/75 16 SAV M/T",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 154,
+      "existing_id": "c058f6b0-b94f-5450-834a-b7ede707bca8",
+      "existing_name": "GT 225/75 16 MAXMILLER",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 155,
+      "existing_id": "b0e0444e-c0d7-5eeb-855a-3e51f9323073",
+      "existing_name": "GT 185/60 15 GTX",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 156,
+      "existing_id": "08c7a670-c496-574e-a727-27681e9c42a7",
+      "existing_name": "Dunlop 185/80 14 SP TOURING",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 162,
+      "existing_id": "32d13cae-0219-5411-94dd-599d7f0def6b",
+      "existing_name": "GT 235/60 16 SAVERO SUV",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 164,
+      "existing_id": "f754a195-7fa3-569e-bac1-b2584cc2cf92",
+      "existing_name": "Accelera 175/65 14",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 165,
+      "existing_id": "ae638741-91c4-5813-bfd9-432f0a67618b",
+      "existing_name": "Accelera 185/70 14",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 166,
+      "existing_id": "7c6938e3-b7bb-5902-bfd5-823a866da133",
+      "existing_name": "Forceum 185/70 14",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 169,
+      "existing_id": "d236b745-dcf5-5fc0-8fe3-95bdace941b9",
+      "existing_name": "MRF 750/16",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 175,
+      "existing_id": "80f3d8cb-49c4-513a-befc-faa4a993d00b",
+      "existing_name": "HANKOOK 175/13",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 176,
+      "existing_id": "5f19c0c4-7e01-5643-9d8c-16415d8ed1c4",
+      "existing_name": "HANKOOK 185/14",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 177,
+      "existing_id": "e5a26ba9-fdcf-575b-98f2-04cd76e25a60",
+      "existing_name": "HANKOOK 185/70 14",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 181,
+      "existing_id": "e46f0fb7-26c6-52b5-86a1-fb7d9d5f30d2",
+      "existing_name": "BD 16 NYB",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 182,
+      "existing_id": "fd2a72c9-385e-553d-a9b9-aedf88d918d8",
+      "existing_name": "Flap 16 NYB",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 183,
+      "existing_id": "f052fce3-20cd-5686-8669-67e2adb0a641",
+      "existing_name": "BD 15 NYB",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 184,
+      "existing_id": "e1244011-8a50-50a1-a53b-61c22bc14e0b",
+      "existing_name": "Flap 15 Cleon",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 203,
+      "existing_id": "f33f43a7-2c22-5692-8acf-7ced2a342eb3",
+      "existing_name": "PENTIL",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 208,
+      "existing_id": "d52f6625-5961-57e7-ab2a-a4a92b694e6f",
+      "existing_name": "Flap 16 Cleon",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 216,
+      "existing_id": "f386df1d-ef33-54c0-b980-91b45ef0aa43",
+      "existing_name": "BD 14 Aspira",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 218,
+      "existing_id": "9f5ccf5a-25a9-5a44-a40b-690c28be7f78",
+      "existing_name": "TAMBAL TUBLES",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 232,
+      "existing_id": "48a8d1e8-83cc-5497-ada6-febdfa3d7c5c",
+      "existing_name": "NITROGEN",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 233,
+      "existing_id": "71a0818b-f78e-5dae-b724-d07eb28b4c08",
+      "existing_name": "Flap 15 GT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 236,
+      "existing_id": "75288b37-8fd1-52c3-8710-2e997884243c",
+      "existing_name": "PENTIL + PASANG",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 237,
+      "existing_id": "618ab035-461e-5ae4-9c9c-087022ca982a",
+      "existing_name": "BD 15 Aspira P. Pendek",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 238,
+      "existing_id": "48cf3265-4be4-57f6-baf9-01f9be7197c3",
+      "existing_name": "Flap 16 Aspira",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 242,
+      "existing_id": "e0fc3acc-02ae-5e3d-b21e-b1720d5d5eb0",
+      "existing_name": "SPOORING",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 244,
+      "existing_id": "70548055-150c-5aa6-b0c2-0bc2db5d5882",
+      "existing_name": "Bongkar Pasang",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 245,
+      "existing_id": "f5254a3e-7503-5030-889d-43cb9688660c",
+      "existing_name": "SERVICE",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 246,
+      "existing_id": "6b7a78c2-95ce-5e84-bbae-3d91a5c45d37",
+      "existing_name": "Baut Camber",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 249,
+      "existing_id": "c7b900d7-c71d-5f34-ae6a-a1cdbabdd8dd",
+      "existing_name": "BD 1000 GT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 253,
+      "existing_id": "86bf5baf-84bd-5b93-9f08-f6b34b9f8a6c",
+      "existing_name": "Flap 16 DB",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 262,
+      "existing_id": "0e225907-3256-5c75-8443-55b4cc6196a6",
+      "existing_name": "PELK KALENG 13",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 268,
+      "existing_id": "14551fc7-40d2-52a7-8487-e54fb344a66c",
+      "existing_name": "GT 205/70 15 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 270,
+      "existing_id": "7e2bf212-a0c2-578f-b8a6-51ecd83f54c4",
+      "existing_name": "Dunlop 205/55 16 EC300",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 273,
+      "existing_id": "e85f5f6b-5167-5f3d-9634-e822d3e525f3",
+      "existing_name": "BD 16 KCN",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 274,
+      "existing_id": "93b4e7ae-98c0-5382-ad12-94f07a52ac44",
+      "existing_name": "Flap 16 INDOTUBE",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 275,
+      "existing_id": "8c3155b7-6175-5bf4-ae10-c68c7a44b7ad",
+      "existing_name": "Flap 15 INDOTUBE",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 277,
+      "existing_id": "f7c13b75-d464-5295-890d-e647e4cc241e",
+      "existing_name": "HANKOOK 215/70 16",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 278,
+      "existing_id": "91733225-d339-5a4f-907a-efb5945be656",
+      "existing_name": "BD 15 KCN",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 279,
+      "existing_id": "0cb41e28-03cb-5ee1-8358-fa682ad91f21",
+      "existing_name": "Dunlop 155/80 12 SP10",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 280,
+      "existing_id": "8311f4ca-8c3e-5d5e-98a6-b309ef56e318",
+      "existing_name": "Dunlop 195/60 15 SP TOURING",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 282,
+      "existing_id": "934632a2-8278-5a81-9e34-9ab3e6c1d387",
+      "existing_name": "SAILUN 175/13 8PR",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 284,
+      "existing_id": "0a2175e8-e8d8-5d55-9f38-2fd9d3d16c79",
+      "existing_name": "BD 16 Bestone",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 288,
+      "existing_id": "b9807f7d-17e2-5cf6-82a4-3b727e265483",
+      "existing_name": "BD 15 Bridgestone",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 289,
+      "existing_id": "0ab79735-45c3-5e66-8cc7-3df48d5772e7",
+      "existing_name": "SAILUN 750/16 14PR 812",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 290,
+      "existing_id": "769aabd6-773c-506e-9b85-964b7b96c740",
+      "existing_name": "BD 13 Truckoor",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 291,
+      "existing_id": "d836b8c2-a2c3-51d3-986c-09410b652367",
+      "existing_name": "BD 14 Truckoor",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 294,
+      "existing_id": "582aaace-e663-563c-b0a1-ef998feceaf2",
+      "existing_name": "GT 185/65 14",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 295,
+      "existing_id": "27d661e9-5362-5812-a7ed-6eee009c98b0",
+      "existing_name": "GT 235/70 15 SAVERO",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 296,
+      "existing_id": "03513d1e-1ca9-5756-a1b4-8ae814b7d16b",
+      "existing_name": "Dunlop 175/70 12",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 297,
+      "existing_id": "7044eca9-b725-5f81-9cce-0c4f312a5935",
+      "existing_name": "VELG 13 SS",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 298,
+      "existing_id": "1c148c0a-4694-530f-994a-0f78c2cc80d9",
+      "existing_name": "BD 12 NYB",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 299,
+      "existing_id": "03b60757-791d-5bea-806c-96b66e99bdac",
+      "existing_name": "Dunlop 195/55 16 EC300",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 304,
+      "existing_id": "f7f71610-968b-5414-b98f-0c18a570de81",
+      "existing_name": "HANKOOK 205/55 16",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 309,
+      "existing_id": "98103a32-9de5-5336-9426-a4747c46eeaf",
+      "existing_name": "GT 215/50 17 GTX PRO",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 310,
+      "existing_id": "1e82e694-1078-5e6f-818c-01f6450fafe7",
+      "existing_name": "GT 265/60 18 SAV A/T+",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 311,
+      "existing_id": "4cce3fe0-eb9b-5888-8c14-793ada37ac99",
+      "existing_name": "MAXXIS 245/70 16 AT811",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 315,
+      "existing_id": "16908d0c-4155-55e8-84c6-af88369704b9",
+      "existing_name": "GT 750/16 LUG PRO",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 316,
+      "existing_id": "fa821405-1de7-5e2f-9fb1-1f48bf65bd12",
+      "existing_name": "TIEROD SE 7451R/L",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 317,
+      "existing_id": "8ee33ddb-8eab-5980-9684-803992948161",
+      "existing_name": "Flap 10 GT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 320,
+      "existing_id": "bdd4e4cc-fa0f-5507-b796-df63aaa9b11a",
+      "existing_name": "VELG 16 Robahan Canter",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 323,
+      "existing_id": "59417b87-5ba9-5204-9c7c-c074dfb1d86c",
+      "existing_name": "GT 215/55 17 SAVERO SUV",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 324,
+      "existing_id": "42b1ca7b-062c-5846-8648-cbccdb82e732",
+      "existing_name": "DUNLOP 225/60 18 SPORTMAXX",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 333,
+      "existing_id": "19ae194b-fd25-52f4-9f97-a81e3c02e333",
+      "existing_name": "GT 215/65 16 ECOTEC",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 337,
+      "existing_id": "8ee28027-333a-5311-aaa8-321a7ffcd034",
+      "existing_name": "SAILUN 750/16 14PR 711",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 339,
+      "existing_id": "cd45e554-07e4-551b-b8ca-021091e68862",
+      "existing_name": "DUNLOP 185/65 15 SP TOURING",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 341,
+      "existing_id": "7338f93a-12a8-57c7-b75b-5f1ced272298",
+      "existing_name": "HANKOOK 165/13 8PR",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 343,
+      "existing_id": "b4531d17-0506-5660-9807-001a4ac250e9",
+      "existing_name": "GT 215/60 17 SAVERO SUV",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 352,
+      "existing_id": "d00b2083-5bad-5673-b846-f272a57584c6",
+      "existing_name": "Duratun 750/15 G51",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 356,
+      "existing_id": "d9e0a7a2-c53b-5c28-ac64-e230672117b4",
+      "existing_name": "DUNLOP 195/50 16 DIREZA",
+      "owner": "ibu",
+      "tax": 1
+    },
+    {
+      "row": 357,
+      "existing_id": "49c5dded-f70f-51f5-9fa5-594ff2a65ed8",
+      "existing_name": "Michelin 175/13 XCD2",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 358,
+      "existing_id": "6fe14492-fabf-50fd-a88c-972cf9e984f8",
+      "existing_name": "ADVANCE 750/16 GL279A+ CACING",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 359,
+      "existing_id": "bb1b4140-4308-5e4c-8819-06d50926c9ea",
+      "existing_name": "Dunlop 215/50 17 LM705",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 360,
+      "existing_id": "eb4350e8-6869-51ee-b9c9-283f4a89ce50",
+      "existing_name": "Dunlop 265/65 17 AT25",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 367,
+      "existing_id": "97e051e5-5a15-5b06-8169-31f93452f504",
+      "existing_name": "BD 13 IBK",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 369,
+      "existing_id": "885a1f8a-15a9-571c-8ab5-119baa2912e0",
+      "existing_name": "Advance 750/16 GL672D",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 370,
+      "existing_id": "f57f5684-bb53-55ed-a873-6aa9da61ce08",
+      "existing_name": "MAXXIS 285/60 18 AT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 371,
+      "existing_id": "0a068d28-ee31-5be4-872e-573b4ad4ff7e",
+      "existing_name": "BD 8.25 TRUCKOOR",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 379,
+      "existing_id": "d4a64be7-9c33-5651-9bbd-fae18115c225",
+      "existing_name": "GT 215/65 16 SAVERO SUV",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 382,
+      "existing_id": "cbdfbdd9-50a6-5cc1-ada8-32b8f0bc153c",
+      "existing_name": "Long Tierod APV",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 385,
+      "existing_id": "d9cb87b4-a457-5075-9e95-3e946eb1be3d",
+      "existing_name": "Tierod Grandmax + Pasang",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 387,
+      "existing_id": "ec494c02-61ff-5fb1-8df4-0314764170e3",
+      "existing_name": "Michellin 195/75 14 XCD2",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 388,
+      "existing_id": "57fcdf52-20ab-5268-8523-77c11259d076",
+      "existing_name": "Hankook 185/65 15",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 393,
+      "existing_id": "1c2f66da-c52d-5b25-b0e5-a70c4ab3eb4e",
+      "existing_name": "BD 14 IBK",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 394,
+      "existing_id": "b7d9961a-380a-5ebd-b3b7-135a666e0537",
+      "existing_name": "Press BOS stir",
+      "owner": "ibu",
+      "tax": 0
+    },
+    {
+      "row": 397,
+      "existing_id": "daf94364-77ec-5ced-a91b-3618ec5c6bff",
+      "existing_name": "BD 16 SJ",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 398,
+      "existing_id": "34b411f2-a2d3-547d-9195-82dd02135588",
+      "existing_name": "Flap 16 Plus Plat",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 400,
+      "existing_id": "8e035f61-1eb2-5830-90df-b0f90db0f63f",
+      "existing_name": "GT 700/16 Super 88",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 401,
+      "existing_id": "24179ee9-5478-5f28-a91a-ad12c3f6cbb3",
+      "existing_name": "Hankook 195/65 15",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 402,
+      "existing_id": "d65ac61b-5e8e-59cb-90d4-d26862b1df43",
+      "existing_name": "hankook 225/55 19",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 403,
+      "existing_id": "22c9c8da-2713-53ef-bd23-8ad814a44901",
+      "existing_name": "Accelera 215/55 17",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 405,
+      "existing_id": "69967f5b-26c9-5bf0-93ee-790082bfe3c4",
+      "existing_name": "HANKOOK 225/60 18",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 406,
+      "existing_id": "b0f21708-c5aa-5f3c-a62e-9b5d6df2f9a5",
+      "existing_name": "Laufen 185/65 15 G FIT AS",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 408,
+      "existing_id": "d9cb87b4-a457-5075-9e95-3e946eb1be3d",
+      "existing_name": "Tierod Grandmax + Pasang",
+      "owner": "bian",
+      "tax": 0
+    },
+    {
+      "row": 410,
+      "existing_id": "1528210f-7c34-567f-a7e3-5e04505d2dae",
+      "existing_name": "Goodride 750/16",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 412,
+      "existing_id": "f07f6d8e-5e1e-5def-b776-12c31cd2d953",
+      "existing_name": "Laufen 215/55 17 S FIT AS",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 418,
+      "existing_id": "44c46ef0-c1eb-557f-832d-fd4aebfed31b",
+      "existing_name": "GT 265/70 17 Komodo MT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 423,
+      "existing_id": "eac0b020-8b1a-5b36-adb1-616d616e07f4",
+      "existing_name": "GT 225/60 17 Savero SUV",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 424,
+      "existing_id": "8a7a8395-515d-5fac-b4c7-ab706817ea0d",
+      "existing_name": "Sailun 185/65 15 Artezzo",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 427,
+      "existing_id": "ddfd111c-ea63-50cf-97c5-85f531bc7f75",
+      "existing_name": "GT 235/75 15 Savero MT",
+      "owner": "bian",
+      "tax": 1
+    },
+    {
+      "row": 441,
+      "existing_id": "1cc17883-9f4a-59a0-9cac-88416b3f6f3c",
+      "existing_name": "TIEROD SS JF",
+      "owner": "bian",
+      "tax": 0
+    }
+  ],
+  "unmatched": [
+    {
+      "row": 9,
+      "name": "Dunlop 175/70 13 SPtouring",
+      "sku": "B_007",
+      "stock": 5,
+      "selling_price": 590000,
+      "cost_price": 505000
+    },
+    {
+      "row": 15,
+      "name": "Dunlop 195/70 14 turing BE",
+      "sku": "B_013",
+      "stock": 8,
+      "selling_price": 675000,
+      "cost_price": 585000
+    },
+    {
+      "row": 18,
+      "name": "GT 165/13 m.m",
+      "sku": "B_017",
+      "stock": 0,
+      "selling_price": 645000,
+      "cost_price": 556800
+    },
+    {
+      "row": 19,
+      "name": "GT  175/13 m.m",
+      "sku": "B_018",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 615300
+    },
+    {
+      "row": 20,
+      "name": "GT 185/14 m.m",
+      "sku": "B_019",
+      "stock": 6,
+      "selling_price": 800000,
+      "cost_price": 711000
+    },
+    {
+      "row": 23,
+      "name": "GT  175/65 14 champ ecotec",
+      "sku": "B_023",
+      "stock": 9,
+      "selling_price": 600000,
+      "cost_price": 512640
+    },
+    {
+      "row": 28,
+      "name": "GT 195/55 16 gtx pro2",
+      "sku": "B_031",
+      "stock": 4,
+      "selling_price": 820000,
+      "cost_price": 720000
+    },
+    {
+      "row": 29,
+      "name": "GT  185/55 16 gtx pro2",
+      "sku": "B_032",
+      "stock": 0,
+      "selling_price": 775000,
+      "cost_price": 672800
+    },
+    {
+      "row": 30,
+      "name": "GT  550 /13 8pr",
+      "sku": "B_033",
+      "stock": 7,
+      "selling_price": 560000,
+      "cost_price": 470000
+    },
+    {
+      "row": 37,
+      "name": "Brgstn 165/13 duravis",
+      "sku": "B_040",
+      "stock": 5,
+      "selling_price": 765000,
+      "cost_price": 675000
+    },
+    {
+      "row": 38,
+      "name": "Brgstn  175/13 duravis",
+      "sku": "B_041",
+      "stock": 2,
+      "selling_price": 800000,
+      "cost_price": 710000
+    },
+    {
+      "row": 39,
+      "name": "Brgstn 165/80 13 ecopia",
+      "sku": "B_043",
+      "stock": 1,
+      "selling_price": 640000,
+      "cost_price": 545000
+    },
+    {
+      "row": 40,
+      "name": "Brgstn 185/70 14 ecopia 150",
+      "sku": "B_045",
+      "stock": 7,
+      "selling_price": 725000,
+      "cost_price": 635000
+    },
+    {
+      "row": 41,
+      "name": "Brgstn 175/65 14 EP150",
+      "sku": "B_046",
+      "stock": 6,
+      "selling_price": 700000,
+      "cost_price": 615000
+    },
+    {
+      "row": 42,
+      "name": "Brgstn 185/65 15 ecovia",
+      "sku": "B_047",
+      "stock": 8,
+      "selling_price": 845000,
+      "cost_price": 755000
+    },
+    {
+      "row": 43,
+      "name": "Brgstn 185/80 14 tecno",
+      "sku": "B_049",
+      "stock": 2,
+      "selling_price": 770000,
+      "cost_price": 685000
+    },
+    {
+      "row": 44,
+      "name": "Brgstn 195/70 14 ecopia",
+      "sku": "B_050",
+      "stock": 6,
+      "selling_price": 850000,
+      "cost_price": 760000
+    },
+    {
+      "row": 45,
+      "name": "Brgstn 195/55 16 tecno sport",
+      "sku": "B_051",
+      "stock": 2,
+      "selling_price": 940000,
+      "cost_price": 845000
+    },
+    {
+      "row": 46,
+      "name": "Brgstn 205/65 15 ep300",
+      "sku": "B_052",
+      "stock": 3,
+      "selling_price": 1030000,
+      "cost_price": 930000
+    },
+    {
+      "row": 47,
+      "name": "Brgstn 195/60 16 ecopia",
+      "sku": "B_053",
+      "stock": 0,
+      "selling_price": 1085000,
+      "cost_price": 980542
+    },
+    {
+      "row": 48,
+      "name": "Brgstn 185/55 15 tecno",
+      "sku": "B_054",
+      "stock": 2,
+      "selling_price": 800000,
+      "cost_price": 705000
+    },
+    {
+      "row": 49,
+      "name": "Brgstn 195/55 15 tecno",
+      "sku": "B_055",
+      "stock": 0,
+      "selling_price": 935000,
+      "cost_price": 834000
+    },
+    {
+      "row": 50,
+      "name": "Brgstn 185/60 15 ecopia",
+      "sku": "B_056",
+      "stock": 1,
+      "selling_price": 965000,
+      "cost_price": 865000
+    },
+    {
+      "row": 51,
+      "name": "Brgstn 750/16 MRN",
+      "sku": "B_058",
+      "stock": 9,
+      "selling_price": 1670000,
+      "cost_price": 1565000
+    },
+    {
+      "row": 52,
+      "name": "G.year 165/80 13 dp",
+      "sku": "B_059",
+      "stock": 0,
+      "selling_price": 580000,
+      "cost_price": 487500
+    },
+    {
+      "row": 53,
+      "name": "G.year 175/65 14 adp2",
+      "sku": "B_060",
+      "stock": 0,
+      "selling_price": 565000,
+      "cost_price": 475000
+    },
+    {
+      "row": 55,
+      "name": "G.year 185/60 15 adp2",
+      "sku": "B_062",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 700000
+    },
+    {
+      "row": 56,
+      "name": "G.year 185/55 15 atm1",
+      "sku": "B_063",
+      "stock": 1,
+      "selling_price": 650000,
+      "cost_price": 550000
+    },
+    {
+      "row": 57,
+      "name": "G.year 205/65 15 adp2",
+      "sku": "B_064",
+      "stock": 0,
+      "selling_price": 725000,
+      "cost_price": 625000
+    },
+    {
+      "row": 58,
+      "name": "G.year 750/16 S501",
+      "sku": "B_066",
+      "stock": 0,
+      "selling_price": 2120000,
+      "cost_price": 2020000
+    },
+    {
+      "row": 61,
+      "name": "Advance 750/16 GL671A",
+      "sku": "B_070",
+      "stock": 0,
+      "selling_price": 1985000,
+      "cost_price": 1885000
+    },
+    {
+      "row": 62,
+      "name": "teckhing 750/16 lemes",
+      "sku": "B_071",
+      "stock": 1,
+      "selling_price": 2000000,
+      "cost_price": 1900000
+    },
+    {
+      "row": 64,
+      "name": "forceum 175/13 8pr",
+      "sku": "B_075",
+      "stock": 0,
+      "selling_price": 620000,
+      "cost_price": 530000
+    },
+    {
+      "row": 72,
+      "name": "BD 650/700 15 GT",
+      "sku": "B_086",
+      "stock": 0,
+      "selling_price": 200000,
+      "cost_price": 161840
+    },
+    {
+      "row": 73,
+      "name": "BD 750/16 16 GT",
+      "sku": "B_087",
+      "stock": 0,
+      "selling_price": 230000,
+      "cost_price": 182200
+    },
+    {
+      "row": 74,
+      "name": "BD 16 brigestone",
+      "sku": "B_089",
+      "stock": 20,
+      "selling_price": 280000,
+      "cost_price": 245000
+    },
+    {
+      "row": 78,
+      "name": "Dunlop 175.13 LT5 25",
+      "sku": "B_094",
+      "stock": 47,
+      "selling_price": 740000,
+      "cost_price": 655000
+    },
+    {
+      "row": 79,
+      "name": "Brgstn 235 75 15 dueler H/T 689",
+      "sku": "B_095",
+      "stock": 4,
+      "selling_price": 1280000,
+      "cost_price": 1175000
+    },
+    {
+      "row": 80,
+      "name": "Brgstn 185 70 14 tecno",
+      "sku": "B_096",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 600000
+    },
+    {
+      "row": 81,
+      "name": "Brgstn 205 65 16 ecopia",
+      "sku": "B_097",
+      "stock": 2,
+      "selling_price": 1050000,
+      "cost_price": 943430
+    },
+    {
+      "row": 82,
+      "name": "GT 175 70 12 bxt plus",
+      "sku": "B_099",
+      "stock": 0,
+      "selling_price": 500000,
+      "cost_price": 405000
+    },
+    {
+      "row": 83,
+      "name": "GT 195 50 16 gtx pro",
+      "sku": "B_0100",
+      "stock": 0,
+      "selling_price": 730000,
+      "cost_price": 630000
+    },
+    {
+      "row": 84,
+      "name": "G.year 155 80 12 dp",
+      "sku": "B_0101",
+      "stock": 0,
+      "selling_price": 585000,
+      "cost_price": 473000
+    },
+    {
+      "row": 85,
+      "name": "G.year 185 70 14 adp2",
+      "sku": "B_0102",
+      "stock": 0,
+      "selling_price": 600000,
+      "cost_price": 510000
+    },
+    {
+      "row": 86,
+      "name": "G.year 175 13 8pr wdt",
+      "sku": "B_0103",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 635000
+    },
+    {
+      "row": 87,
+      "name": "G.year 195 65 15 adp2",
+      "sku": "B_0104",
+      "stock": 0,
+      "selling_price": 685000,
+      "cost_price": 585000
+    },
+    {
+      "row": 88,
+      "name": "G.year 205 55 16 atm gy",
+      "sku": "B_0105",
+      "stock": 0,
+      "selling_price": 775000,
+      "cost_price": 675000
+    },
+    {
+      "row": 89,
+      "name": "Sayap",
+      "sku": "S_003",
+      "stock": 10,
+      "selling_price": 240000,
+      "cost_price": 160000
+    },
+    {
+      "row": 90,
+      "name": "Dunlop 235 60 16 ST20",
+      "sku": "B_D162360",
+      "stock": 2,
+      "selling_price": 1330000,
+      "cost_price": 1230000
+    },
+    {
+      "row": 91,
+      "name": "GT 195 55 15 gtx pro",
+      "sku": "B_0110",
+      "stock": 0,
+      "selling_price": 740000,
+      "cost_price": 650000
+    },
+    {
+      "row": 92,
+      "name": "Dunlop 185 60 15 touring",
+      "sku": "B_0112",
+      "stock": 1,
+      "selling_price": 710000,
+      "cost_price": 620000
+    },
+    {
+      "row": 93,
+      "name": "GT 195 60 15 ecotec",
+      "sku": "B_0114",
+      "stock": 0,
+      "selling_price": 680000,
+      "cost_price": 589700
+    },
+    {
+      "row": 94,
+      "name": "GT 205 70 15 savero suv",
+      "sku": "B_0115",
+      "stock": 0,
+      "selling_price": 910000,
+      "cost_price": 790700
+    },
+    {
+      "row": 95,
+      "name": "FLAP 900.20 GT",
+      "sku": "B_0117",
+      "stock": 1,
+      "selling_price": 120000,
+      "cost_price": 91500
+    },
+    {
+      "row": 96,
+      "name": "Bd 900 20 GT",
+      "sku": "B_0118",
+      "stock": 6,
+      "selling_price": 380000,
+      "cost_price": 348000
+    },
+    {
+      "row": 97,
+      "name": "GiTi 750 16 GAZ 891",
+      "sku": "B_0120",
+      "stock": 1,
+      "selling_price": 2180000,
+      "cost_price": 2080000
+    },
+    {
+      "row": 98,
+      "name": "GiTi 750 16 GAR 890",
+      "sku": "B_0121",
+      "stock": 1,
+      "selling_price": 2130000,
+      "cost_price": 2030000
+    },
+    {
+      "row": 99,
+      "name": "GT 165 70 13 eco",
+      "sku": "B_0123",
+      "stock": 0,
+      "selling_price": 500000,
+      "cost_price": 400000
+    },
+    {
+      "row": 100,
+      "name": "Brgstn 195 70 14 tecno",
+      "sku": "B_0125",
+      "stock": 0,
+      "selling_price": 730000,
+      "cost_price": 630000
+    },
+    {
+      "row": 101,
+      "name": "Dunlop 185/70 14 SPRIL Z",
+      "sku": "B_0127",
+      "stock": 0,
+      "selling_price": 650000,
+      "cost_price": 554000
+    },
+    {
+      "row": 102,
+      "name": "Dunlop 165/80 13 SP R1 26",
+      "sku": "B_D1303",
+      "stock": 0,
+      "selling_price": 560000,
+      "cost_price": 465000
+    },
+    {
+      "row": 103,
+      "name": "Brgstn 195/65 15 ecopia",
+      "sku": "B_0129",
+      "stock": 8,
+      "selling_price": 940000,
+      "cost_price": 855000
+    },
+    {
+      "row": 104,
+      "name": "Brgstn 215/60 17 D687",
+      "sku": "B_0130",
+      "stock": 0,
+      "selling_price": 1270000,
+      "cost_price": 1142982
+    },
+    {
+      "row": 105,
+      "name": "Brgstn 195/60 15 techno",
+      "sku": "B_0133",
+      "stock": 1,
+      "selling_price": 810000,
+      "cost_price": 715000
+    },
+    {
+      "row": 106,
+      "name": "Brgstn 195/50 16 techno sport",
+      "sku": "B_0134",
+      "stock": 0,
+      "selling_price": 885000,
+      "cost_price": 784000
+    },
+    {
+      "row": 107,
+      "name": "Brgstn 205/45 17 techno sport",
+      "sku": "B_0135",
+      "stock": 2,
+      "selling_price": 1000000,
+      "cost_price": 890000
+    },
+    {
+      "row": 108,
+      "name": "Brgstn 185/65 16 techno",
+      "sku": "B_0137",
+      "stock": 0,
+      "selling_price": 765000,
+      "cost_price": 665000
+    },
+    {
+      "row": 109,
+      "name": "Brgstn 225/65 17 Dueler470",
+      "sku": "B_0139",
+      "stock": 1,
+      "selling_price": 1320000,
+      "cost_price": 1198000
+    },
+    {
+      "row": 110,
+      "name": "GT 185/55 15 Champ btx",
+      "sku": "B_0140",
+      "stock": 0,
+      "selling_price": 675000,
+      "cost_price": 575000
+    },
+    {
+      "row": 112,
+      "name": "GT 185/65 15 Champ Gtx",
+      "sku": "B_0143",
+      "stock": 0,
+      "selling_price": 650000,
+      "cost_price": 550000
+    },
+    {
+      "row": 116,
+      "name": "GT 205/65 15 Champ ecotec",
+      "sku": "B_0148",
+      "stock": 0,
+      "selling_price": 770000,
+      "cost_price": 666540
+    },
+    {
+      "row": 118,
+      "name": "Bd 900*20 bs",
+      "sku": "B_0154",
+      "stock": 0,
+      "selling_price": 525000,
+      "cost_price": 436500
+    },
+    {
+      "row": 119,
+      "name": "GT 1000x20 16PR RDF",
+      "sku": "B_0155",
+      "stock": 0,
+      "selling_price": 3390000,
+      "cost_price": 3190000
+    },
+    {
+      "row": 120,
+      "name": "Dunlop 265/60 18 grandtrek D1E",
+      "sku": "B_D1826560",
+      "stock": 0,
+      "selling_price": 1875000,
+      "cost_price": 1762000
+    },
+    {
+      "row": 121,
+      "name": "Brgstn  225/65 17 dueler HT 470",
+      "sku": "B_0159",
+      "stock": 0,
+      "selling_price": 1230000,
+      "cost_price": 1131000
+    },
+    {
+      "row": 123,
+      "name": "GT 185 55 15 GTX Pro",
+      "sku": "B_0162",
+      "stock": 2,
+      "selling_price": 735000,
+      "cost_price": 640700
+    },
+    {
+      "row": 124,
+      "name": "Dunlop 185 70 14 enasev",
+      "sku": "B_0164",
+      "stock": 16,
+      "selling_price": 715000,
+      "cost_price": 623000
+    },
+    {
+      "row": 125,
+      "name": "Brgstn 185/70 14 b250",
+      "sku": "B_0165",
+      "stock": 0,
+      "selling_price": 1025000,
+      "cost_price": 905000
+    },
+    {
+      "row": 126,
+      "name": "GT 205/45 17 Gtx pro2",
+      "sku": "B_0166",
+      "stock": 5,
+      "selling_price": 890000,
+      "cost_price": 787500
+    },
+    {
+      "row": 128,
+      "name": "GT 205/65 16 chp luxe",
+      "sku": "B_0168",
+      "stock": 0,
+      "selling_price": 810000,
+      "cost_price": 690000
+    },
+    {
+      "row": 130,
+      "name": "Brgstn 185 55 16 tecno sport",
+      "sku": "B_0170",
+      "stock": 0,
+      "selling_price": 875000,
+      "cost_price": 775000
+    },
+    {
+      "row": 131,
+      "name": "brgstn 900 20 emsa",
+      "sku": "B_0171",
+      "stock": 0,
+      "selling_price": 2800000,
+      "cost_price": 2665000
+    },
+    {
+      "row": 132,
+      "name": "brgstn 175/70 13 ecopia",
+      "sku": "B_0172",
+      "stock": 0,
+      "selling_price": 750000,
+      "cost_price": 667000
+    },
+    {
+      "row": 134,
+      "name": "Dunlop 215/55 17 sp sportrmaxx D1E",
+      "sku": "B_D1721555",
+      "stock": 0,
+      "selling_price": 1400000,
+      "cost_price": 1292000
+    },
+    {
+      "row": 137,
+      "name": "brgstn 205/55 16 ecopia",
+      "sku": "B_0178",
+      "stock": 0,
+      "selling_price": 1250000,
+      "cost_price": 1124000
+    },
+    {
+      "row": 138,
+      "name": "GT 195/14 8PR m.m",
+      "sku": "B_0179",
+      "stock": 0,
+      "selling_price": 850000,
+      "cost_price": 742000
+    },
+    {
+      "row": 139,
+      "name": "GT 900.20 14PR MILER 88N RDF",
+      "sku": "B_0180",
+      "stock": 0,
+      "selling_price": 2750000,
+      "cost_price": 2575000
+    },
+    {
+      "row": 140,
+      "name": "Acelera 175/13",
+      "sku": "B_0182",
+      "stock": 0,
+      "selling_price": 615000,
+      "cost_price": 530000
+    },
+    {
+      "row": 144,
+      "name": "GT 265 65 17 SAV AT+",
+      "sku": "B_0187",
+      "stock": 0,
+      "selling_price": 1250000,
+      "cost_price": 1115000
+    },
+    {
+      "row": 147,
+      "name": "westlake 750/16 14 CR",
+      "sku": "B_0191",
+      "stock": 0,
+      "selling_price": 1900000,
+      "cost_price": 1800000
+    },
+    {
+      "row": 148,
+      "name": "FLAP 1000 X 20 Bridgestone",
+      "sku": "B_0192",
+      "stock": 0,
+      "selling_price": 300000,
+      "cost_price": 253000
+    },
+    {
+      "row": 149,
+      "name": "Dunlop 205 70 15 LM705",
+      "sku": "B_0193",
+      "stock": 0,
+      "selling_price": 880000,
+      "cost_price": 778000
+    },
+    {
+      "row": 150,
+      "name": "westlake 11/22,5",
+      "sku": "B_0194",
+      "stock": 0,
+      "selling_price": 3750000,
+      "cost_price": 3500000
+    },
+    {
+      "row": 151,
+      "name": "brgstn 235/60 16  D687",
+      "sku": "B_0195",
+      "stock": 0,
+      "selling_price": 1560000,
+      "cost_price": 1460000
+    },
+    {
+      "row": 157,
+      "name": "Brgstn 175/65 14 tecno",
+      "sku": "B_0203",
+      "stock": 0,
+      "selling_price": 670000,
+      "cost_price": 571000
+    },
+    {
+      "row": 158,
+      "name": "Dunlop 185/55 15 ec 300",
+      "sku": "B_0204",
+      "stock": 4,
+      "selling_price": 830000,
+      "cost_price": 729000
+    },
+    {
+      "row": 159,
+      "name": "brgstn 205/55 16 tecno sport",
+      "sku": "B_0206",
+      "stock": 0,
+      "selling_price": 980000,
+      "cost_price": 889370
+    },
+    {
+      "row": 160,
+      "name": "g.year 195/70 14 adp2",
+      "sku": "B_0208",
+      "stock": 0,
+      "selling_price": 685000,
+      "cost_price": 595000
+    },
+    {
+      "row": 161,
+      "name": "Advance 750 16 k.tahu GL909A",
+      "sku": "B_0209",
+      "stock": 6,
+      "selling_price": 2260000,
+      "cost_price": 2160000
+    },
+    {
+      "row": 163,
+      "name": "accelera 195 15",
+      "sku": "B_0212",
+      "stock": 3,
+      "selling_price": 820000,
+      "cost_price": 730000
+    },
+    {
+      "row": 167,
+      "name": "Dunlop 215/65 R 16 ST20",
+      "sku": "B_D1621565",
+      "stock": 2,
+      "selling_price": 1100000,
+      "cost_price": 993000
+    },
+    {
+      "row": 168,
+      "name": "Flap 15 Brgstone",
+      "sku": "B_0218",
+      "stock": 0,
+      "selling_price": 140000,
+      "cost_price": 110000
+    },
+    {
+      "row": 170,
+      "name": "BD 15 GT pentil pendek",
+      "sku": "B_0220",
+      "stock": 0,
+      "selling_price": 190000,
+      "cost_price": 160000
+    },
+    {
+      "row": 171,
+      "name": "Brgstn 215/70 15 D689",
+      "sku": "B_0221",
+      "stock": 0,
+      "selling_price": 1200000,
+      "cost_price": 1085000
+    },
+    {
+      "row": 172,
+      "name": "Brgstn 185 80 14 ecopia",
+      "sku": "B_0222",
+      "stock": 0,
+      "selling_price": 785000,
+      "cost_price": 685000
+    },
+    {
+      "row": 173,
+      "name": "Flap 15 truckor",
+      "sku": "B_0223",
+      "stock": 1,
+      "selling_price": 70000,
+      "cost_price": 37000
+    },
+    {
+      "row": 174,
+      "name": "Flap 16 Truckor",
+      "sku": "B_0224",
+      "stock": 0,
+      "selling_price": 65000,
+      "cost_price": 40500
+    },
+    {
+      "row": 178,
+      "name": "BD Asprira 16",
+      "sku": "B_0229",
+      "stock": 15,
+      "selling_price": 180000,
+      "cost_price": 141000
+    },
+    {
+      "row": 179,
+      "name": "Dunlop 215 60 17 ec300",
+      "sku": "B_0230",
+      "stock": 2,
+      "selling_price": 1050000,
+      "cost_price": 950000
+    },
+    {
+      "row": 180,
+      "name": "Advance 750/15 GL279A",
+      "sku": "B_0231",
+      "stock": 0,
+      "selling_price": 1865000,
+      "cost_price": 1765000
+    },
+    {
+      "row": 185,
+      "name": "dunlop 205 60 16 Touring",
+      "sku": "B_0236",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 698000
+    },
+    {
+      "row": 186,
+      "name": "Tiron 750 15 HS317/6",
+      "sku": "B_0237",
+      "stock": 0,
+      "selling_price": 1580000,
+      "cost_price": 1475000
+    },
+    {
+      "row": 187,
+      "name": "Gt 185 65 15 Bxt Pro",
+      "sku": "B_0238",
+      "stock": 0,
+      "selling_price": 650000,
+      "cost_price": 0
+    },
+    {
+      "row": 188,
+      "name": "acelera 165 60 14 eco plush",
+      "sku": "B_0239",
+      "stock": 0,
+      "selling_price": 535000,
+      "cost_price": 431000
+    },
+    {
+      "row": 189,
+      "name": "G. year 205 65 16 adp2",
+      "sku": "B_0241",
+      "stock": 8,
+      "selling_price": 800000,
+      "cost_price": 700000
+    },
+    {
+      "row": 190,
+      "name": "Forceum 185 65 15",
+      "sku": "B_0243",
+      "stock": 0,
+      "selling_price": 600000,
+      "cost_price": 500000
+    },
+    {
+      "row": 191,
+      "name": "Forceum 175 65 14",
+      "sku": "B_0245",
+      "stock": 0,
+      "selling_price": 520000,
+      "cost_price": 435000
+    },
+    {
+      "row": 192,
+      "name": "Forceum 195 65 15",
+      "sku": "B_0246",
+      "stock": 1,
+      "selling_price": 625000,
+      "cost_price": 525000
+    },
+    {
+      "row": 193,
+      "name": "Hankook 195 70 14",
+      "sku": "B_0248",
+      "stock": 0,
+      "selling_price": 650000,
+      "cost_price": 555000
+    },
+    {
+      "row": 194,
+      "name": "Hankook 11R22.55 16 AH31K",
+      "sku": "B_0249",
+      "stock": 0,
+      "selling_price": 4050000,
+      "cost_price": 3750000
+    },
+    {
+      "row": 195,
+      "name": "dunlop 10.00 20",
+      "sku": "B_D2002",
+      "stock": 0,
+      "selling_price": 3300000,
+      "cost_price": 3100000
+    },
+    {
+      "row": 196,
+      "name": "Dunlop 900 20",
+      "sku": "B_D20900",
+      "stock": 0,
+      "selling_price": 2430000,
+      "cost_price": 2280000
+    },
+    {
+      "row": 197,
+      "name": "GT 215 45 17 gtx pro",
+      "sku": "B_0252",
+      "stock": 0,
+      "selling_price": 860000,
+      "cost_price": 757300
+    },
+    {
+      "row": 198,
+      "name": "GT 225 65 17 Savero",
+      "sku": "B_0253",
+      "stock": 0,
+      "selling_price": 915000,
+      "cost_price": 813300
+    },
+    {
+      "row": 199,
+      "name": "Dunlop 225 65 17 St30",
+      "sku": "B_D1722565",
+      "stock": 0,
+      "selling_price": 1050000,
+      "cost_price": 930000
+    },
+    {
+      "row": 200,
+      "name": "Brgstn 185 65 15 Tecno",
+      "sku": "B_0255",
+      "stock": 0,
+      "selling_price": 770000,
+      "cost_price": 670000
+    },
+    {
+      "row": 201,
+      "name": "Accelera 185 14",
+      "sku": "B_0256",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 600000
+    },
+    {
+      "row": 202,
+      "name": "Forceum 185 14",
+      "sku": "B_0257",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 600000
+    },
+    {
+      "row": 204,
+      "name": "Duraturn 750 16  Kasar",
+      "sku": "B_0259",
+      "stock": 0,
+      "selling_price": 1915000,
+      "cost_price": 1765000
+    },
+    {
+      "row": 205,
+      "name": "Duraturn 11R",
+      "sku": "B_0260",
+      "stock": 0,
+      "selling_price": 3350000,
+      "cost_price": 3220000
+    },
+    {
+      "row": 206,
+      "name": "Tiron 750 16 HS317 HD",
+      "sku": "B_0261",
+      "stock": 0,
+      "selling_price": 1750000,
+      "cost_price": 1650000
+    },
+    {
+      "row": 207,
+      "name": "BD 15 NYB pentli pendek",
+      "sku": "B_0262",
+      "stock": 0,
+      "selling_price": 110000,
+      "cost_price": 80000
+    },
+    {
+      "row": 209,
+      "name": "GT 145 80 13 Eco",
+      "sku": "B_0265",
+      "stock": 0,
+      "selling_price": 500000,
+      "cost_price": 375000
+    },
+    {
+      "row": 210,
+      "name": "Brgstn 195 70 14 Turanza T005A",
+      "sku": "B_0266",
+      "stock": 0,
+      "selling_price": 995000,
+      "cost_price": 873689
+    },
+    {
+      "row": 211,
+      "name": "Dunlop 185 55 16 Ec300 D1E",
+      "sku": "B_0267",
+      "stock": 3,
+      "selling_price": 950000,
+      "cost_price": 849000
+    },
+    {
+      "row": 212,
+      "name": "Dunlop 195 60 16 EC300",
+      "sku": "B_0268",
+      "stock": 0,
+      "selling_price": 985000,
+      "cost_price": 881000
+    },
+    {
+      "row": 213,
+      "name": "Baut Chamber 17",
+      "sku": "B_0269",
+      "stock": 2,
+      "selling_price": 2500000,
+      "cost_price": 0
+    },
+    {
+      "row": 214,
+      "name": "GT 235 50 18  Champiro HPY",
+      "sku": "B_0270",
+      "stock": 0,
+      "selling_price": 1240000,
+      "cost_price": 1108560
+    },
+    {
+      "row": 215,
+      "name": "Duraturn 750 16 y226",
+      "sku": "B_0271",
+      "stock": 0,
+      "selling_price": 1750000,
+      "cost_price": 1650000
+    },
+    {
+      "row": 217,
+      "name": "Dunlop 205 45 17 Direza",
+      "sku": "B_0274",
+      "stock": 0,
+      "selling_price": 910000,
+      "cost_price": 812000
+    },
+    {
+      "row": 219,
+      "name": "GT 650 10 10pr Forklift",
+      "sku": "B_0276",
+      "stock": 0,
+      "selling_price": 925000,
+      "cost_price": 774000
+    },
+    {
+      "row": 220,
+      "name": "Brgstn 195 14 Duravis",
+      "sku": "B_0277",
+      "stock": 0,
+      "selling_price": 1030000,
+      "cost_price": 930000
+    },
+    {
+      "row": 221,
+      "name": "Flap 900 Brgstn",
+      "sku": "B_0278",
+      "stock": 1,
+      "selling_price": 260000,
+      "cost_price": 228000
+    },
+    {
+      "row": 222,
+      "name": "BD 900 X 20 Bridgestone",
+      "sku": "B_0279",
+      "stock": 0,
+      "selling_price": 540000,
+      "cost_price": 510000
+    },
+    {
+      "row": 223,
+      "name": "Bongkar Pasang R16 17 18",
+      "sku": "B_0280",
+      "stock": 4802,
+      "selling_price": 50000,
+      "cost_price": 0
+    },
+    {
+      "row": 224,
+      "name": "GT 185 60 14 Gtx Pro",
+      "sku": "B_0281",
+      "stock": 0,
+      "selling_price": 600000,
+      "cost_price": 516500
+    },
+    {
+      "row": 225,
+      "name": "Brgstn 195 55 16 Ecopia",
+      "sku": "B_0282",
+      "stock": 0,
+      "selling_price": 0,
+      "cost_price": 960000
+    },
+    {
+      "row": 226,
+      "name": "dunlop 235/50 18 dz 102",
+      "sku": "B_D182350",
+      "stock": 0,
+      "selling_price": 1150000,
+      "cost_price": 1046000
+    },
+    {
+      "row": 227,
+      "name": "GT 205 50 17 cmp ECOTEC",
+      "sku": "B_0284",
+      "stock": 0,
+      "selling_price": 780000,
+      "cost_price": 671580
+    },
+    {
+      "row": 228,
+      "name": "GT 27X8.50 R14 KOMODO MT",
+      "sku": "B_0285",
+      "stock": 0,
+      "selling_price": 950000,
+      "cost_price": 803000
+    },
+    {
+      "row": 229,
+      "name": "GT Forklift 600.9 10PR GRIP",
+      "sku": "B_0286",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 586800
+    },
+    {
+      "row": 230,
+      "name": "BD 600.9 Forklift GT",
+      "sku": "B_0287",
+      "stock": 0,
+      "selling_price": 115000,
+      "cost_price": 89780
+    },
+    {
+      "row": 231,
+      "name": "Flap 600 9 GT",
+      "sku": "B_0288",
+      "stock": 0,
+      "selling_price": 60000,
+      "cost_price": 36850
+    },
+    {
+      "row": 234,
+      "name": "Dunlop 195 50 16 ec300",
+      "sku": "B_0291",
+      "stock": 0,
+      "selling_price": 920000,
+      "cost_price": 814000
+    },
+    {
+      "row": 235,
+      "name": "Brgstn 235 70 15 Dueler",
+      "sku": "B_0292",
+      "stock": 0,
+      "selling_price": 1300000,
+      "cost_price": 1170500
+    },
+    {
+      "row": 239,
+      "name": "GT 205 60 16 Gtx Pro",
+      "sku": "B_0296",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 695000
+    },
+    {
+      "row": 240,
+      "name": "Bridgestone 250 15 16PR JL",
+      "sku": "B_0297",
+      "stock": 0,
+      "selling_price": 3650000,
+      "cost_price": 3485000
+    },
+    {
+      "row": 241,
+      "name": "Balancing",
+      "sku": "B_0298",
+      "stock": 9996348,
+      "selling_price": 30000,
+      "cost_price": 5000
+    },
+    {
+      "row": 243,
+      "name": "Spooring  ss/cary los bak",
+      "sku": "B_0300",
+      "stock": 99230,
+      "selling_price": 130000,
+      "cost_price": 0
+    },
+    {
+      "row": 247,
+      "name": "Baut Camber ss/cary",
+      "sku": "B_0304",
+      "stock": 99715,
+      "selling_price": 200000,
+      "cost_price": 0
+    },
+    {
+      "row": 248,
+      "name": "BD 1000 Brgstn",
+      "sku": "B_0305",
+      "stock": 3,
+      "selling_price": 600000,
+      "cost_price": 532000
+    },
+    {
+      "row": 250,
+      "name": "Hankook 175 65 14",
+      "sku": "B_0307",
+      "stock": 0,
+      "selling_price": 585000,
+      "cost_price": 506000
+    },
+    {
+      "row": 251,
+      "name": "Hankook 185 55 16",
+      "sku": "B_0308",
+      "stock": 0,
+      "selling_price": 660000,
+      "cost_price": 560000
+    },
+    {
+      "row": 252,
+      "name": "Brgstn 205 70 15",
+      "sku": "B_0309",
+      "stock": 0,
+      "selling_price": 900000,
+      "cost_price": 795000
+    },
+    {
+      "row": 254,
+      "name": "Acelera 205 40 17",
+      "sku": "B_0311",
+      "stock": 0,
+      "selling_price": 820000,
+      "cost_price": 690000
+    },
+    {
+      "row": 255,
+      "name": "GT 205 55 16 Gtx Pro",
+      "sku": "B_0312",
+      "stock": 0,
+      "selling_price": 880000,
+      "cost_price": 775500
+    },
+    {
+      "row": 256,
+      "name": "Hankook 195 55 16",
+      "sku": "B_0313",
+      "stock": 0,
+      "selling_price": 725000,
+      "cost_price": 623000
+    },
+    {
+      "row": 257,
+      "name": "Duratun 750 16  ( Set )",
+      "sku": "B_0314",
+      "stock": 0,
+      "selling_price": 2200000,
+      "cost_price": 0
+    },
+    {
+      "row": 258,
+      "name": "Dunlop 205 55 17 Enasave D3E",
+      "sku": "B_0315",
+      "stock": 2,
+      "selling_price": 1150000,
+      "cost_price": 1040000
+    },
+    {
+      "row": 259,
+      "name": "Dunlop 215 70 15 LM",
+      "sku": "B_0316",
+      "stock": 0,
+      "selling_price": 940000,
+      "cost_price": 841000
+    },
+    {
+      "row": 260,
+      "name": "Dunlop 205 65 15 Sp Sport",
+      "sku": "B_0317",
+      "stock": 0,
+      "selling_price": 920000,
+      "cost_price": 818000
+    },
+    {
+      "row": 261,
+      "name": "GT 750 15  ( 1 set )",
+      "sku": "B_0319",
+      "stock": 0,
+      "selling_price": 1600000,
+      "cost_price": 0
+    },
+    {
+      "row": 263,
+      "name": "BD 700 650  15 Brdgstn",
+      "sku": "B_0322",
+      "stock": 0,
+      "selling_price": 260000,
+      "cost_price": 230000
+    },
+    {
+      "row": 264,
+      "name": "Acelera 165 65 13",
+      "sku": "B_0323",
+      "stock": 0,
+      "selling_price": 455000,
+      "cost_price": 375000
+    },
+    {
+      "row": 265,
+      "name": "Acelera 165 80 13",
+      "sku": "B_0324",
+      "stock": 0,
+      "selling_price": 480000,
+      "cost_price": 400000
+    },
+    {
+      "row": 266,
+      "name": "Acelera 175 70 13",
+      "sku": "B_0325",
+      "stock": 0,
+      "selling_price": 475000,
+      "cost_price": 395000
+    },
+    {
+      "row": 267,
+      "name": "GT LT235 75 15 sav MT",
+      "sku": "B_0326",
+      "stock": 0,
+      "selling_price": 1170000,
+      "cost_price": 1050000
+    },
+    {
+      "row": 269,
+      "name": "Dunlop 175 60 15 sp touring",
+      "sku": "B_0328",
+      "stock": 0,
+      "selling_price": 680000,
+      "cost_price": 576500
+    },
+    {
+      "row": 271,
+      "name": "GT 215/55 17 Champ GTX pro",
+      "sku": "B_0330",
+      "stock": 0,
+      "selling_price": 1010000,
+      "cost_price": 904050
+    },
+    {
+      "row": 272,
+      "name": "brgstn  215/50 17 tecno",
+      "sku": "B_0331",
+      "stock": 0,
+      "selling_price": 1130000,
+      "cost_price": 1008000
+    },
+    {
+      "row": 276,
+      "name": "GT 155/80 12 Champ BXT plus",
+      "sku": "B_0335",
+      "stock": 0,
+      "selling_price": 460000,
+      "cost_price": 361000
+    },
+    {
+      "row": 281,
+      "name": "Dunlop 195/14 LT",
+      "sku": "B_0340",
+      "stock": 0,
+      "selling_price": 1000000,
+      "cost_price": 895000
+    },
+    {
+      "row": 283,
+      "name": "",
+      "sku": "S_005",
+      "stock": 1,
+      "selling_price": 140000,
+      "cost_price": 120000
+    },
+    {
+      "row": 285,
+      "name": "BD 15 indotube p.pendek",
+      "sku": "B_0343",
+      "stock": 0,
+      "selling_price": 125000,
+      "cost_price": 91000
+    },
+    {
+      "row": 286,
+      "name": "FLAP 20 R INDOTUBE",
+      "sku": "B_0344",
+      "stock": 6,
+      "selling_price": 120000,
+      "cost_price": 90000
+    },
+    {
+      "row": 287,
+      "name": "Brgstn 265/65 17 dueler684",
+      "sku": "B_0345",
+      "stock": 0,
+      "selling_price": 1870000,
+      "cost_price": 1764941
+    },
+    {
+      "row": 292,
+      "name": "Brgstn 195/15",
+      "sku": "B_0352",
+      "stock": 1,
+      "selling_price": 1100000,
+      "cost_price": 995000
+    },
+    {
+      "row": 293,
+      "name": "G.YEAR 750/15 SET",
+      "sku": "B_0354",
+      "stock": 0,
+      "selling_price": 2070000,
+      "cost_price": 1950000
+    },
+    {
+      "row": 300,
+      "name": "dunlop 195/65 15 SPTRLZ",
+      "sku": "B_0363",
+      "stock": 0,
+      "selling_price": 730000,
+      "cost_price": 638500
+    },
+    {
+      "row": 301,
+      "name": "GT 30*9.50 R15 SAVERO MT",
+      "sku": "B_0364",
+      "stock": 0,
+      "selling_price": 1255000,
+      "cost_price": 1132800
+    },
+    {
+      "row": 302,
+      "name": "Gt 195/50 15 champ gtx pro",
+      "sku": "B_0365",
+      "stock": 2,
+      "selling_price": 720000,
+      "cost_price": 616000
+    },
+    {
+      "row": 303,
+      "name": "Brigestone 650/10 10PR JL",
+      "sku": "B_0366",
+      "stock": 0,
+      "selling_price": 1950000,
+      "cost_price": 1650000
+    },
+    {
+      "row": 305,
+      "name": "brgstn 235/60 18 Dueller",
+      "sku": "B_0368",
+      "stock": 0,
+      "selling_price": 1860000,
+      "cost_price": 1748006
+    },
+    {
+      "row": 306,
+      "name": "Accelera 225 40 19",
+      "sku": "B_0369",
+      "stock": 0,
+      "selling_price": 1270000,
+      "cost_price": 1117000
+    },
+    {
+      "row": 307,
+      "name": "Flap 12 powerclip Gt",
+      "sku": "B_0370",
+      "stock": 0,
+      "selling_price": 100000,
+      "cost_price": 75000
+    },
+    {
+      "row": 308,
+      "name": "BD 700.12 Forklif GT",
+      "sku": "B_0371",
+      "stock": 0,
+      "selling_price": 175000,
+      "cost_price": 140700
+    },
+    {
+      "row": 312,
+      "name": "Dunlop 185/65 15 sp 300",
+      "sku": "B_0376",
+      "stock": 0,
+      "selling_price": 775000,
+      "cost_price": 682000
+    },
+    {
+      "row": 313,
+      "name": "Bd 650 10 GT",
+      "sku": "B_0377",
+      "stock": 0,
+      "selling_price": 175000,
+      "cost_price": 123000
+    },
+    {
+      "row": 314,
+      "name": "Balancing",
+      "sku": "S_006",
+      "stock": 9998937,
+      "selling_price": 60000,
+      "cost_price": 10000
+    },
+    {
+      "row": 318,
+      "name": "velg 16*6 6 topy 9ml",
+      "sku": "B_0383",
+      "stock": 0,
+      "selling_price": 900000,
+      "cost_price": 750000
+    },
+    {
+      "row": 319,
+      "name": "Tierod  Aspira 48810/20 + Pasang",
+      "sku": "S_008",
+      "stock": 2,
+      "selling_price": 200000,
+      "cost_price": 95500
+    },
+    {
+      "row": 321,
+      "name": "Velg 16x6 L5 topy",
+      "sku": "S_0010",
+      "stock": 1,
+      "selling_price": 1000000,
+      "cost_price": 750000
+    },
+    {
+      "row": 322,
+      "name": "Brgstn 185 14 Duravis",
+      "sku": "B_0384",
+      "stock": 5,
+      "selling_price": 920000,
+      "cost_price": 825000
+    },
+    {
+      "row": 325,
+      "name": "Flap 15 NYB",
+      "sku": "B_0388",
+      "stock": 0,
+      "selling_price": 60000,
+      "cost_price": 37000
+    },
+    {
+      "row": 326,
+      "name": "Ring 16",
+      "sku": "B_0389",
+      "stock": 2,
+      "selling_price": 225000,
+      "cost_price": 125000
+    },
+    {
+      "row": 327,
+      "name": "Brgstn 185/60 15 Techno",
+      "sku": "B_0390",
+      "stock": 0,
+      "selling_price": 800000,
+      "cost_price": 695000
+    },
+    {
+      "row": 328,
+      "name": "Brgstn 235/50 18 Turanza",
+      "sku": "B_0391",
+      "stock": 0,
+      "selling_price": 1600000,
+      "cost_price": 1475000
+    },
+    {
+      "row": 329,
+      "name": "Accerela 265/50 20 omicron",
+      "sku": "B_0392",
+      "stock": 0,
+      "selling_price": 2000000,
+      "cost_price": 1890000
+    },
+    {
+      "row": 330,
+      "name": "aeoulus 750 16",
+      "sku": "B_0393",
+      "stock": 0,
+      "selling_price": 2300000,
+      "cost_price": 2050000
+    },
+    {
+      "row": 331,
+      "name": "GT 750/16 SUPER 88N",
+      "sku": "B_0394",
+      "stock": 0,
+      "selling_price": 1550000,
+      "cost_price": 1450000
+    },
+    {
+      "row": 332,
+      "name": "Brgstn 215/45 17 Tecno sport",
+      "sku": "B_0395",
+      "stock": 2,
+      "selling_price": 1140000,
+      "cost_price": 1040000
+    },
+    {
+      "row": 334,
+      "name": "Brgstn 215/55 17 Turansa T0005A",
+      "sku": "B_0397",
+      "stock": 0,
+      "selling_price": 1430000,
+      "cost_price": 1227000
+    },
+    {
+      "row": 335,
+      "name": "Brgstn 225/50 18 Alenza",
+      "sku": "B_0398",
+      "stock": 0,
+      "selling_price": 1750000,
+      "cost_price": 1638000
+    },
+    {
+      "row": 336,
+      "name": "GT 205/50 16 SX2",
+      "sku": "B_0399",
+      "stock": 0,
+      "selling_price": 975000,
+      "cost_price": 855000
+    },
+    {
+      "row": 338,
+      "name": "G.year 825/16",
+      "sku": "B_0401",
+      "stock": 0,
+      "selling_price": 2180000,
+      "cost_price": 1981000
+    },
+    {
+      "row": 340,
+      "name": "Hankook 31*10,5 R15 RF12",
+      "sku": "B_0403",
+      "stock": 0,
+      "selling_price": 1600000,
+      "cost_price": 1410000
+    },
+    {
+      "row": 342,
+      "name": "Brgstn 215/50 17 Turanza T005A",
+      "sku": "B_0405",
+      "stock": 0,
+      "selling_price": 1500000,
+      "cost_price": 1347000
+    },
+    {
+      "row": 344,
+      "name": "GT 11.00*20 super 88",
+      "sku": "B_0407",
+      "stock": 0,
+      "selling_price": 3850000,
+      "cost_price": 3650000
+    },
+    {
+      "row": 345,
+      "name": "GT 11.00*20 16PR Miller RDF",
+      "sku": "B_0408",
+      "stock": 1,
+      "selling_price": 4000000,
+      "cost_price": 3750000
+    },
+    {
+      "row": 346,
+      "name": "Bd 11.00*20 GT",
+      "sku": "B_0409",
+      "stock": 0,
+      "selling_price": 550000,
+      "cost_price": 450000
+    },
+    {
+      "row": 347,
+      "name": "FLAP 11.00*20 GT",
+      "sku": "B_0410",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 90000
+    },
+    {
+      "row": 348,
+      "name": "Bridgestone 650 10",
+      "sku": "B_0411",
+      "stock": 0,
+      "selling_price": 1650000,
+      "cost_price": 1400000
+    },
+    {
+      "row": 349,
+      "name": "BD 10 powerclip GT",
+      "sku": "B_0412",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 109200
+    },
+    {
+      "row": 350,
+      "name": "Forcium 165/80 13 MT",
+      "sku": "B_0413",
+      "stock": 0,
+      "selling_price": 700000,
+      "cost_price": 573315
+    },
+    {
+      "row": 351,
+      "name": "Duratun 750/16  Y601",
+      "sku": "B_0414",
+      "stock": 0,
+      "selling_price": 1915000,
+      "cost_price": 1815000
+    },
+    {
+      "row": 353,
+      "name": "Velg 15 Topy",
+      "sku": "DLL_005",
+      "stock": 1,
+      "selling_price": 725000,
+      "cost_price": 535000
+    },
+    {
+      "row": 354,
+      "name": "Brgstn 225/75 16 Duravis",
+      "sku": "B_0416",
+      "stock": 0,
+      "selling_price": 1370000,
+      "cost_price": 1270000
+    },
+    {
+      "row": 355,
+      "name": "G.year 750 16 HM SDG HD",
+      "sku": "B_0417",
+      "stock": 0,
+      "selling_price": 1920000,
+      "cost_price": 1800000
+    },
+    {
+      "row": 361,
+      "name": "Brgstn 205/65 15 Turanza T05",
+      "sku": "B_0423",
+      "stock": 0,
+      "selling_price": 1200000,
+      "cost_price": 1085500
+    },
+    {
+      "row": 362,
+      "name": "Accelera 215/35 18",
+      "sku": "B_0424",
+      "stock": 0,
+      "selling_price": 870000,
+      "cost_price": 760239
+    },
+    {
+      "row": 363,
+      "name": "Hankook 255/45 20",
+      "sku": "B_0425",
+      "stock": 0,
+      "selling_price": 1980000,
+      "cost_price": 1830000
+    },
+    {
+      "row": 364,
+      "name": "Sailun 185/14",
+      "sku": "B_0426",
+      "stock": 0,
+      "selling_price": 760000,
+      "cost_price": 678000
+    },
+    {
+      "row": 365,
+      "name": "Accelera 235/75 15 AT 75",
+      "sku": "B_0427",
+      "stock": 0,
+      "selling_price": 1150000,
+      "cost_price": 895000
+    },
+    {
+      "row": 366,
+      "name": "Brgstn 185/80 14 Techno 248",
+      "sku": "B_0428",
+      "stock": 0,
+      "selling_price": 975000,
+      "cost_price": 872435
+    },
+    {
+      "row": 368,
+      "name": "GT 31X10.50 R15 SAVERO MT",
+      "sku": "B_0430",
+      "stock": 0,
+      "selling_price": 1410000,
+      "cost_price": 1285000
+    },
+    {
+      "row": 372,
+      "name": "Laufen 175/65 14 G FIT AS",
+      "sku": "B_0434",
+      "stock": 0,
+      "selling_price": 540000,
+      "cost_price": 450000
+    },
+    {
+      "row": 373,
+      "name": "Laufen 185/70 14 G FIT AS",
+      "sku": "B_0435",
+      "stock": 0,
+      "selling_price": 560000,
+      "cost_price": 467000
+    },
+    {
+      "row": 374,
+      "name": "Laufen 205/65 15 G FIT AS",
+      "sku": "B_0436",
+      "stock": 0,
+      "selling_price": 685000,
+      "cost_price": 599000
+    },
+    {
+      "row": 375,
+      "name": "Brgstn 215/60 17 Alenza",
+      "sku": "B_0437",
+      "stock": 0,
+      "selling_price": 1450000,
+      "cost_price": 1348480
+    },
+    {
+      "row": 376,
+      "name": "Michellin 205/75 14",
+      "sku": "B_0438",
+      "stock": 0,
+      "selling_price": 1650000,
+      "cost_price": 1550000
+    },
+    {
+      "row": 377,
+      "name": "GiTi 11R 22.5 GSR225",
+      "sku": "B_0439",
+      "stock": 0,
+      "selling_price": 4050000,
+      "cost_price": 3800000
+    },
+    {
+      "row": 378,
+      "name": "Dunlop 195/65 16 eC300 DE",
+      "sku": "B_0440",
+      "stock": 1,
+      "selling_price": 870000,
+      "cost_price": 768000
+    },
+    {
+      "row": 380,
+      "name": "GT Forklift 700.12 12PR GRIP",
+      "sku": "B_0442",
+      "stock": 0,
+      "selling_price": 1200000,
+      "cost_price": 1003000
+    },
+    {
+      "row": 381,
+      "name": "Flap 700 12 GT",
+      "sku": "B_0443",
+      "stock": 0,
+      "selling_price": 75000,
+      "cost_price": 36800
+    },
+    {
+      "row": 383,
+      "name": "BAUT RODA 12X15",
+      "sku": "S_0012",
+      "stock": 8,
+      "selling_price": 15000,
+      "cost_price": 0
+    },
+    {
+      "row": 384,
+      "name": "GT 205/70 15 SAV AT",
+      "sku": "B_0444",
+      "stock": 0,
+      "selling_price": 1035000,
+      "cost_price": 935000
+    },
+    {
+      "row": 386,
+      "name": "Flap 1100/1000 Indotube",
+      "sku": "B_0445",
+      "stock": 0,
+      "selling_price": 135000,
+      "cost_price": 85000
+    },
+    {
+      "row": 389,
+      "name": "Brgstn 205/65 15 Turanza T6",
+      "sku": "B_0448",
+      "stock": 0,
+      "selling_price": 1270000,
+      "cost_price": 1167219
+    },
+    {
+      "row": 390,
+      "name": "Karet Support",
+      "sku": "S_014",
+      "stock": 1,
+      "selling_price": 300000,
+      "cost_price": 150000
+    },
+    {
+      "row": 391,
+      "name": "Hankook 27*8.50 R14 Dynamic MT",
+      "sku": "B_0449",
+      "stock": 0,
+      "selling_price": 1020000,
+      "cost_price": 896000
+    },
+    {
+      "row": 392,
+      "name": "Velg XM 6.00 16 LB6 12mm",
+      "sku": "B_0450",
+      "stock": 2,
+      "selling_price": 780000,
+      "cost_price": 680000
+    },
+    {
+      "row": 395,
+      "name": "JASA JEMPUT PASANG",
+      "sku": "S_016",
+      "stock": 0,
+      "selling_price": 150000,
+      "cost_price": 0
+    },
+    {
+      "row": 396,
+      "name": "Laufen 175/13 X FIT VAN",
+      "sku": "B_0452",
+      "stock": 0,
+      "selling_price": 690000,
+      "cost_price": 605000
+    },
+    {
+      "row": 399,
+      "name": "Brgstn 215/55 17 Turanza E33",
+      "sku": "B_0455",
+      "stock": 0,
+      "selling_price": 1820000,
+      "cost_price": 1699085
+    },
+    {
+      "row": 404,
+      "name": "Velg 14 L5 Kosei",
+      "sku": "DLL_006",
+      "stock": 0,
+      "selling_price": 550000,
+      "cost_price": 450000
+    },
+    {
+      "row": 407,
+      "name": "Velg XM  600 16 LB6 10mm",
+      "sku": "DLL_007",
+      "stock": 0,
+      "selling_price": 750000,
+      "cost_price": 650000
+    },
+    {
+      "row": 409,
+      "name": "TIRON 750 16 HS317",
+      "sku": "B_0463",
+      "stock": 0,
+      "selling_price": 1660000,
+      "cost_price": 1560000
+    },
+    {
+      "row": 411,
+      "name": "BD 14",
+      "sku": "B_0465",
+      "stock": 1,
+      "selling_price": 120000,
+      "cost_price": 87000
+    },
+    {
+      "row": 413,
+      "name": "Cek ban",
+      "sku": "S_018",
+      "stock": 12343,
+      "selling_price": 50000,
+      "cost_price": 0
+    },
+    {
+      "row": 414,
+      "name": "BD 15 IBK Pentil pendek",
+      "sku": "B_0467",
+      "stock": 9,
+      "selling_price": 115000,
+      "cost_price": 81000
+    },
+    {
+      "row": 415,
+      "name": "Forklift 28 x 9 15 12 PR",
+      "sku": "B_0468",
+      "stock": 0,
+      "selling_price": 2500000,
+      "cost_price": 2200000
+    },
+    {
+      "row": 416,
+      "name": "BD 28 x 15 GT",
+      "sku": "B_0469",
+      "stock": 0,
+      "selling_price": 250000,
+      "cost_price": 204000
+    },
+    {
+      "row": 417,
+      "name": "GT 185/60 15",
+      "sku": "B_0470",
+      "stock": 0,
+      "selling_price": 720000,
+      "cost_price": 630000
+    },
+    {
+      "row": 419,
+      "name": "BD 16 IBK",
+      "sku": "B_0473",
+      "stock": 0,
+      "selling_price": 200000,
+      "cost_price": 155000
+    },
+    {
+      "row": 420,
+      "name": "Flap 16 IBK",
+      "sku": "B_0474",
+      "stock": 0,
+      "selling_price": 80000,
+      "cost_price": 40500
+    },
+    {
+      "row": 421,
+      "name": "BD 15 IBK",
+      "sku": "B_0475",
+      "stock": 1,
+      "selling_price": 150000,
+      "cost_price": 85695
+    },
+    {
+      "row": 422,
+      "name": "BD 16 IBK Light",
+      "sku": "B_0476",
+      "stock": 6,
+      "selling_price": 185000,
+      "cost_price": 141160
+    },
+    {
+      "row": 425,
+      "name": "Sailun 195/65 15 Artezzo",
+      "sku": "B_0479",
+      "stock": 0,
+      "selling_price": 625000,
+      "cost_price": 535000
+    },
+    {
+      "row": 426,
+      "name": "Laufen 195/65 15 G Fit S",
+      "sku": "B_0480",
+      "stock": 0,
+      "selling_price": 640000,
+      "cost_price": 548000
+    },
+    {
+      "row": 428,
+      "name": "Dunlop 185/65 14 R1",
+      "sku": "B_0482",
+      "stock": 1,
+      "selling_price": 620000,
+      "cost_price": 530000
+    },
+    {
+      "row": 429,
+      "name": "Advance 1000x20 GL662",
+      "sku": "B_0483",
+      "stock": 0,
+      "selling_price": 4450000,
+      "cost_price": 4200000
+    },
+    {
+      "row": 430,
+      "name": "Tiron 1100x20 16 PR",
+      "sku": "B_0484",
+      "stock": 0,
+      "selling_price": 4300000,
+      "cost_price": 4150000
+    },
+    {
+      "row": 431,
+      "name": "Hankook 165/80 13",
+      "sku": "B_0485",
+      "stock": 0,
+      "selling_price": 540000,
+      "cost_price": 439000
+    },
+    {
+      "row": 432,
+      "name": "Karet Segi tiga",
+      "sku": "DLL_008",
+      "stock": 0,
+      "selling_price": 20000,
+      "cost_price": 10000
+    },
+    {
+      "row": 433,
+      "name": "Mangkok karet support",
+      "sku": "S_019",
+      "stock": 2,
+      "selling_price": 30000,
+      "cost_price": 15000
+    },
+    {
+      "row": 434,
+      "name": "Brgstn 750/15 MRD",
+      "sku": "B_0486",
+      "stock": 6,
+      "selling_price": 1370000,
+      "cost_price": 1265000
+    },
+    {
+      "row": 435,
+      "name": "Shell Helix HX3",
+      "sku": "O_001",
+      "stock": 0,
+      "selling_price": 235000,
+      "cost_price": 185000
+    },
+    {
+      "row": 436,
+      "name": "Dunlop 205/70 15 Bluerespon",
+      "sku": "B_0487",
+      "stock": 1,
+      "selling_price": 900000,
+      "cost_price": 795000
+    },
+    {
+      "row": 437,
+      "name": "Laufen 165/80 13",
+      "sku": "B_0488",
+      "stock": 0,
+      "selling_price": 580000,
+      "cost_price": 485000
+    },
+    {
+      "row": 438,
+      "name": "Karet Support JF",
+      "sku": "DLL_009",
+      "stock": 4,
+      "selling_price": 50000,
+      "cost_price": 28000
+    },
+    {
+      "row": 439,
+      "name": "Lonceng Suzuki",
+      "sku": "DLL_0010",
+      "stock": 9,
+      "selling_price": 50000,
+      "cost_price": 22500
+    },
+    {
+      "row": 440,
+      "name": "Velg CEMAX 750 20",
+      "sku": "DLL_0011",
+      "stock": 0,
+      "selling_price": 1270000,
+      "cost_price": 1170000
+    },
+    {
+      "row": 442,
+      "name": "RACK END AVANZA",
+      "sku": "DLL_013",
+      "stock": 1,
+      "selling_price": 380000,
+      "cost_price": 194400
+    },
+    {
+      "row": 443,
+      "name": "RACK END ALL NEW AVANZA",
+      "sku": "DLL_014",
+      "stock": 1,
+      "selling_price": 380000,
+      "cost_price": 194400
+    },
+    {
+      "row": 444,
+      "name": "Karet Support Carry Suzuki",
+      "sku": "DLL_015",
+      "stock": 8,
+      "selling_price": 100000,
+      "cost_price": 80000
+    },
+    {
+      "row": 445,
+      "name": "Flap 12 Forklift",
+      "sku": "B_0489",
+      "stock": 1,
+      "selling_price": 100000,
+      "cost_price": 80000
+    },
+    {
+      "row": 446,
+      "name": "BD 10 Forklift Bridgestone",
+      "sku": "B_0490",
+      "stock": 0,
+      "selling_price": 180000,
+      "cost_price": 130000
+    },
+    {
+      "row": 447,
+      "name": "Link Stabilizer",
+      "sku": "S_020",
+      "stock": 0,
+      "selling_price": 300000,
+      "cost_price": 175000
+    }
+  ],
+  "ambiguous": []
+}

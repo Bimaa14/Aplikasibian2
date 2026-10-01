@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      try {
+        const dark = localStorage.getItem('perkasa-jaya.theme') === 'dark';
+        document.documentElement.classList.toggle('dark', dark);
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+      } catch { /* Light mode remains available when storage is blocked. */ }
+    </script>
+    <link rel="icon" type="image/png" href="/LOGOWEB-removebg-preview.png" />
+    <link rel="apple-touch-icon" href="/LOGOWEB-removebg-preview.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="PERKASA JAYA — Aplikasi POS (kasir) dan mini-ERP untuk bengkel ban dan servis otomotif: kasir cepat, stok, piutang/hutang, laba, dan nota penjualan."
+    />
+    <title>PERKASA JAYA — POS & Mini ERP Bengkel Ban & Servis</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

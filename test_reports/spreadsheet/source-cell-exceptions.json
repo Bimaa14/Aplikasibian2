@@ -1,0 +1,1462 @@
+{
+  "file": "C:\\Users\\Bima\\Downloads\\Perkasa Jaya - Store information system (1).xlsx",
+  "negative_final": [
+    {
+      "row": 6,
+      "item": "Accelera 175/65 14",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 6,
+      "P_credit": 0,
+      "Q_final": -6
+    },
+    {
+      "row": 16,
+      "item": "Advance 1000/20 GL662A+",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 5,
+      "O_cash": 6,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 17,
+      "item": "Advance 750/15 radial fullset",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 2,
+      "O_cash": 2,
+      "P_credit": 1,
+      "Q_final": -1
+    },
+    {
+      "row": 19,
+      "item": "Advance 750/16 GL672D",
+      "G_stock": 4.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 135,
+      "O_cash": 31,
+      "P_credit": 115,
+      "Q_final": -7
+    },
+    {
+      "row": 23,
+      "item": "Aspira  Filter Oli Avaza-Agya",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "COMPLEMENTARY",
+      "N_in": 20,
+      "O_cash": 56,
+      "P_credit": 0,
+      "Q_final": -36
+    },
+    {
+      "row": 24,
+      "item": "Aspira 750/16 Halus",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 2,
+      "O_cash": 0,
+      "P_credit": 3,
+      "Q_final": -1
+    },
+    {
+      "row": 25,
+      "item": "Aspira 750/16 Kasar",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 1,
+      "Q_final": -2
+    },
+    {
+      "row": 31,
+      "item": "Baut Roda 12x1.5",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "COMPLEMENTARY",
+      "N_in": 0,
+      "O_cash": 49,
+      "P_credit": 0,
+      "Q_final": -49
+    },
+    {
+      "row": 32,
+      "item": "BD 1000 Bridgestone",
+      "G_stock": 2.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 3,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 34,
+      "item": "BD 1000*20",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 0,
+      "P_credit": 2,
+      "Q_final": -2
+    },
+    {
+      "row": 36,
+      "item": "BD 12 NYB",
+      "G_stock": 13.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 18,
+      "P_credit": 0,
+      "Q_final": -5
+    },
+    {
+      "row": 42,
+      "item": "BD 13 Truckoor",
+      "G_stock": 2.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 12,
+      "P_credit": 0,
+      "Q_final": -10
+    },
+    {
+      "row": 52,
+      "item": "BD 15 Indotube P. Pendek",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 9,
+      "P_credit": 1,
+      "Q_final": -10
+    },
+    {
+      "row": 53,
+      "item": "BD 15 KCN",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 41,
+      "P_credit": 0,
+      "Q_final": -41
+    },
+    {
+      "row": 56,
+      "item": "BD 15 Truckoor",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 32,
+      "P_credit": 6,
+      "Q_final": -38
+    },
+    {
+      "row": 58,
+      "item": "BD 16 Bestone",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 61,
+      "item": "BD 16 KCN",
+      "G_stock": 16.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 18,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 76,
+      "item": "Bongkar Pasang",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "SERVICE",
+      "N_in": 0,
+      "O_cash": 448,
+      "P_credit": 4,
+      "Q_final": -452
+    },
+    {
+      "row": 81,
+      "item": "Bridgestone 175/13 Duravis",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 160,
+      "O_cash": 158,
+      "P_credit": 4,
+      "Q_final": -2
+    },
+    {
+      "row": 104,
+      "item": "Bridgestone 195/55 16 Techno Sport",
+      "G_stock": 6.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 12,
+      "O_cash": 20,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 112,
+      "item": "Bridgestone 205/55 16 Ecopia",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 2,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 115,
+      "item": "Bridgestone 205/65 15 Turanza",
+      "G_stock": 1.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 5,
+      "O_cash": 4,
+      "P_credit": 5,
+      "Q_final": -3
+    },
+    {
+      "row": 119,
+      "item": "Bridgestone 215/45 17 Techno Sport",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 4,
+      "O_cash": 6,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 128,
+      "item": "Bridgestone 225/65 17 Dueler HT 470",
+      "G_stock": 1.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 3,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 132,
+      "item": "Bridgestone 235/60 16 D687",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 16,
+      "O_cash": 20,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 135,
+      "item": "Bridgestone 235/75 15 Dueler H/T 689",
+      "G_stock": 5.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 55,
+      "O_cash": 36,
+      "P_credit": 26,
+      "Q_final": -2
+    },
+    {
+      "row": 137,
+      "item": "Bridgestone 265/65 17 Dueler 684",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 4,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 154,
+      "item": "Dunlop 165/65 13 SP TOURING",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 11,
+      "P_credit": 4,
+      "Q_final": -15
+    },
+    {
+      "row": 166,
+      "item": "Dunlop 185/60 15 EC300",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 8,
+      "P_credit": 0,
+      "Q_final": -8
+    },
+    {
+      "row": 170,
+      "item": "Dunlop 185/65 15 SP300",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 2,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 179,
+      "item": "Dunlop 195/55 16 EC300",
+      "G_stock": 4.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 16,
+      "O_cash": 21,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 180,
+      "item": "Dunlop 195/60 15 SP TOURING",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 2,
+      "O_cash": 9,
+      "P_credit": 0,
+      "Q_final": -7
+    },
+    {
+      "row": 187,
+      "item": "Dunlop 205/45 17 DIREZA",
+      "G_stock": 2.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 21,
+      "O_cash": 22,
+      "P_credit": 2,
+      "Q_final": -1
+    },
+    {
+      "row": 189,
+      "item": "Dunlop 205/55 17 ENASEV",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 19,
+      "O_cash": 20,
+      "P_credit": 2,
+      "Q_final": -3
+    },
+    {
+      "row": 190,
+      "item": "Dunlop 205/60 16 EC300",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 2,
+      "O_cash": 3,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 192,
+      "item": "Dunlop 205/65 15 SP SPORT",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 10,
+      "P_credit": 0,
+      "Q_final": -10
+    },
+    {
+      "row": 193,
+      "item": "Dunlop 205/65 16 EC300",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 34,
+      "O_cash": 36,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 195,
+      "item": "Dunlop 215/45 17 DIREZA",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 9,
+      "O_cash": 10,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 197,
+      "item": "Dunlop 215/50 17 LM705",
+      "G_stock": 1.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 2,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 198,
+      "item": "Dunlop 215/55 17 SPORTMAXX",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 12,
+      "O_cash": 14,
+      "P_credit": 2,
+      "Q_final": -4
+    },
+    {
+      "row": 203,
+      "item": "Dunlop 225/65 17 ST30",
+      "G_stock": 6.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 2,
+      "O_cash": 11,
+      "P_credit": 0,
+      "Q_final": -3
+    },
+    {
+      "row": 205,
+      "item": "Dunlop 235/60 16 ST20",
+      "G_stock": 4.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 34,
+      "O_cash": 42,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 206,
+      "item": "Dunlop 265/60 18 GRANDTREK",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 7,
+      "O_cash": 9,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 208,
+      "item": "Dunlop 750/16 12PR",
+      "G_stock": 0.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 12,
+      "O_cash": 3,
+      "P_credit": 12,
+      "Q_final": -3
+    },
+    {
+      "row": 211,
+      "item": "Duratun 750/15 G51",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 4,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 220,
+      "item": "Flap 1000*20 GT",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 2,
+      "O_cash": 0,
+      "P_credit": 4,
+      "Q_final": -2
+    },
+    {
+      "row": 224,
+      "item": "Flap 15 Cleon",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 226,
+      "item": "Flap 15 INDOTUBE",
+      "G_stock": 6.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 3,
+      "P_credit": 4,
+      "Q_final": -1
+    },
+    {
+      "row": 228,
+      "item": "Flap 15 Truckoor",
+      "G_stock": 40.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 44,
+      "P_credit": 21,
+      "Q_final": -25
+    },
+    {
+      "row": 229,
+      "item": "Flap 16 Aspira",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 3,
+      "P_credit": 0,
+      "Q_final": -3
+    },
+    {
+      "row": 230,
+      "item": "Flap 16 Bridgestone",
+      "G_stock": 1.0,
+      "J_owner": "IBU",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 6,
+      "P_credit": 1,
+      "Q_final": -6
+    },
+    {
+      "row": 232,
+      "item": "Flap 16 DB",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 238,
+      "item": "Flap 16 Truckoor",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 4,
+      "P_credit": 3,
+      "Q_final": -7
+    },
+    {
+      "row": 241,
+      "item": "Flap 900*20 GT",
+      "G_stock": 1.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 0,
+      "P_credit": 2,
+      "Q_final": -1
+    },
+    {
+      "row": 244,
+      "item": "Forceum 175/13",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 10,
+      "P_credit": 0,
+      "Q_final": -10
+    },
+    {
+      "row": 250,
+      "item": "G. YEAR 155/80 12 DP",
+      "G_stock": 2.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 15,
+      "P_credit": 0,
+      "Q_final": -13
+    },
+    {
+      "row": 259,
+      "item": "G. YEAR 195/70 14 ADP2",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 5,
+      "P_credit": 1,
+      "Q_final": -6
+    },
+    {
+      "row": 260,
+      "item": "G. YEAR 195/70 14 ADP2",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 5,
+      "P_credit": 1,
+      "Q_final": -6
+    },
+    {
+      "row": 265,
+      "item": "G. YEAR 750/16 2020 HD",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 48,
+      "O_cash": 29,
+      "P_credit": 31,
+      "Q_final": -12
+    },
+    {
+      "row": 277,
+      "item": "GT 165/65 13 ECOTEC",
+      "G_stock": 1.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 6,
+      "P_credit": 0,
+      "Q_final": -5
+    },
+    {
+      "row": 279,
+      "item": "GT 165/80 13 ECOTEC",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 419,
+      "O_cash": 427,
+      "P_credit": 1,
+      "Q_final": -9
+    },
+    {
+      "row": 280,
+      "item": "GT 175/13 MAXMILLER",
+      "G_stock": 8.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 109,
+      "O_cash": 116,
+      "P_credit": 2,
+      "Q_final": -1
+    },
+    {
+      "row": 282,
+      "item": "GT 175/70 12 BXT PLUS",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 10,
+      "P_credit": 0,
+      "Q_final": -10
+    },
+    {
+      "row": 285,
+      "item": "GT 185/55 15 CHAMPIRO BTX",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 290,
+      "item": "GT 185/60 14 ECOTEC",
+      "G_stock": 2.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 4,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 291,
+      "item": "GT 185/60 14 GTX PRO",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 4,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 292,
+      "item": "GT 185/60 15 ECOTEC",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 7,
+      "O_cash": 11,
+      "P_credit": 4,
+      "Q_final": -8
+    },
+    {
+      "row": 297,
+      "item": "GT 185/65 15 ECOTEC",
+      "G_stock": 6.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 143,
+      "O_cash": 152,
+      "P_credit": 0,
+      "Q_final": -3
+    },
+    {
+      "row": 303,
+      "item": "GT 195/50 16 GTX PRO",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 4,
+      "O_cash": 8,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 306,
+      "item": "GT 195/60 15 CHAMPIRO GTX",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 4,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 307,
+      "item": "GT 195/60 15 ECOTEC",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 17,
+      "O_cash": 19,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 308,
+      "item": "GT 195/60 16 ECOTEC",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 9,
+      "O_cash": 9,
+      "P_credit": 1,
+      "Q_final": -1
+    },
+    {
+      "row": 312,
+      "item": "GT 205/50 16 Champiro SX2",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 2,
+      "O_cash": 4,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 314,
+      "item": "GT 205/55 16 GTX PRO",
+      "G_stock": 5.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 19,
+      "O_cash": 27,
+      "P_credit": 0,
+      "Q_final": -3
+    },
+    {
+      "row": 317,
+      "item": "GT 205/65 16 CHAMPIRO LUXE",
+      "G_stock": 1.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 4,
+      "P_credit": 0,
+      "Q_final": -3
+    },
+    {
+      "row": 318,
+      "item": "GT 205/65 16 ECOTEC",
+      "G_stock": 4.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 9,
+      "O_cash": 25,
+      "P_credit": 0,
+      "Q_final": -12
+    },
+    {
+      "row": 319,
+      "item": "GT 205/70 15 ECOTEC",
+      "G_stock": 1.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 3,
+      "O_cash": 7,
+      "P_credit": 0,
+      "Q_final": -3
+    },
+    {
+      "row": 320,
+      "item": "GT 205/70 15 SAVERO SUV",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 6,
+      "P_credit": 0,
+      "Q_final": -6
+    },
+    {
+      "row": 321,
+      "item": "GT 215/45 17 GTX PRO",
+      "G_stock": 4.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 9,
+      "O_cash": 19,
+      "P_credit": 0,
+      "Q_final": -6
+    },
+    {
+      "row": 323,
+      "item": "GT 215/55 17 CHAMPIRO GTX PRO",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 6,
+      "O_cash": 9,
+      "P_credit": 1,
+      "Q_final": -4
+    },
+    {
+      "row": 325,
+      "item": "GT 215/60 17 SAVERO SUV",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 10,
+      "O_cash": 12,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 326,
+      "item": "GT 215/65 16 ECOTEC",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 3,
+      "P_credit": 0,
+      "Q_final": -3
+    },
+    {
+      "row": 329,
+      "item": "GT 225/65 17 SAVERO",
+      "G_stock": 1.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 3,
+      "O_cash": 6,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 330,
+      "item": "GT 225/75 16 MAXMILLER",
+      "G_stock": 1.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 6,
+      "O_cash": 6,
+      "P_credit": 4,
+      "Q_final": -3
+    },
+    {
+      "row": 337,
+      "item": "GT 265/60 18 SAV A/T+",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 2,
+      "P_credit": 2,
+      "Q_final": -4
+    },
+    {
+      "row": 338,
+      "item": "GT 265/65 17 SAV AT+",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 2,
+      "P_credit": 2,
+      "Q_final": -4
+    },
+    {
+      "row": 344,
+      "item": "GT 500/12 8PR",
+      "G_stock": 4.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 9,
+      "P_credit": 0,
+      "Q_final": -5
+    },
+    {
+      "row": 351,
+      "item": "GT 700/14 8PR",
+      "G_stock": 7.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 49,
+      "O_cash": 58,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 356,
+      "item": "GT 750/16 HAPPY DUTY",
+      "G_stock": 11.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 133,
+      "O_cash": 89,
+      "P_credit": 61,
+      "Q_final": -6
+    },
+    {
+      "row": 363,
+      "item": "HANKOOK 175/65 14",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 14,
+      "P_credit": 0,
+      "Q_final": -14
+    },
+    {
+      "row": 367,
+      "item": "HANKOOK 185/70 14",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 10,
+      "O_cash": 12,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 376,
+      "item": "HANKOOK 255/45 20 K127A",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 2,
+      "P_credit": 0,
+      "Q_final": -2
+    },
+    {
+      "row": 383,
+      "item": "Karet Support + Pasang  ",
+      "G_stock": 5.0,
+      "J_owner": "BIAN",
+      "M_category": "COMPLEMENTARY",
+      "N_in": 0,
+      "O_cash": 9,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 391,
+      "item": "Long Tierod APV",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "COMPLEMENTARY",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 396,
+      "item": "Michelin 175/13 XCD2",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 4,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 399,
+      "item": "MRF 750/16",
+      "G_stock": 3.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 0,
+      "P_credit": 6,
+      "Q_final": -3
+    },
+    {
+      "row": 406,
+      "item": "Pertamina Prima XP 20W-50 4 Liter",
+      "G_stock": 10.0,
+      "J_owner": "NON",
+      "M_category": "OIL",
+      "N_in": 48,
+      "O_cash": 64,
+      "P_credit": 0,
+      "Q_final": -6
+    },
+    {
+      "row": 408,
+      "item": "SAILUN 175/13 8PR",
+      "G_stock": 3.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 20,
+      "P_credit": 0,
+      "Q_final": -17
+    },
+    {
+      "row": 419,
+      "item": "Shell Helix HX5 15W-40 1 Liter",
+      "G_stock": 1.0,
+      "J_owner": "NON",
+      "M_category": "OIL",
+      "N_in": 12,
+      "O_cash": 17,
+      "P_credit": 0,
+      "Q_final": -4
+    },
+    {
+      "row": 421,
+      "item": "Shell Helix HX6 10W-40 1 Liter",
+      "G_stock": 0.0,
+      "J_owner": "NON",
+      "M_category": "OIL",
+      "N_in": 12,
+      "O_cash": 17,
+      "P_credit": 0,
+      "Q_final": -5
+    },
+    {
+      "row": 423,
+      "item": "Shell Helix HX7 1 Liter",
+      "G_stock": 0.0,
+      "J_owner": "NON",
+      "M_category": "OIL",
+      "N_in": 12,
+      "O_cash": 22,
+      "P_credit": 0,
+      "Q_final": -10
+    },
+    {
+      "row": 430,
+      "item": "TECKING 750/16 LEMES",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 0,
+      "P_credit": 2,
+      "Q_final": -2
+    },
+    {
+      "row": 431,
+      "item": "TIEROD 48810/20",
+      "G_stock": 10.0,
+      "J_owner": "IBU",
+      "M_category": "COMPLEMENTARY",
+      "N_in": 23,
+      "O_cash": 43,
+      "P_credit": 0,
+      "Q_final": -10
+    },
+    {
+      "row": 435,
+      "item": "TIRON 750/16",
+      "G_stock": 7.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 142,
+      "O_cash": 74,
+      "P_credit": 84,
+      "Q_final": -9
+    },
+    {
+      "row": 443,
+      "item": "VELG 16 ORISINIL TOPY",
+      "G_stock": 2.0,
+      "J_owner": "BIAN",
+      "M_category": "COMPLEMENTARY",
+      "N_in": 0,
+      "O_cash": 4,
+      "P_credit": 2,
+      "Q_final": -4
+    },
+    {
+      "row": 444,
+      "item": "VELG 16 Robahan Canter",
+      "G_stock": 2.0,
+      "J_owner": "BIAN",
+      "M_category": "Tire",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 2,
+      "Q_final": -1
+    },
+    {
+      "row": 449,
+      "item": "Aspira  Filter Oli Innova Bensin",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "COMPLEMENTARY",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 461,
+      "item": "Aspira  Filter Oli Colt diesel",
+      "G_stock": 0.0,
+      "J_owner": "BIAN",
+      "M_category": "COMPLEMENTARY",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 464,
+      "item": "Pertamina 4 Liter FASTRON GOLD 5W-40",
+      "G_stock": 0.0,
+      "J_owner": "NON VPT",
+      "M_category": "OIL",
+      "N_in": 0,
+      "O_cash": 1,
+      "P_credit": 0,
+      "Q_final": -1
+    },
+    {
+      "row": 501,
+      "item": "Laufen 195/65 15 G Fit AS",
+      "G_stock": null,
+      "J_owner": "Bian",
+      "M_category": "Tire",
+      "N_in": 8,
+      "O_cash": 9,
+      "P_credit": 0,
+      "Q_final": -1
+    }
+  ],
+  "other_owner_labels": [
+    {
+      "row": 142,
+      "item": "Castrol GTX 1 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 143,
+      "item": "Castrol Magnetic 10W-40  1 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 144,
+      "item": "Castrol Magnetic 10W-40  4 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 145,
+      "item": "Castrol Magnetic 5W-40  1 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 146,
+      "item": "Castrol Magnetic 5W-40  4 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 147,
+      "item": "Castrol Magnetic Diesel 10W-30 4 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 148,
+      "item": "Castrol Magnetic Stop-Star 5W-30  1 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 149,
+      "item": "Castrol Magnetic Stop-Star 5W-30  4 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 404,
+      "item": "Pertamina Meditran SX 10 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 405,
+      "item": "Pertamina Prima XP 20W-50 1 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 406,
+      "item": "Pertamina Prima XP 20W-50 4 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 418,
+      "item": "Shell Helix HX3 20W-50 4 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 419,
+      "item": "Shell Helix HX5 15W-40 1 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 420,
+      "item": "Shell Helix HX5 15W-40 4 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 421,
+      "item": "Shell Helix HX6 10W-40 1 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 422,
+      "item": "Shell Helix HX6 4 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 423,
+      "item": "Shell Helix HX7 1 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 424,
+      "item": "Shell Helix HX7 4 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 425,
+      "item": "Shell Rimula R4 1 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 426,
+      "item": "Shell Rimula R4 5 Liter",
+      "J_owner": "NON",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 445,
+      "item": "WD  ",
+      "J_owner": "POLOSAN",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 453,
+      "item": "ICOSON Filter Oli Avanza",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 454,
+      "item": "ICOSON Filter Oli APV/FUTURA",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 455,
+      "item": "ICOSON Filter Oli PAJERO",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 456,
+      "item": "ICOSON Filter Oli INOVA/HILUX",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 457,
+      "item": "ICOSON Filter Oli INOVA DIESEL",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 458,
+      "item": "JF  KARET SUPPORT",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 459,
+      "item": "Honda Filter Oli HRV",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 460,
+      "item": "Sakura Filter Oli SS",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 462,
+      "item": "Suzuki  Lonceng",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 463,
+      "item": "Pertamina 3,5 Liter FASTRON ECO 5W-30",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 464,
+      "item": "Pertamina 4 Liter FASTRON GOLD 5W-40",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 465,
+      "item": "ADM PART Filter Oli Agya Avanza baru",
+      "J_owner": "NON VPT",
+      "K_tax": 0.0,
+      "M_category": "COMPLEMENTARY"
+    },
+    {
+      "row": 472,
+      "item": "Pertamina 1 liter FASTRON GOLD 5W-40",
+      "J_owner": "NON VAT",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    },
+    {
+      "row": 473,
+      "item": "Shell 4 Liter Rimula R5",
+      "J_owner": "NON VAT",
+      "K_tax": 0.0,
+      "M_category": "OIL"
+    }
+  ]
+}

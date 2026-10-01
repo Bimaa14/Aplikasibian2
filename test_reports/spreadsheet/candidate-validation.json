@@ -1,0 +1,301 @@
+{
+  "database": "bian_store_candidate_20260929_222923_cada18",
+  "products_matched": 475,
+  "monthly_checks": [
+    {
+      "month": "2025-01",
+      "report": "sales",
+      "net": 513650000.0,
+      "tax_base": 473425000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-01",
+      "report": "purchases",
+      "net": 448994739.0,
+      "tax_base": 448994739.0,
+      "matches": true
+    },
+    {
+      "month": "2025-02",
+      "report": "sales",
+      "net": 538710000.0,
+      "tax_base": 509395000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-02",
+      "report": "purchases",
+      "net": 332241309.0,
+      "tax_base": 327972409.0,
+      "matches": true
+    },
+    {
+      "month": "2025-03",
+      "report": "sales",
+      "net": 621600000.0,
+      "tax_base": 576885000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-03",
+      "report": "purchases",
+      "net": 629528568.53,
+      "tax_base": 629528568.53,
+      "matches": true
+    },
+    {
+      "month": "2025-04",
+      "report": "sales",
+      "net": 573195000.0,
+      "tax_base": 535820000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-04",
+      "report": "purchases",
+      "net": 342053769.0,
+      "tax_base": 325569769.0,
+      "matches": true
+    },
+    {
+      "month": "2025-05",
+      "report": "sales",
+      "net": 588870000.0,
+      "tax_base": 557540000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-05",
+      "report": "purchases",
+      "net": 521725362.0,
+      "tax_base": 521725362.0,
+      "matches": true
+    },
+    {
+      "month": "2025-06",
+      "report": "sales",
+      "net": 519740000.0,
+      "tax_base": 487400000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-06",
+      "report": "purchases",
+      "net": 341971595.0,
+      "tax_base": 328698595.0,
+      "matches": true
+    },
+    {
+      "month": "2025-07",
+      "report": "sales",
+      "net": 569650000.0,
+      "tax_base": 536460000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-07",
+      "report": "purchases",
+      "net": 531163641.2,
+      "tax_base": 531163641.2,
+      "matches": true
+    },
+    {
+      "month": "2025-08",
+      "report": "sales",
+      "net": 362665000.0,
+      "tax_base": 337950000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-08",
+      "report": "purchases",
+      "net": 175435098.8,
+      "tax_base": 175435098.8,
+      "matches": true
+    },
+    {
+      "month": "2025-09",
+      "report": "sales",
+      "net": 418730000.0,
+      "tax_base": 394145000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-09",
+      "report": "purchases",
+      "net": 355043947.3,
+      "tax_base": 342419947.3,
+      "matches": true
+    },
+    {
+      "month": "2025-10",
+      "report": "sales",
+      "net": 443645000.0,
+      "tax_base": 416735000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-10",
+      "report": "purchases",
+      "net": 443653046.02,
+      "tax_base": 428239446.02,
+      "matches": true
+    },
+    {
+      "month": "2025-11",
+      "report": "sales",
+      "net": 509930000.0,
+      "tax_base": 464665000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-11",
+      "report": "purchases",
+      "net": 380759188.0,
+      "tax_base": 368145188.0,
+      "matches": true
+    },
+    {
+      "month": "2025-12",
+      "report": "sales",
+      "net": 578075000.0,
+      "tax_base": 538290000.0,
+      "matches": true
+    },
+    {
+      "month": "2025-12",
+      "report": "purchases",
+      "net": 444351863.4,
+      "tax_base": 427510263.4,
+      "matches": true
+    },
+    {
+      "month": "2026-01",
+      "report": "sales",
+      "net": 510165000.0,
+      "tax_base": 474625000.0,
+      "matches": true
+    },
+    {
+      "month": "2026-01",
+      "report": "purchases",
+      "net": 414326336.7,
+      "tax_base": 410921336.7,
+      "matches": true
+    },
+    {
+      "month": "2026-02",
+      "report": "sales",
+      "net": 434525000.0,
+      "tax_base": 414380000.0,
+      "matches": true
+    },
+    {
+      "month": "2026-02",
+      "report": "purchases",
+      "net": 337897295.21,
+      "tax_base": 336677295.21,
+      "matches": true
+    },
+    {
+      "month": "2026-03",
+      "report": "sales",
+      "net": 508221000.0,
+      "tax_base": 456380000.0,
+      "matches": true
+    },
+    {
+      "month": "2026-03",
+      "report": "purchases",
+      "net": 358388042.0,
+      "tax_base": 350322146.0,
+      "matches": true
+    },
+    {
+      "month": "2026-04",
+      "report": "sales",
+      "net": 457368000.0,
+      "tax_base": 416835000.0,
+      "matches": true
+    },
+    {
+      "month": "2026-04",
+      "report": "purchases",
+      "net": 362371570.84,
+      "tax_base": 336622714.84,
+      "matches": true
+    },
+    {
+      "month": "2026-05",
+      "report": "sales",
+      "net": 461724000.0,
+      "tax_base": 425060000.0,
+      "matches": true
+    },
+    {
+      "month": "2026-05",
+      "report": "purchases",
+      "net": 391989182.2,
+      "tax_base": 382288435.0,
+      "matches": true
+    },
+    {
+      "month": "2026-06",
+      "report": "sales",
+      "net": 449950000.0,
+      "tax_base": 409575000.0,
+      "matches": true
+    },
+    {
+      "month": "2026-06",
+      "report": "purchases",
+      "net": 364003127.87,
+      "tax_base": 347350221.95,
+      "matches": true
+    },
+    {
+      "month": "2026-07",
+      "report": "sales",
+      "net": 369860000.0,
+      "tax_base": 332050000.0,
+      "matches": true
+    },
+    {
+      "month": "2026-07",
+      "report": "purchases",
+      "net": 232611761.0,
+      "tax_base": 223952500.0,
+      "matches": true
+    },
+    {
+      "month": "2026-08",
+      "report": "sales",
+      "net": 358342000.0,
+      "tax_base": 323920000.0,
+      "matches": true
+    },
+    {
+      "month": "2026-08",
+      "report": "purchases",
+      "net": 273292364.0,
+      "tax_base": 262995208.0,
+      "matches": true
+    },
+    {
+      "month": "2026-09",
+      "report": "sales",
+      "net": 364853000.0,
+      "tax_base": 327515000.0,
+      "matches": true
+    },
+    {
+      "month": "2026-09",
+      "report": "purchases",
+      "net": 374932595.3,
+      "tax_base": 364763625.3,
+      "matches": true
+    }
+  ],
+  "legacy_report_checks": 12
+}

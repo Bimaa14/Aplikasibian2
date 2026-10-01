@@ -1,0 +1,137 @@
+{
+  "project_name": "BengKasir - Pembukuan & Kasir Bengkel Perkasa Jaya",
+  "app_type": "dashboard",
+  "theme": "light_with_dark_tactical_accents",
+  "emotional_tone": "Indonesian tactical SME automotive accounting - precise, high contrast, authoritative, functional",
+  "target_users": "Pemilik Bengkel & Kasir Perkasa Jaya",
+  "archetype": "THE PERFORMANCE PRO / TACTICAL INDUSTRIAL AUTOMOTIVE",
+  "typography": {
+    "heading_font": "Outfit, sans-serif",
+    "body_font": "Plus Jakarta Sans, sans-serif",
+    "mono_font": "JetBrains Mono, monospace",
+    "h1": "text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100",
+    "h2": "text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100",
+    "h3": "text-xl font-semibold text-slate-800 dark:text-slate-200",
+    "h4": "text-lg font-semibold text-slate-800 dark:text-slate-200",
+    "body": "text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed",
+    "label": "text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400",
+    "number_display": "font-mono font-bold tracking-tight text-slate-900 dark:text-slate-100"
+  },
+  "colors": {
+    "primary": {
+      "main": "#1E293B",
+      "hover": "#0F172A",
+      "contrast_text": "#FFFFFF"
+    },
+    "action_blue": {
+      "main": "#2563EB",
+      "hover": "#1D4ED8",
+      "contrast_text": "#FFFFFF"
+    },
+    "status": {
+      "paid_green": "#059669",
+      "paid_bg": "#ECFDF5",
+      "partial_amber": "#D97706",
+      "partial_bg": "#FFFBEB",
+      "unpaid_red": "#DC2626",
+      "unpaid_bg": "#FEF2F2",
+      "void_gray": "#6B7280",
+      "void_bg": "#F3F4F6",
+      "overdue_critical": "#B91C1C"
+    },
+    "backgrounds": {
+      "app_bg": "#F8FAFC",
+      "card_bg": "#FFFFFF",
+      "header_bg": "rgba(255, 255, 255, 0.85)",
+      "table_header_bg": "#F1F5F9"
+    },
+    "borders": {
+      "default": "#E2E8F0",
+      "active": "#94A3B8"
+    }
+  },
+  "layout_strategy": {
+    "grid_mode": "MODE B - High Density Accounting Grid",
+    "spacing_scale": "p-4, p-6, p-8 for containers; gap-4 or gap-6 for metrics widgets",
+    "container_padding": "Minimum p-6 internal padding on bordered cards to avoid text collisions",
+    "header_spec": "Glassmorphism with backdrop-blur-md bg-white/80 border-b border-slate-200 sticky top-0 z-50",
+    "card_style": "Flat, sharp-cornered or subtle 8px border-radius (rounded-lg) with 1px border-slate-200, no glossy standard gradients"
+  },
+  "key_modules_and_components": {
+    "dashboard_overview": {
+      "description": "Ringkasan Keuangan Bengkel & Metrik Utama",
+      "features": [
+        "KPI Cards: Total Piutang Aktif, Total Hutang Supplier, Arus Kas Bulan Ini (Basis Kas), Laba Margin (Basis Akrual)",
+        "Bucket Aging Quick Summary: 0-30 Hari, 31-60 Hari, 61-90 Hari, 90+ Hari",
+        "Recent Transaction Stream with status pill badges (Lunas, Parsial, Belum Bayar, Void/Retur)",
+        "Quick Action trigger buttons for 'Input Pembayaran Piutang' and 'Input Pembayaran Hutang'"
+      ]
+    },
+    "accounts_receivable_piutang": {
+      "description": "Manajemen Piutang Pelanggan Bengkel & Cicilan",
+      "features": [
+        "Table with Total Nominal, Terbayar, Sisa Piutang, Status (Lunas / Belum Lunas / Parsial / Retur-Void)",
+        "Cicilan Modal Dialog with real-time remaining validation (Anti-Overpayment protection)",
+        "Riwayat Pembayaran Drawer / Modal for viewing partial payment log with dates and notes",
+        "Retur Kredit Handler setting receivable status to 'Void' (hangus), avoiding false paid inflation"
+      ]
+    },
+    "accounts_payable_hutang": {
+      "description": "Manajemen Hutang Supplier Sparepart & Ban/Oli",
+      "features": [
+        "Table with Supplier Name, Invoice No, Total Nominal, Sisa Hutang, Due Date",
+        "Partial supplier payment form with payment method (Kas Bengkel, Transfer Bank)",
+        "Aging alerts for upcoming due dates (Telat X Hari indicator)"
+      ]
+    },
+    "reports_dual_basis": {
+      "description": "Laporan Keuangan Dual Basis (Kas vs Akrual)",
+      "features": [
+        "Laporan Arus Kas (Basis Kas): Pendapatan Kas Aktual - Pembayaran Supplier Aktual - Pengeluaran Operasional",
+        "Laporan Margin (Basis Akrual): Omset Penjualan - HPP Modal Barang/Jasa - Pengeluaran Operasional",
+        "Category breakdown filter: Spooring, Oli, Ban, Sparepart, Jasa Service",
+        "Bagi Laba Pemilik Calculator (Skema Subsidi 50/50 >50jt, Cicilan BNI, Min Laba Ibu 10jt)",
+        "CSV Export for Excel verification"
+      ]
+    },
+    "settings_compatibility_notice": {
+      "description": "Pengaturan & Informasional Arsitektur",
+      "features": [
+        "Windows XP & Desktop Standalone limitations notice modal/banner with honest technical explanation",
+        "Local Database vs Cloud Sync indicators",
+        "Data Backup & Restore button simulation"
+      ]
+    }
+  },
+  "testing_and_data_attributes": {
+    "mandatory_rule": "Every button, input, select, link, tab, summary metric, status badge, and table row MUST have a data-testid attribute in kebab-case format.",
+    "examples": [
+      "data-testid=\"nav-dashboard-link\"",
+      "data-testid=\"nav-piutang-link\"",
+      "data-testid=\"nav-hutang-link\"",
+      "data-testid=\"nav-reports-link\"",
+      "data-testid=\"metric-total-piutang\"",
+      "data-testid=\"metric-total-hutang\"",
+      "data-testid=\"metric-cash-flow\"",
+      "data-testid=\"btn-pay-receivable-123\"",
+      "data-testid=\"input-payment-amount\"",
+      "data-testid=\"btn-submit-payment\"",
+      "data-testid=\"status-badge-paid\"",
+      "data-testid=\"status-badge-partial\"",
+      "data-testid=\"status-badge-void\"",
+      "data-testid=\"btn-export-csv-report\""
+    ]
+  },
+  "file_structure_guidelines": {
+    "use_js_extension": true,
+    "note": "Components in /app/frontend/src use .js syntax (React with JSX standard)."
+  },
+  "general_ui_ux_guidelines": [
+    "Never use full-screen transparent headers or drop-downs without solid or blurred backgrounds.",
+    "Hover states must always explicitly set background and text colors to preserve legibility.",
+    "All monetary amounts must use Indonesian Rupiah formatting (e.g. Rp 1.500.000).",
+    "Void/Retur credit items must clearly display a strike-through or muted gray badge with 'Retur/Void' status to ensure non-inflation of paid AR metrics.",
+    "Avoid invented or random seeded statistical charts when empty; provide clear Indonesian empty state guidance.",
+    "Include responsive layouts that scale gracefully down to mobile screens and up to ultra-wide desktop monitors."
+  ]
+}
