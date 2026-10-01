@@ -117,7 +117,55 @@ def test_setup_form_origin_passes_strict_csrf_middleware(monkeypatch, setup_key)
     assert accepted.status_code == 200
     assert len(fake_db.users.documents) == 1
 
-    for origin in ("null", "https://untrusted.example"):
-        rejected = client.post("/api/ordinary-mutation", headers={"Origin": origin})
+    # Railway terminates TLS before forwarding the request to the HTTP app.
+    railway = client.post(
+        "/api/ordinary-mutation",
+        headers={
+            "Origin": "https://app.example",
+            "Host": "internal-service",
+            "X-Forwarded-Host": "app.example, internal-proxy",
+            "X-Forwarded-Proto": "https, http",
+        },
+    )
+    assert railway.status_code == 404
+
+    for origin in ("null", "https://untrusted.example", "https://app.example/path"):
+        rejected = client.post(
+            "/api/ordinary-mutation",
+            headers={
+                "Origin": origin,
+                "X-Forwarded-Host": "app.example",
+                "X-Forwarded-Proto": "https",
+            },
+        )
         assert rejected.status_code == 403
         assert rejected.text == "Untrusted request origin"
+
+@pytest.mark.parametrize(
+    "forwarded_host,forwarded_proto",
+    [
+        ("user@app.example", "https"),
+        ("app.example/path", "https"),
+        ("app.example", "javascript"),
+        ("untrusted.example", "https"),
+    ],
+)
+def test_setup_form_rejects_malformed_or_untrusted_forwarding(
+    monkeypatch, setup_key, forwarded_host, forwarded_proto
+):
+    monkeypatch.setattr(server, "COOKIE_SAMESITE", "none")
+    monkeypatch.setattr(server, "CORS_ORIGINS", [])
+    client = TestClient(server.app, base_url="http://internal-service")
+
+    response = client.post(
+        "/api/setup-demo",
+        data={"secret": "a" * 32, "password": "password-demo-aman"},
+        headers={
+            "Origin": "https://app.example",
+            "X-Forwarded-Host": forwarded_host,
+            "X-Forwarded-Proto": forwarded_proto,
+        },
+    )
+
+    assert response.status_code == 403
+    assert response.text == "Untrusted request origin"

@@ -1,5 +1,5 @@
-import asyncio
 from contextlib import asynccontextmanager
+from urllib.parse import urlsplit
 from fastapi import FastAPI, APIRouter, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -35,8 +35,33 @@ def is_trusted_request_origin(request):
         return request.headers.get("sec-fetch-site", "").lower() == "same-origin"
     if origin in {"", "null", "*"}:
         return False
-    request_origin = f"{request.url.scheme}://{request.url.netloc}"
-    return origin == request_origin or origin in CORS_ORIGINS
+    try:
+        parsed_origin = urlsplit(origin)
+        origin_port = parsed_origin.port
+    except ValueError:
+        return False
+    if (parsed_origin.scheme.lower() not in {"http", "https"} or not parsed_origin.hostname
+            or parsed_origin.username is not None or parsed_origin.password is not None
+            or parsed_origin.path or parsed_origin.query or parsed_origin.fragment):
+        return False
+    if origin.rstrip("/") in CORS_ORIGINS:
+        return True
+    forwarded_proto = (request.headers.get("x-forwarded-proto") or "").split(",", 1)[0].strip()
+    request_scheme = (forwarded_proto or request.url.scheme).lower()
+    forwarded_host = (request.headers.get("x-forwarded-host") or request.headers.get("host") or "").split(",", 1)[0].strip()
+    if request_scheme not in {"http", "https"} or not forwarded_host or any(c.isspace() for c in forwarded_host):
+        return False
+    try:
+        parsed_host = urlsplit(f"//{forwarded_host}")
+        trusted_port = parsed_host.port
+    except ValueError:
+        return False
+    if (not parsed_host.hostname or parsed_host.username is not None or parsed_host.password is not None
+            or parsed_host.path or parsed_host.query or parsed_host.fragment):
+        return False
+    origin_effective_port = origin_port or (443 if parsed_origin.scheme.lower() == "https" else 80)
+    host_effective_port = trusted_port or (443 if request_scheme == "https" else 80)
+    return parsed_origin.hostname.lower() == parsed_host.hostname.lower() and origin_effective_port == host_effective_port
 
 
 # Startup runs before the yield, shutdown after it. Add your own setup/teardown here.
