@@ -1,6 +1,6 @@
 import asyncio
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 import os
@@ -21,6 +21,22 @@ from lib.debts import migrate_returned_debts
 from lib.financial_operations import recover_financial_operations
 from lib.financial_operations import financial_lock
 from lib.runtime_lock import single_writer
+from lib.auth import COOKIE_SAMESITE
+
+CORS_ORIGINS = [origin.strip().rstrip("/") for origin in os.environ.get("CORS_ORIGINS", "").split(",") if origin.strip()]
+UNSAFE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
+
+
+def is_trusted_request_origin(request):
+    origin = request.headers.get("origin")
+    if origin is None:
+        # In cross-site cookie mode, missing provenance must fail closed. Modern
+        # same-origin browsers can still identify themselves via Fetch Metadata.
+        return request.headers.get("sec-fetch-site", "").lower() == "same-origin"
+    if origin in {"", "null", "*"}:
+        return False
+    request_origin = f"{request.url.scheme}://{request.url.netloc}"
+    return origin == request_origin or origin in CORS_ORIGINS
 
 
 # Startup runs before the yield, shutdown after it. Add your own setup/teardown here.
@@ -59,6 +75,12 @@ app = FastAPI(
     openapi_url="/openapi.json" if os.environ.get("ENABLE_API_DOCS", "false").lower() == "true" else None,
 )
 
+
+@app.middleware("http")
+async def enforce_cookie_csrf_origin(request, call_next):
+    if COOKIE_SAMESITE == "none" and request.method in UNSAFE_METHODS and not is_trusted_request_origin(request):
+        return Response(content="Untrusted request origin", status_code=403)
+    return await call_next(request)
 
 @app.middleware("http")
 async def consistent_financial_reads(request, call_next):
@@ -125,7 +147,7 @@ app.include_router(api_router)
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=CORS_ORIGINS or ["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

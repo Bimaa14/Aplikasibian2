@@ -13,6 +13,11 @@ SESSION_COOKIE = "bengkel_session"
 SESSION_TTL = timedelta(days=7)
 # Cookie Secure flag: on by default; set COOKIE_SECURE=false only for plain-HTTP local dev.
 COOKIE_SECURE = os.environ.get("COOKIE_SECURE", "true").lower() != "false"
+COOKIE_SAMESITE = os.environ.get("COOKIE_SAMESITE", "lax").strip().lower()
+if COOKIE_SAMESITE not in {"lax", "strict", "none"}:
+    raise RuntimeError("COOKIE_SAMESITE must be one of: lax, strict, none")
+if COOKIE_SAMESITE == "none" and not COOKIE_SECURE:
+    raise RuntimeError("COOKIE_SAMESITE=none requires COOKIE_SECURE=true")
 # Brute-force guard on /auth/login
 MAX_LOGIN_ATTEMPTS = 8
 LOGIN_WINDOW = timedelta(minutes=15)
@@ -42,7 +47,7 @@ async def create_session(user_id: str, response: Response) -> None:
         value=token,
         httponly=True,
         secure=COOKIE_SECURE,
-        samesite="lax",
+        samesite=COOKIE_SAMESITE,
         path="/",
         max_age=int(SESSION_TTL.total_seconds()),
     )
@@ -52,7 +57,13 @@ async def destroy_session(request: Request, response: Response) -> None:
     token = request.cookies.get(SESSION_COOKIE)
     if token:
         await db.sessions.delete_one({"token": token})
-    response.delete_cookie(key=SESSION_COOKIE, path="/")
+    response.delete_cookie(
+        key=SESSION_COOKIE,
+        path="/",
+        httponly=True,
+        secure=COOKIE_SECURE,
+        samesite=COOKIE_SAMESITE,
+    )
 
 
 async def require_user(request: Request) -> dict:

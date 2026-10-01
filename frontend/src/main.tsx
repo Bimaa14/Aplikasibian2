@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import { ThemeProvider } from 'next-themes'
 import './index.css'
 import './bookkeeping.css'
@@ -12,9 +12,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="perkasa-jaya.theme" disableTransitionOnChange>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <HashRouter>
         <App />
-      </BrowserRouter>
+      </HashRouter>
     </QueryClientProvider>
     </ThemeProvider>
   </StrictMode>,

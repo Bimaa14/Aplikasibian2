@@ -51,7 +51,7 @@ export default function LoginPage() {
         />
         <div className="relative flex h-full flex-col justify-end p-10">
           <div className="mb-auto flex items-center gap-4 pt-8">
-            <img src="/LOGOWEB-removebg-preview.png" alt="Logo Perkasa Jaya" className="h-32 w-auto shrink-0 object-contain drop-shadow-sm" />
+            <img src={`${import.meta.env.BASE_URL}LOGOWEB-removebg-preview.png`} alt="Logo Perkasa Jaya" className="h-32 w-auto shrink-0 object-contain drop-shadow-sm" />
             <p className="font-heading text-3xl font-bold tracking-tight text-amber-300 drop-shadow-md">PERKASA JAYA</p>
           </div>
         </div>
@@ -62,7 +62,7 @@ export default function LoginPage() {
         <div className="absolute right-6 top-6"><ThemeToggle compact /></div>
         <div className="w-full max-w-sm">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <img src="/LOGOWEB-removebg-preview.png" alt="Logo Perkasa Jaya" className="h-16 w-auto shrink-0 object-contain drop-shadow-sm" />
+            <img src={`${import.meta.env.BASE_URL}LOGOWEB-removebg-preview.png`} alt="Logo Perkasa Jaya" className="h-16 w-auto shrink-0 object-contain drop-shadow-sm" />
             <p className="font-heading text-xl font-bold text-primary">PERKASA JAYA</p>
           </div>
           <h2 className="font-heading text-2xl font-bold tracking-tight">Masuk ke Kasir</h2>

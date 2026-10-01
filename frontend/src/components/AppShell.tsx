@@ -77,7 +77,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 function Brand() {
   return (
     <div className="flex items-center gap-3 px-5 py-5">
-      <img src="/LOGOWEB-removebg-preview.png" alt="Logo Perkasa Jaya" className="h-20 w-auto shrink-0 object-contain drop-shadow-sm" />
+      <img src={`${import.meta.env.BASE_URL}LOGOWEB-removebg-preview.png`} alt="Logo Perkasa Jaya" className="h-20 w-auto shrink-0 object-contain drop-shadow-sm" />
       <div>
         <p className="font-heading text-lg font-bold leading-none tracking-tight text-primary">PERKASA JAYA</p>
         <p className="mt-1 text-xs text-muted-foreground">POS &amp; Mini ERP Bengkel</p>

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { apiGet } from "@/lib/api";
+import { apiGet, fileUrl } from "@/lib/api";
 import { formatIDR, todayLocalISO } from "@/lib/format";
 import type { MonthlyReport } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -71,7 +71,7 @@ export default function ReportsPage() {
   const r = reportQuery.data;
 
   function download(kind: "csv" | "pdf") {
-    const url = `${process.env.REACT_APP_BACKEND_URL}/api/reports/monthly/${kind}?month=${month}`;
+    const url = fileUrl(`/reports/monthly/${kind}?month=${month}`);
     const a = document.createElement("a");
     a.href = url;
     a.download = `laporan-bengkel-${month}.${kind}`;

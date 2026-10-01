@@ -41,7 +41,7 @@ export default defineConfig(async ({ mode }) => {
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("PORT frontend harus antara 1 dan 65535");
   const emergentOverlay = await loadEmergentOverlay();
   return {
-    define: { "process.env.REACT_APP_BACKEND_URL": JSON.stringify("") },
+    base: env.VITE_BASE_PATH || "/",
     plugins: [
       react(),
       tailwindcss(),
