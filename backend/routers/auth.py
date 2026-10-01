@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel
 
 from lib.auth import (assert_login_allowed, clear_login_failures, create_session,
-                      destroy_session, register_login_failure, require_user, verify_password)
+                      destroy_session, hash_password, register_login_failure,
+                      require_user, verify_password)
 from lib.db import db
 from models.auth import LoginRequest, User
 

@@ -110,7 +110,7 @@ async def root():
 
 # Mount resource routers (each exports its own APIRouter, all under /api)
 from routers import (auth, customers, dashboard, expenses, laravel_bundle,
-                     payables, products, receivables, reports, stock_in,
+                     payables, products, receivables, reports, setup_demo, stock_in,
                      suppliers, transactions, vehicles)
 from routers import excel_reports, imports as imports_router
 from routers import books
@@ -125,6 +125,7 @@ async def system_info():
             'offline_installer': False, 'source_commit': '2382f5bc3bbbaf3c230319701d8351c1f0e80881'}
 
 api_router.include_router(auth.router)
+api_router.include_router(setup_demo.router)
 api_router.include_router(products.router)
 api_router.include_router(customers.router)
 api_router.include_router(suppliers.router)
