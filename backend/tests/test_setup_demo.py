@@ -2,8 +2,10 @@
 
 import pytest
 from fastapi import HTTPException
+from fastapi.testclient import TestClient
 from pymongo.errors import DuplicateKeyError
 
+import server
 from routers import setup_demo
 
 
@@ -91,3 +93,31 @@ async def test_setup_rejects_password_over_bcrypt_limit(monkeypatch, setup_key):
     assert response.status_code == 200
     assert not fake_db.users.documents
     assert "maksimal 72 byte" in response.body.decode()
+
+
+def test_setup_form_origin_passes_strict_csrf_middleware(monkeypatch, setup_key):
+    backend_origin = "https://backend.example"
+    fake_db = FakeDatabase()
+    monkeypatch.setattr(setup_demo, "db", fake_db)
+    monkeypatch.setattr(server, "COOKIE_SAMESITE", "none")
+    monkeypatch.setattr(server, "CORS_ORIGINS", [backend_origin])
+
+    # Simulate a reverse proxy where the app-visible origin differs from the public origin.
+    client = TestClient(server.app, base_url="http://internal-service")
+    form = client.get("/api/setup-demo")
+
+    assert form.status_code == 200
+    assert form.headers["referrer-policy"] == "same-origin"
+
+    accepted = client.post(
+        "/api/setup-demo",
+        data={"secret": "a" * 32, "password": "password-demo-aman"},
+        headers={"Origin": backend_origin},
+    )
+    assert accepted.status_code == 200
+    assert len(fake_db.users.documents) == 1
+
+    for origin in ("null", "https://untrusted.example"):
+        rejected = client.post("/api/ordinary-mutation", headers={"Origin": origin})
+        assert rejected.status_code == 403
+        assert rejected.text == "Untrusted request origin"

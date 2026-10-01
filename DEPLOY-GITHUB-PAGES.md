@@ -14,12 +14,13 @@
 
 ## Setup demo admin satu lần
 
-1. Railway backend: tambahkan variable **`DEMO_SETUP_KEY`** dengan secret acak minimal 32 byte. Jangan gunakan default atau simpan secret di repository.
-2. Tunggu deployment selesai, lalu buka `https://aplikasibian2-production.up.railway.app/api/setup-demo`.
-3. Isi secret dan password baru minimal 12 karakter, maksimal 72 byte UTF-8. Form memakai POST body, bukan URL.
-4. Klik **Buat akun demo admin**, lalu tutup halaman dan login secara terpisah sebagai `demo-admin`. Tidak ada login otomatis.
-5. Endpoint dinonaktifkan jika variable tidak ada atau kurang dari 32 byte. Endpoint hanya membuat akun; akun yang sudah ada tidak diubah.
-6. Setelah setup, hapus `DEMO_SETUP_KEY` dari Railway untuk menonaktifkan endpoint. Akun admin tetap ada; hapus atau ubah secara manual bila tidak diperlukan.
+1. Railway backend: tambahkan variable **`DEMO_SETUP_KEY`** dengan secret acak minimal 32 byte. Jangan gunakan default atau simpan secret di repository. Jika key pernah terekspos, rotasi sebelum menjalankan setup.
+2. Tambahkan origin backend yang membuka form setup ke **`CORS_ORIGINS`**, dipisahkan koma dari origin frontend, misalnya `https://bimaa14.github.io,https://aplikasibian2-production.up.railway.app`. Jangan tambahkan path atau trailing slash.
+3. Tunggu deployment selesai, lalu buka `https://aplikasibian2-production.up.railway.app/api/setup-demo`.
+4. Isi secret dan password baru minimal 12 karakter, maksimal 72 byte UTF-8. Form memakai POST body, bukan URL, sehingga query string tidak membawa secret.
+5. Klik **Buat akun demo admin**, lalu tutup halaman dan login secara terpisah sebagai `demo-admin`. Tidak ada login otomatis.
+6. Endpoint dinonaktifkan jika variable tidak ada atau kurang dari 32 byte. Endpoint hanya membuat akun; akun yang sudah ada tidak diubah.
+7. Setelah setup, hapus `DEMO_SETUP_KEY` dari Railway untuk menonaktifkan endpoint. Akun admin tetap ada; hapus atau ubah secara manual bila tidak diperlukan.
 
 ## Konfigurasi build
 
