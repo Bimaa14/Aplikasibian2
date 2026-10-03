@@ -1,0 +1,203 @@
+from contextlib import asynccontextmanager
+from urllib.parse import urlsplit
+from fastapi import FastAPI, APIRouter, Response
+from fastapi.responses import JSONResponse
+from dotenv import load_dotenv
+from starlette.middleware.cors import CORSMiddleware
+import os
+import logging
+from pathlib import Path
+from pydantic import BaseModel, Field
+from typing import List
+import uuid
+from datetime import datetime, timezone
+
+
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
+
+# MongoDB connection
+from lib.db import client, db, ensure_indexes
+from lib.debts import migrate_returned_debts
+from lib.financial_operations import recover_financial_operations
+from lib.financial_operations import financial_lock
+from lib.runtime_lock import single_writer, cloud_single_writer
+from lib.auth import COOKIE_SAMESITE
+from lib.frontend_hosting import mount_frontend
+
+CORS_ORIGINS = [origin.strip().rstrip("/") for origin in os.environ.get("CORS_ORIGINS", "").split(",") if origin.strip()]
+render_origin = os.environ.get("RENDER_EXTERNAL_URL", "").strip().rstrip("/")
+if render_origin and render_origin not in CORS_ORIGINS:
+    CORS_ORIGINS.append(render_origin)
+UNSAFE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
+
+
+def is_trusted_request_origin(request):
+    origin = request.headers.get("origin")
+    if origin is None:
+        # In cross-site cookie mode, missing provenance must fail closed. Modern
+        # same-origin browsers can still identify themselves via Fetch Metadata.
+        return request.headers.get("sec-fetch-site", "").lower() == "same-origin"
+    if origin in {"", "null", "*"}:
+        return False
+    try:
+        parsed_origin = urlsplit(origin)
+        origin_port = parsed_origin.port
+    except ValueError:
+        return False
+    if (parsed_origin.scheme.lower() not in {"http", "https"} or not parsed_origin.hostname
+            or parsed_origin.username is not None or parsed_origin.password is not None
+            or parsed_origin.path or parsed_origin.query or parsed_origin.fragment):
+        return False
+    if origin.rstrip("/") in CORS_ORIGINS:
+        return True
+    forwarded_proto = (request.headers.get("x-forwarded-proto") or "").split(",", 1)[0].strip()
+    request_scheme = (forwarded_proto or request.url.scheme).lower()
+    forwarded_host = (request.headers.get("x-forwarded-host") or request.headers.get("host") or "").split(",", 1)[0].strip()
+    if request_scheme not in {"http", "https"} or not forwarded_host or any(c.isspace() for c in forwarded_host):
+        return False
+    try:
+        parsed_host = urlsplit(f"//{forwarded_host}")
+        trusted_port = parsed_host.port
+    except ValueError:
+        return False
+    if (not parsed_host.hostname or parsed_host.username is not None or parsed_host.password is not None
+            or parsed_host.path or parsed_host.query or parsed_host.fragment):
+        return False
+    origin_effective_port = origin_port or (443 if parsed_origin.scheme.lower() == "https" else 80)
+    host_effective_port = trusted_port or (443 if request_scheme == "https" else 80)
+    return parsed_origin.hostname.lower() == parsed_host.hostname.lower() and origin_effective_port == host_effective_port
+
+
+# Startup runs before the yield, shutdown after it. Add your own setup/teardown here.
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    with single_writer(db.name):
+        try:
+            async with cloud_single_writer(db):
+                await prepare_database()
+                yield
+        finally:
+            client.close()
+
+
+async def prepare_database():
+    await recover_financial_operations()
+    await ensure_indexes()
+    await migrate_returned_debts()
+    for name in ('excel_events', 'import_batches', 'transactions', 'transaction_details'):
+        try:
+            await db[name].create_index('id', unique=True, name='id_unique')
+        except Exception as exc:
+            logging.getLogger(__name__).error("create id index on %s: %s", name, exc)
+    try:
+        await db.excel_parameters.create_index('month', unique=True, name='month_unique')
+        await db.excel_snapshots.create_index([('source', 1), ('month', 1)], unique=True, name='source_month_unique')
+    except Exception as exc:
+        logging.getLogger(__name__).error("create excel indexes: %s", exc)
+
+
+# Create the main app without a prefix
+app = FastAPI(
+    lifespan=lifespan,
+    # Skema/dokumentasi API tidak diekspos di produksi (set ENABLE_API_DOCS=true untuk dev).
+    docs_url="/docs" if os.environ.get("ENABLE_API_DOCS", "false").lower() == "true" else None,
+    redoc_url=None,
+    openapi_url="/openapi.json" if os.environ.get("ENABLE_API_DOCS", "false").lower() == "true" else None,
+)
+
+
+@app.get("/healthz", include_in_schema=False)
+async def health_check():
+    try:
+        await db.command("ping")
+    except Exception:
+        logger.warning("Health check: database unavailable")
+        return JSONResponse({"status": "unavailable"}, status_code=503)
+    return {"status": "ok"}
+
+
+@app.middleware("http")
+async def enforce_cookie_csrf_origin(request, call_next):
+    if COOKIE_SAMESITE == "none" and request.method in UNSAFE_METHODS and not is_trusted_request_origin(request):
+        return Response(content="Untrusted request origin", status_code=403)
+    return await call_next(request)
+
+@app.middleware("http")
+async def consistent_financial_reads(request, call_next):
+    # Wait until a write/rollback finishes so UI and reports never see its partial state.
+    if request.method == "GET" and request.url.path.startswith("/api/"):
+        async with financial_lock:
+            return await call_next(request)
+    return await call_next(request)
+
+# Create a router with the /api prefix
+api_router = APIRouter(prefix="/api")
+
+
+# Define Models
+class StatusCheck(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    client_name: str
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class StatusCheckCreate(BaseModel):
+    client_name: str
+
+# Add your routes to the router instead of directly to app
+@api_router.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+# Mount resource routers (each exports its own APIRouter, all under /api)
+from routers import (auth, customers, dashboard, expenses, laravel_bundle,
+                     payables, products, receivables, reports, setup_demo, stock_in,
+                     suppliers, transactions, vehicles)
+from routers import excel_reports, imports as imports_router
+from routers import books
+from lib.dates import today_iso
+from lib.auth import require_user
+from fastapi import Depends
+
+
+@api_router.get('/system', dependencies=[Depends(require_user)])
+async def system_info():
+    return {'today': today_iso(), 'timezone': os.environ['APP_TZ'], 'xp_supported': False,
+            'offline_installer': False, 'source_commit': '2382f5bc3bbbaf3c230319701d8351c1f0e80881'}
+
+api_router.include_router(auth.router)
+api_router.include_router(setup_demo.router)
+api_router.include_router(products.router)
+api_router.include_router(customers.router)
+api_router.include_router(suppliers.router)
+api_router.include_router(transactions.router)
+api_router.include_router(receivables.router)
+api_router.include_router(payables.router)
+api_router.include_router(expenses.router)
+api_router.include_router(dashboard.router)
+api_router.include_router(stock_in.router)
+api_router.include_router(vehicles.router)
+api_router.include_router(reports.router)
+api_router.include_router(laravel_bundle.router)
+api_router.include_router(excel_reports.router)
+api_router.include_router(imports_router.router)
+api_router.include_router(books.router)
+
+# Include the router in the main app
+app.include_router(api_router)
+mount_frontend(app)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=CORS_ORIGINS,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)

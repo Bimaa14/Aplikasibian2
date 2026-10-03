@@ -1,0 +1,15 @@
+.env
+.env.*
+**/.env
+**/.env.*
+*.key
+*.pem
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+dist/
+.cache/
+test_reports/
+*.tsbuildinfo

@@ -1,0 +1,48 @@
+# Deny by default: only application source and required workbook references enter
+# the Docker build context. This also excludes Render secret files at the root.
+**
+!Dockerfile
+!.dockerignore
+
+!frontend/
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/index.html
+!frontend/tsconfig*.json
+!frontend/vite.config.ts
+!frontend/src/
+!frontend/src/**
+!frontend/public/
+!frontend/public/**
+
+!backend/
+!backend/server.py
+!backend/requirements-local.txt
+!backend/lib/
+!backend/lib/*.py
+!backend/models/
+!backend/models/*.py
+!backend/routers/
+!backend/routers/*.py
+
+!imports/
+!imports/workbooks/
+!imports/workbooks/09 - Laporan Bulan September.xlsx
+!imports/workbooks/Perkasa Jaya - Store information system (wecompress.com).xlsx
+!refrensi-spreadsheet/
+!refrensi-spreadsheet/Perkasa Jaya - Store information system (1).xlsx
+
+# Keep secrets and generated dependencies excluded even under allowed folders.
+**/.env
+**/.env.*
+**/*.env
+**/*credentials*
+**/*.key
+**/*.pem
+**/node_modules
+**/node_modules/**
+**/__pycache__
+**/__pycache__/**
+**/*.pyc
+**/.pytest_cache
+**/.pytest_cache/**
