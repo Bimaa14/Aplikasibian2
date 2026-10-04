@@ -20,8 +20,8 @@ from tools.copy_local_to_atlas_demo import atlas_uri, make_client, safe_error, T
 from tools.report_baseline_core import build_report_baseline
 from tools.report_baseline_apply import apply_reviewed_baseline, preflight_update, validate_cloud_source
 
-WORKBOOK = ROOT / 'refrensi-spreadsheet/Perkasa Jaya - Store information system (2).xlsx'
-EXPECTED_DIGEST = '0a336185b123e856be79801be0e7b354ee5366df1f9eb86056f3fd80bf300061'
+WORKBOOK = ROOT / 'refrensi-spreadsheet/Perkasa Jaya - Store information system (3).xlsx'
+EXPECTED_DIGEST = '1b204cc3c0ca119f4cb3ef582a80d85c0eddd2c49e2287d3843108ccfe084780'
 
 
 def write_status(folder, phase, **metadata):
@@ -33,7 +33,7 @@ def write_status(folder, phase, **metadata):
 
 def source_workbook():
     if hashlib.sha256(WORKBOOK.read_bytes()).hexdigest() != EXPECTED_DIGEST:
-        raise ValueError('File sheet (2) berubah; minta pemeriksaan ulang sebelum memperbarui laporan.')
+        raise ValueError('File sheet (3) berubah; minta pemeriksaan ulang sebelum memperbarui laporan.')
     return dataset('store_current', WORKBOOK)
 
 
@@ -42,13 +42,13 @@ def run_window(folder):
     from tkinter import ttk
 
     root = tk.Tk()
-    root.title('Bian - samakan laporan online dengan sheet (2)')
+    root.title('Bian - samakan laporan online dengan sheet (3)')
     root.geometry('760x600')
     root.minsize(710, 560)
     frame = ttk.Frame(root, padding=24)
     frame.pack(fill='both', expand=True)
     ttk.Label(frame, text='Perbarui laporan demo online', font=('Segoe UI', 17, 'bold')).pack(anchor='w')
-    ttk.Label(frame, text=('Sumber: sheet (2) yang sudah diperiksa\nTujuan: bian_client_demo di Atlas Cluster0\n'
+    ttk.Label(frame, text=('Sumber: sheet (3) yang sudah diperiksa\nTujuan: bian_client_demo di Atlas Cluster0\n'
                            'Angka laporan mengikuti sheet. Stok, akun, saldo tagihan, dan riwayat transaksi aplikasi tetap disimpan.'),
               wraplength=700, justify='left').pack(anchor='w', pady=(12, 18))
     ttk.Label(frame, text='Password database Atlas untuk bian_demo_service:').pack(anchor='w')
@@ -199,7 +199,7 @@ def run_window(folder):
                     password.configure(state='normal')
                     password.delete(0, 'end')
                     password.configure(state='disabled')
-                    notice.set('Selesai! Data online sudah diverifikasi. Jalankan deployment kode terbaru yang memakai sheet (2).')
+                    notice.set('Selesai! Data online sudah diverifikasi. Jalankan deployment kode terbaru yang memakai sheet (3).')
                     add_line('Stok, akun, dan saldo tagihan tetap sesuai sebelum pembaruan. Backup tersimpan.')
                 elif kind == 'error':
                     notice.set(data['message'])

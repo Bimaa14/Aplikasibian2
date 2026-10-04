@@ -24,7 +24,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     CLOUD_SINGLE_WRITER=true \
     FRONTEND_DIST=/app/frontend/dist \
     WORKBOOK_DIR=/app/imports/workbooks \
-    STORE_WORKBOOK_PATH="/app/refrensi-spreadsheet/Perkasa Jaya - Store information system (2).xlsx" \
+    STORE_WORKBOOK_PATH="/app/refrensi-spreadsheet/Perkasa Jaya - Store information system (3).xlsx" \
     PORT=10000
 
 COPY backend/requirements-local.txt /app/backend/requirements-local.txt
@@ -35,7 +35,7 @@ RUN python -m pip install --no-cache-dir -r /app/backend/requirements-local.txt 
 COPY --chown=10001:10001 backend/ /app/backend/
 COPY --from=frontend-build --chown=10001:10001 /app/frontend/dist/ /app/frontend/dist/
 COPY --chown=10001:10001 ["imports/workbooks/09 - Laporan Bulan September.xlsx", "imports/workbooks/Perkasa Jaya - Store information system (wecompress.com).xlsx", "/app/imports/workbooks/"]
-COPY --chown=10001:10001 ["refrensi-spreadsheet/Perkasa Jaya - Store information system (1).xlsx", "refrensi-spreadsheet/Perkasa Jaya - Store information system (2).xlsx", "/app/refrensi-spreadsheet/"]
+COPY --chown=10001:10001 ["refrensi-spreadsheet/Perkasa Jaya - Store information system (1).xlsx", "refrensi-spreadsheet/Perkasa Jaya - Store information system (3).xlsx", "/app/refrensi-spreadsheet/"]
 
 USER 10001:10001
 EXPOSE 10000

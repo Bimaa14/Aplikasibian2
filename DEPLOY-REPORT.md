@@ -1,6 +1,6 @@
-# Menyamakan laporan demo dengan sheet (2)
+# Menyamakan laporan demo dengan sheet terbaru
 
-Kode Docker menggunakan `Perkasa Jaya - Store information system (2).xlsx` melalui
+Kode Docker menggunakan `Perkasa Jaya - Store information system (3).xlsx` melalui
 `STORE_WORKBOOK_PATH`. File (1) tetap tersedia; aplikasi lokal yang belum memasang
 variabel tersebut tetap menggunakan sumber sebelumnya.
 
@@ -8,7 +8,7 @@ Pembaruan data dan kode harus dipasang bersama. Mengganti workbook saja belum
 mengganti riwayat impor di Atlas. Menjalankan kode lama setelah pembaruan data
 dapat membaca metadata sumber yang lama.
 
-Laporan baseline mengikuti sumber (2), termasuk nilai cache dan koreksi manual.
+Laporan baseline mengikuti sumber (3), termasuk nilai cache dan koreksi manual.
 Transaksi aplikasi yang sudah ada tetap disimpan tetapi memiliki
 `report_excluded=true`; pembayaran lama ditandai per pembayaran, bukan per
 tagihan. Transaksi dan pembayaran baru tanpa penanda tetap masuk laporan.
@@ -17,6 +17,10 @@ Stok, akun, pelanggan, supplier, dan saldo tagihan tetap dipertahankan.
 September 2026: pendapatan Rp399.283.000; modal Rp343.145.000; laba Rp45.278.000;
 spooring Rp10.860.000; pembayaran supplier Rp397.114.574; pengeluaran Rp41.735.000;
 laba bersih Rp3.543.000. Angka ini diverifikasi terhadap `REPORT!E15:M15`.
+
+Oktober 2026 pada sumber (3): pendapatan Rp48.675.000; modal Rp40.895.000;
+laba Rp5.765.000; spooring Rp2.015.000; pembayaran supplier Rp59.030.000;
+pengeluaran Rp3.975.000; laba bersih Rp1.790.000.
 
 Salinan uji cocok pada seluruh 12 bulan tahun 2026, termasuk urutan dan isi baris
 Get Data penjualan serta pembelian. Pemeriksaan hash memastikan database sumber,
@@ -39,7 +43,7 @@ fokus pada repository demo lulus 148 kasus. Frontend dan format nota tidak diuba
 5. Setelah helper menyatakan selesai, push commit kode terbaru. Deploy commit
    terbaru itu di Railway; jangan redeploy commit lama. Pastikan 1 replica dan
    1 worker, serta tidak ada variabel Railway yang menimpa `STORE_WORKBOOK_PATH`
-   dengan file (1).
+   dengan file (1) atau (2).
 6. Periksa `/healthz` dan laporan September/Oktober setelah server hidup.
 
 Password tidak disimpan dalam source, backup, status, atau log. Backup privat
