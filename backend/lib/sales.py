@@ -65,9 +65,34 @@ def month_bounds(month):
     return {'$gte': start.isoformat(), '$lt': end.isoformat()}
 
 
+async def archived_zero_sales(month, owner=None, category=None, tax=None, payment_method=None):
+    """Source-only zero rows still occupy the Apps Script REPORT summary range.
+
+    Their POS invoices were intentionally omitted during import. Read the source
+    archive without manufacturing transactions or adding item-ledger rows.
+    """
+    query = {'import_source': 'store_current', 'date': month_bounds(month),
+             'kind': {'$in': ['cash_sale', 'credit_sale']}, 'qty': 0, 'amount': 0,
+             'report_excluded': {'$ne': True}}
+    rows = []
+    async for event in db.excel_events.find(query, {'_id': 0}):
+        method = 'credit' if event['kind'] == 'credit_sale' else 'cash'
+        line_owner = event.get('owner') or 'unassigned'
+        line_category = event.get('category') or 'unassigned'
+        line_tax = str(event['tax']) if event.get('tax') in (0, 1) else 'unassigned'
+        if (owner is not None and line_owner != owner
+                or category is not None and line_category != category
+                or tax is not None and line_tax != tax
+                or payment_method is not None and method != payment_method):
+            continue
+        rows.append({**event, 'payment_method': method})
+    return rows
+
+
 async def sales_report(month, owner=None, category=None, tax=None, payment_method=None, page=1, page_size=25):
     bounds = month_bounds(month)
-    query = {'$or': [{'date_key': bounds}, {'return_date': bounds}], 'status': {'$in': ['completed', 'returned']}}
+    query = {'$or': [{'date_key': bounds}, {'return_date': bounds}],
+             'status': {'$in': ['completed', 'returned']}, 'report_excluded': {'$ne': True}}
     if payment_method:
         query['payment_method'] = payment_method
     pipeline = [
@@ -131,7 +156,8 @@ async def sales_report(month, owner=None, category=None, tax=None, payment_metho
                     unknown += net * sign
     rows.sort(key=lambda row: (row['date'], row['invoice_number'], row['kind']), reverse=True)
     totals = {key: float(sum((g[key] for g in groups.values()), Decimal(0))) for key in ('gross', 'discount', 'net')}
-    taxable, full_taxable, eligible_count = excel_sales_summary(rows)
+    archive_rows = await archived_zero_sales(month, owner, category, tax, payment_method)
+    taxable, full_taxable, eligible_count = excel_sales_summary(rows + archive_rows)
     summary = [{
         'owner': key[0], 'category': key[1], 'tax': None if key[2] == 'unassigned' else int(key[2]),
         **{field: float(amount) for field, amount in values.items()},

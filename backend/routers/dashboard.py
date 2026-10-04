@@ -27,7 +27,8 @@ async def dashboard(year: int | None = Query(default=None, ge=1900, le=9999)):
     events = await live_events()
     totals = dashboard_report(events, selected_year)
     txs = await db.transactions.find({'date_key': {'$regex': f'^{selected_year}-'},
-                                      'status': {'$in': ['completed', 'returned']}}, {'_id': 0}).to_list(None)
+                                      'status': {'$in': ['completed', 'returned']},
+                                      'report_excluded': {'$ne': True}}, {'_id': 0}).to_list(None)
     purchases = [p for p in await live_purchases() if p.get('date', '')[:4] == str(selected_year)
                  and (p.get('category') or '').upper() == 'TIRE']
     total_cost = sum(e.get('cost', 0) * e.get('qty', 0) for e in events

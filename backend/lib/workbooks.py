@@ -25,9 +25,26 @@ def text(x):
     return str(x).strip() if x is not None else ''
 
 
+def _validated_store_workbook_path(value):
+    path = Path(value).expanduser().resolve(strict=True)
+    if not path.is_file() or path.suffix.lower() != '.xlsx':
+        raise ValueError('workbook_path must point to an existing .xlsx file')
+    return path
+
+
 @lru_cache(maxsize=3)
-def dataset(source):
-    path = (Path(__file__).resolve().parents[2] / 'refrensi-spreadsheet' / 'Perkasa Jaya - Store information system (1).xlsx') if source == 'store_current' else Path(os.environ['WORKBOOK_DIR']) / FILES[source]
+def dataset(source, workbook_path=None):
+    """Read a source, optionally isolating a Store candidate from the active file/cache."""
+    if workbook_path is not None:
+        if source != 'store_current':
+            raise ValueError('workbook_path is only supported for store_current')
+        path = _validated_store_workbook_path(workbook_path)
+    elif source == 'store_current':
+        configured = os.environ.get('STORE_WORKBOOK_PATH', '').strip()
+        path = (_validated_store_workbook_path(configured) if configured else
+                Path(__file__).resolve().parents[2] / 'refrensi-spreadsheet' / 'Perkasa Jaya - Store information system (1).xlsx')
+    else:
+        path = Path(os.environ['WORKBOOK_DIR']) / FILES[source]
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     w = openpyxl.load_workbook(path, read_only=True, data_only=True)
     data = {'source': source, 'digest': digest, 'filename': path.name, 'events': [], 'products': [], 'receivables': [], 'payables': [], 'checks': [], 'warnings': []}

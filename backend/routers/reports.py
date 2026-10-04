@@ -49,7 +49,8 @@ async def _build_report(month: str) -> MonthlyReport:
     period = [e for e in events if e.get('date', '')[:7] == month]
     result = store_report(events, month)
     txs = await db.transactions.find({'$or': [{'date_key': bounds}, {'return_date': bounds}],
-                                      'status': {'$in': ['completed', 'returned']}}, {'_id': 0}).to_list(None)
+                                      'status': {'$in': ['completed', 'returned']},
+                                      'report_excluded': {'$ne': True}}, {'_id': 0}).to_list(None)
     sold = [t for t in txs if t.get('date_key', '')[:7] == month]
     returned = [t for t in txs if (t.get('return_date') or '')[:7] == month]
     service_fee_total = sum(e.get('fee', 0) for e in period if e['kind'] in ('cash_sale', 'credit_sale'))

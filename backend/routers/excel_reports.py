@@ -1,4 +1,4 @@
-"""Reports based on the supplied Store (1) workbook and its cached source history."""
+"""Reports based on the configured Store workbook and its cached source history."""
 import asyncio
 import math
 from datetime import datetime, timezone
@@ -53,6 +53,9 @@ async def live_events(include_imported=True):
         {'import_source': {'$exists': False}},
         {'import_source': {'$exists': True}, 'return_date': {'$type': 'string'}},
     ]} if include_imported else {'import_source': {'$exists': False}}
+    # Baseline reconciliation can retain old invoices without recognizing them
+    # again. Unmarked future invoices remain part of the live ledger.
+    transaction_query['report_excluded'] = {'$ne': True}
     txs = await db.transactions.find(transaction_query, {'_id': 0}).to_list(None)
     details = await db.transaction_details.find({'transaction_id': {'$in': [t['id'] for t in txs]}}, {'_id': 0}).to_list(None)
     by_tx = {}
@@ -95,19 +98,34 @@ async def live_events(include_imported=True):
             meta = dict(transaction_id=debt.get('transaction_id'), customer=debt.get('customer_name') or '',
                         invoice_date=transaction.get('date_key') or debt.get('issued_date'),
                         supplier=debt.get('supplier_name') or '', debt_id=debt['id'])
-            for p in debt.get('payments', []):
+            payments = [p for p in debt.get('payments', []) if p.get('report_excluded') is not True]
+            excluded = [p for p in debt.get('payments', []) if p.get('report_excluded') is True]
+            refund_amount, refund_ratio = n(debt.get('refund_amount')), n(1)
+            if excluded:
+                # A return reverses only receipts recognized by this ledger.
+                # Bound partial legacy refunds and their noncash transfer share.
+                amounts = [n(p.get('amount')) for p in payments + excluded]
+                if refund_amount.is_finite() and all(a.is_finite() and a >= 0 for a in amounts):
+                    included_amount = sum((n(p.get('amount')) for p in payments), n(0))
+                    excluded_amount = sum((n(p.get('amount')) for p in excluded), n(0))
+                    refund_amount = min(included_amount, max(n(0), refund_amount - excluded_amount))
+                    refund_ratio = refund_amount / included_amount if included_amount else n(0)
+                else:
+                    refund_amount, refund_ratio = n(0), n(0)
+            for p in payments:
                 events.append(dict(**meta, date=p['payment_date'], kind=kind, amount=p['amount'],
                                    profit=p.get('profit_amount', 0), method=p.get('method', 'cash'), payment_id=p.get('id')))
                 if kind == 'credit_payment' and p.get('method', 'cash') != 'cash':
                     transfer = dict(**meta, date=p['payment_date'], kind='transfer', amount=p['amount'],
                                     method=p['method'], payment_id=p.get('id'), origin='credit_payment')
                     events.append(transfer)
-                    if debt.get('return_date') and debt.get('refund_amount'):
-                        events.append({**transfer, 'date': debt['return_date'], 'amount': -p['amount'], 'is_return': True})
-            if kind == 'credit_payment' and debt.get('return_date') and debt.get('refund_amount'):
-                events.append(dict(**meta, date=debt['return_date'], kind=kind, amount=-debt['refund_amount'],
-                                   profit=-sum(p.get('profit_amount', 0) for p in debt.get('payments', [])), is_return=True))
-    async for e in db.expenses.find({'import_source': {'$exists': False}}, {'_id': 0}):
+                    if debt.get('return_date') and refund_amount:
+                        events.append({**transfer, 'date': debt['return_date'],
+                                       'amount': -float(n(p['amount']) * refund_ratio), 'is_return': True})
+            if kind == 'credit_payment' and debt.get('return_date') and refund_amount:
+                events.append(dict(**meta, date=debt['return_date'], kind=kind, amount=-float(refund_amount),
+                                   profit=-sum(p.get('profit_amount', 0) for p in payments), is_return=True))
+    async for e in db.expenses.find({'import_source': {'$exists': False}, 'report_excluded': {'$ne': True}}, {'_id': 0}):
         events.append(dict(date=e['date'], kind='expense', amount=e['amount'], category=e['category'],
                            description=e.get('description', ''), payment_source=e.get('payment_source', 'Cashier')))
     return events
