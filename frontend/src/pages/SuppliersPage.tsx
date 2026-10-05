@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { EmptyBlock, ErrorBlock, LoadingBlock } from "@/components/StateBlock";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,6 +22,7 @@ export default function SuppliersPage() {
   const [editing, setEditing] = useState<Supplier | null>(null);
   const [deleting, setDeleting] = useState<Supplier | null>(null);
   const [form, setForm] = useState<SupplierForm>(EMPTY_FORM);
+  const [search, setSearch] = useState("");
 
   const suppliersQuery = useQuery({ queryKey: ["suppliers"], queryFn: () => apiGet<Supplier[]>("/suppliers") });
 
@@ -61,18 +62,27 @@ export default function SuppliersPage() {
     setDialogOpen(true);
   }
 
-  const suppliers = suppliersQuery.data ?? [];
+  const allSuppliers = suppliersQuery.data ?? [];
+  const suppliers = allSuppliers.filter(s => [s.name, s.phone, s.address].join(" ").toLowerCase().includes(search.trim().toLowerCase()));
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div className="page-workspace">
+      <div className="page-heading">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight">Distributor</h1>
-          <p className="text-sm text-muted-foreground">Data distributor/supplier untuk pencatatan hutang.</p>
+          <p className="text-sm text-muted-foreground">Kontak pemasok untuk pembelian barang dan pencatatan hutang.</p>
         </div>
         <Button data-testid="supplier-add-button" onClick={openCreate}>
-          <Plus className="size-4" /> Tambah Distributor
+          <Plus className="size-4" /> Tambah distributor
         </Button>
+      </div>
+
+      <div className="page-toolbar">
+        <div className="relative min-w-0 w-full sm:max-w-md">
+          <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input aria-label="Cari distributor" data-testid="supplier-search-input" className="pl-10" value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari nama, telepon, atau alamat" />
+        </div>
+        {!suppliersQuery.isPending && !suppliersQuery.isError && <span className="text-sm text-muted-foreground" data-testid="suppliers-visible-count">{suppliers.length} distributor ditampilkan</span>}
       </div>
 
       {suppliersQuery.isPending ? (
@@ -80,9 +90,9 @@ export default function SuppliersPage() {
       ) : suppliersQuery.isError ? (
         <ErrorBlock error={suppliersQuery.error} onRetry={() => void suppliersQuery.refetch()} />
       ) : suppliers.length === 0 ? (
-        <EmptyBlock title="Belum ada distributor" description="Tambahkan distributor pertama Anda." />
+        <EmptyBlock title={allSuppliers.length ? "Distributor tidak ditemukan" : "Belum ada distributor"} description={allSuppliers.length ? "Ubah kata pencarian untuk melihat distributor lainnya." : "Pilih Tambah distributor untuk mencatat kontak pemasok barang."} />
       ) : (
-        <div className="rounded-xl border border-border bg-card" data-testid="suppliers-table">
+        <div className="data-panel" data-testid="suppliers-table">
           <Table>
             <TableHeader>
               <TableRow>
@@ -95,9 +105,9 @@ export default function SuppliersPage() {
             <TableBody>
               {suppliers.map((s) => (
                 <TableRow key={s.id}>
-                  <TableCell className="text-sm font-medium">{s.name}</TableCell>
+                  <TableCell className="min-w-40 whitespace-normal text-sm font-semibold">{s.name}</TableCell>
                   <TableCell className="font-mono text-xs">{s.phone || "-"}</TableCell>
-                  <TableCell className="max-w-72 truncate text-xs text-muted-foreground">{s.address || "-"}</TableCell>
+                  <TableCell className="min-w-44 max-w-80 whitespace-normal text-sm text-muted-foreground">{s.address || "-"}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
                       <Button
@@ -105,6 +115,7 @@ export default function SuppliersPage() {
                         size="icon-xs"
                         data-testid={`supplier-edit-btn-${s.id.slice(0, 8)}`}
                         title="Edit"
+                        aria-label={`Edit distributor ${s.name}`}
                         onClick={() => openEdit(s)}
                       >
                         <Pencil />
@@ -114,6 +125,7 @@ export default function SuppliersPage() {
                         size="icon-xs"
                         data-testid={`supplier-delete-btn-${s.id.slice(0, 8)}`}
                         title="Hapus"
+                        aria-label={`Hapus distributor ${s.name}`}
                         onClick={() => setDeleting(s)}
                       >
                         <Trash2 className="text-red-700 dark:text-red-400" />
@@ -128,22 +140,23 @@ export default function SuppliersPage() {
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-md" data-testid="supplier-form-dialog">
+        <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-lg" data-testid="supplier-form-dialog">
           <DialogHeader>
             <DialogTitle>{editing ? "Edit Distributor" : "Tambah Distributor"}</DialogTitle>
+            <DialogDescription>Nama distributor wajib diisi. Telepon dan alamat dapat dilengkapi nanti.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="supplier-form-name">Nama</Label>
-              <Input id="supplier-form-name" data-testid="supplier-form-name-input" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
+              <Label htmlFor="supplier-form-name">Nama distributor</Label>
+              <Input id="supplier-form-name" data-testid="supplier-form-name-input" autoComplete="organization" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="supplier-form-phone">Telepon</Label>
-              <Input id="supplier-form-phone" data-testid="supplier-form-phone-input" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
+              <Input id="supplier-form-phone" data-testid="supplier-form-phone-input" type="tel" autoComplete="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="Nomor telepon distributor" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="supplier-form-address">Alamat</Label>
-              <Textarea id="supplier-form-address" data-testid="supplier-form-address-input" value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} rows={2} />
+              <Textarea id="supplier-form-address" data-testid="supplier-form-address-input" autoComplete="street-address" value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} rows={3} />
             </div>
           </div>
           <DialogFooter>
@@ -155,7 +168,7 @@ export default function SuppliersPage() {
               disabled={saveMutation.isPending || !form.name.trim()}
               onClick={() => saveMutation.mutate()}
             >
-              {saveMutation.isPending ? "Menyimpan…" : "Simpan"}
+              {saveMutation.isPending ? "Menyimpan…" : "Simpan distributor"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -165,6 +178,7 @@ export default function SuppliersPage() {
         <DialogContent className="sm:max-w-md" data-testid="supplier-delete-dialog">
           <DialogHeader>
             <DialogTitle>Hapus distributor {deleting?.name}?</DialogTitle>
+            <DialogDescription>Periksa nama distributor sebelum melanjutkan penghapusan.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" data-testid="supplier-delete-cancel-button" onClick={() => setDeleting(null)}>

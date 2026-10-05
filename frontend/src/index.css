@@ -5,12 +5,13 @@
 @import "@fontsource/ibm-plex-sans/500.css";
 @import "@fontsource/ibm-plex-sans/600.css";
 @import "@fontsource/ibm-plex-sans/700.css";
+@import "@fontsource-variable/outfit";
 @import "@fontsource-variable/jetbrains-mono";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
     --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
     --color-sidebar-ring: var(--sidebar-ring);
@@ -56,26 +57,26 @@
 /* Light workspace by default; the saved preference enables .dark. */
 :root {
     color-scheme: light;
-    --font-heading: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
-    --background: #f5f6f8;
-    --foreground: #20262e;
+    --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    --background: #f2f5f8;
+    --foreground: #172b40;
     --card: #ffffff;
-    --card-foreground: #20262e;
+    --card-foreground: #172b40;
     --popover: #ffffff;
-    --popover-foreground: #20262e;
-    --primary: #946000;
+    --popover-foreground: #172b40;
+    --primary: #203b55;
     --primary-foreground: #ffffff;
-    --secondary: #eceff2;
-    --secondary-foreground: #34404c;
-    --muted: #eef1f4;
-    --muted-foreground: #586574;
-    --accent: #faf0d9;
-    --accent-foreground: #78500b;
+    --secondary: #e9eef3;
+    --secondary-foreground: #203b55;
+    --muted: #eef2f6;
+    --muted-foreground: #52647a;
+    --accent: #fff2cf;
+    --accent-foreground: #6e4700;
     --destructive: #b42332;
-    --border: #dce1e7;
-    --input: #c7cfd9;
-    --ring: #946000;
-    --chart-1: #946000;
+    --border: #d5dde7;
+    --input: #7b899b;
+    --ring: #1d4ed8;
+    --chart-1: #203b55;
     --chart-2: #16734f;
     --chart-3: #236c99;
     --chart-4: #b42332;
@@ -89,7 +90,7 @@
     --sidebar-accent-foreground: #78500b;
     --sidebar-border: #dce1e7;
     --sidebar-ring: #946000;
-    --notice-foreground: #78500b;
+    --notice-foreground: #6e4700;
     --status-success: #16734f;
     --status-warning: #855706;
     --status-danger: #b42332;
@@ -101,25 +102,25 @@
     --status-success: #34d399;
     --status-warning: #fbbf24;
     --status-danger: #fca5a5;
-    --background: #0B0F17;
-    --foreground: #F8FAFC;
-    --card: #111827;
-    --card-foreground: #F9FAFB;
-    --popover: #111827;
-    --popover-foreground: #F9FAFB;
-    --primary: #F59E0B;
-    --primary-foreground: #131313;
-    --secondary: #1E293B;
-    --secondary-foreground: #F8FAFC;
-    --muted: #1E293B;
-    --muted-foreground: #94A3B8;
-    --accent: #1E293B;
-    --accent-foreground: #FBBF24;
-    --destructive: #EF4444;
-    --border: #1E293B;
-    --input: #1F2937;
-    --ring: #F59E0B;
-    --chart-1: #F59E0B;
+    --background: #0c1927;
+    --foreground: #edf3fa;
+    --card: #142638;
+    --card-foreground: #edf3fa;
+    --popover: #142638;
+    --popover-foreground: #edf3fa;
+    --primary: #f4c34e;
+    --primary-foreground: #15283c;
+    --secondary: #22394e;
+    --secondary-foreground: #edf3fa;
+    --muted: #1b3044;
+    --muted-foreground: #b0c0d0;
+    --accent: #263b50;
+    --accent-foreground: #f4c34e;
+    --destructive: #fca5a5;
+    --border: #354c62;
+    --input: #7e92a7;
+    --ring: #f4c34e;
+    --chart-1: #f4c34e;
     --chart-2: #34D399;
     --chart-3: #38BDF8;
     --chart-4: #F87171;
@@ -144,7 +145,20 @@
     }
   html {
     @apply font-sans;
+    scroll-padding-top: 5rem;
     }
+}
+
+body { margin: 0; line-height: 1.5; }
+button, input, select, textarea { font: inherit; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+:where(button, a, input, select, textarea, [role="button"], [role="tab"]):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+}
+::selection { background: #f4c34e; color: #15283c; }
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
 .glow-amber {

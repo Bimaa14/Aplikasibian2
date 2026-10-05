@@ -60,10 +60,10 @@ const TABS = [
 
 function Row({ label, value, tone = "plain", strong = false, sub }: { label: string; value: string; tone?: "plain" | "minus" | "plus" | "total"; strong?: boolean; sub?: string }) {
   return (
-    <div className={cn("flex items-center justify-between gap-3 py-2.5 px-3 rounded-lg", tone === "total" && "bg-primary/10 border border-primary/20", strong && tone !== "total" && "bg-secondary/40")}>
-      <div>
+    <div className={cn("ledger-line flex flex-col items-start justify-between gap-2 border-b border-border/60 px-3 py-3 last:border-0 sm:flex-row sm:items-center sm:gap-4", tone === "total" && "ledger-total", strong && tone !== "total" && "bg-secondary/40")}>
+      <div className="min-w-0">
         <p className={cn("text-sm", strong ? "font-semibold" : "text-muted-foreground")}>{label}</p>
-        {sub ? <p className="text-[11px] text-muted-foreground/70">{sub}</p> : null}
+        {sub ? <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{sub}</p> : null}
       </div>
       <span className={cn("font-mono tabular-nums text-sm",
         tone === "minus" && "text-red-700 dark:text-red-400", tone === "plus" && "text-emerald-700 dark:text-emerald-400",
@@ -72,13 +72,13 @@ function Row({ label, value, tone = "plain", strong = false, sub }: { label: str
   );
 }
 
-function ReportActions({ csvHref, testid }: { csvHref: string; testid: string }) {
+function ReportActions({ csvHref, testid, disabled }: { csvHref: string; testid: string; disabled: boolean }) {
   return (
-    <div className="flex items-center gap-2 print:hidden">
-      <a data-testid={`${testid}-csv-button`} href={csvHref} className="inline-flex items-center gap-1.5 rounded-md bg-secondary/60 px-3 py-2 text-sm font-medium transition-colors hover:text-foreground">
+    <div className="report-actions flex flex-wrap items-center gap-2 print:hidden">
+      <button type="button" data-testid={`${testid}-csv-button`} disabled={disabled} onClick={() => { const link = document.createElement('a'); link.href = csvHref; link.click(); }} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60">
         <Download className="size-4" /> Unduh CSV
-      </a>
-      <button data-testid={`${testid}-print-button`} onClick={() => window.print()} className="inline-flex items-center gap-1.5 rounded-md bg-secondary/60 px-3 py-2 text-sm font-medium transition-colors hover:text-foreground">
+      </button>
+      <button type="button" data-testid={`${testid}-print-button`} disabled={disabled} onClick={() => window.print()} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60">
         <Printer className="size-4" /> Cetak
       </button>
     </div>
@@ -91,16 +91,17 @@ function DailyView() {
   const q = useQuery({ queryKey: ["books-daily", date], queryFn: () => apiGet<DailyReport>(`/books/daily?date=${date}`) });
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-muted-foreground">Tanggal</label>
-          <input type="date" data-testid="daily-date-input" className="bk-control h-9 w-auto" value={date} max={today} onChange={(e) => setDate(e.target.value)} />
+      <div className="page-toolbar flex flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <label htmlFor="daily-report-date" className="text-sm text-muted-foreground">Tanggal</label>
+          <input id="daily-report-date" type="date" data-testid="daily-date-input" className="bk-control w-auto" value={date} max={today} onChange={(e) => setDate(e.target.value)} />
         </div>
-        <ReportActions csvHref={fileUrl(`/books/daily/csv?date=${date}`)} testid="daily" />
+        <ReportActions csvHref={fileUrl(`/books/daily/csv?date=${date}`)} testid="daily" disabled={!q.data || q.isPending || q.isError} />
       </div>
       {q.isPending ? <LoadingBlock /> : q.isError ? <ErrorBlock error={q.error} onRetry={() => void q.refetch()} /> : q.data && (
-        <div className="grid gap-4 lg:grid-cols-2" data-testid="daily-report">
-        <div className="bk-panel p-3">
+        <div className="grid min-w-0 gap-5 xl:grid-cols-2" data-testid="daily-report">
+        <div className="bk-panel ledger-statement min-w-0 p-3">
+          <h2 className="section-heading px-3 py-3 font-heading text-lg font-semibold">Perhitungan kas harian</h2>
           <Row label="Penjualan tunai tanpa oli" value={formatIDR(q.data.cash_sales)} tone="plus" strong sub="SELLING CASH termasuk transfer / EDC / QRIS" />
           <Row label="Pembayaran piutang masuk" value={`+ ${formatIDR(q.data.receivable_payments)}`} tone="plus" />
           <Row label="Dikurangi: transfer / EDC / QRIS" value={`− ${formatIDR(q.data.transfer_payments)}`} tone="minus" sub="Riwayat TRANSFER dan penerimaan non-tunai baru" />
@@ -113,7 +114,7 @@ function DailyView() {
           <Row label="Kas bersih akhir" value={formatIDR(q.data.final_cash)} tone="total" strong />
           <DailyParameters key={date} report={q.data} />
         </div>
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-5">
           <div className="bk-panel p-3" data-testid="daily-capital-profit">
             <p className="mb-2 px-1 text-sm font-semibold">Modal dan Laba</p>
             <Row label="Modal toko" value={formatIDR(q.data.modal)} strong />
@@ -149,11 +150,11 @@ function DailyParameters({ report }: { report: DailyReport }) {
   return (
     <div className="mt-4 space-y-2 border-t border-border pt-3 print:hidden">
       <p className="text-sm font-semibold">Pengambilan Bian</p>
-      <div className="grid grid-cols-2 gap-2">
-        <label className="text-xs text-muted-foreground">Modal (Rp)<input aria-label="Modal Bian" type="number" min="0" className="bk-control mt-1 w-full" value={modal} onChange={(e) => setModal(e.target.value)} /></label>
-        <label className="text-xs text-muted-foreground">Laba (Rp)<input aria-label="Laba Bian" type="number" min="0" className="bk-control mt-1 w-full" value={laba} onChange={(e) => setLaba(e.target.value)} /></label>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <label className="text-sm text-muted-foreground">Modal (Rp)<input data-testid="daily-bian-modal" aria-label="Modal Bian" type="number" min="0" className="bk-control mt-1 w-full" value={modal} onChange={(e) => setModal(e.target.value)} /></label>
+        <label className="text-sm text-muted-foreground">Laba (Rp)<input data-testid="daily-bian-profit" aria-label="Laba Bian" type="number" min="0" className="bk-control mt-1 w-full" value={laba} onChange={(e) => setLaba(e.target.value)} /></label>
       </div>
-      <button className="rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground" disabled={save.isPending || !Number.isFinite(Number(modal)) || !Number.isFinite(Number(laba)) || Number(modal) < 0 || Number(laba) < 0} onClick={() => save.mutate()}>{save.isPending ? 'Menyimpan…' : 'Simpan'}</button>
+      <button data-testid="daily-save-bian" className="min-h-11 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground" disabled={save.isPending || !Number.isFinite(Number(modal)) || !Number.isFinite(Number(laba)) || Number(modal) < 0 || Number(laba) < 0} onClick={() => save.mutate()}>{save.isPending ? 'Menyimpan…' : 'Simpan pengambilan'}</button>
       <p className="text-xs text-muted-foreground">Nilai per tanggal mengikuti kolom modal dan laba Bian pada DAILY REPORT.</p>
     </div>
   );
@@ -162,9 +163,9 @@ function DailyParameters({ report }: { report: DailyReport }) {
 function MonthPicker({ month, setMonth }: { month: string; setMonth: (m: string) => void }) {
   const thisMonth = todayLocalISO().slice(0, 7);
   return (
-    <div className="flex items-center gap-2">
-      <label className="text-sm text-muted-foreground">Bulan</label>
-      <input type="month" data-testid="month-input" className="bk-control h-9 w-auto" value={month} max={thisMonth} onChange={(e) => setMonth(e.target.value)} />
+    <div className="flex min-w-0 flex-wrap items-center gap-2">
+      <label htmlFor="books-report-month" className="text-sm text-muted-foreground">Bulan</label>
+      <input id="books-report-month" type="month" data-testid="month-input" className="bk-control w-auto" value={month} max={thisMonth} onChange={(e) => setMonth(e.target.value)} />
     </div>
   );
 }
@@ -174,14 +175,14 @@ function MonthlyView() {
   const q = useQuery({ queryKey: ["books-monthly", month], queryFn: () => apiGet<MonthlyReport>(`/books/monthly?month=${month}`) });
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="page-toolbar flex flex-wrap items-center justify-between gap-3">
         <MonthPicker month={month} setMonth={setMonth} />
-        <ReportActions csvHref={fileUrl(`/books/monthly/csv?month=${month}`)} testid="monthly" />
+        <ReportActions csvHref={fileUrl(`/books/monthly/csv?month=${month}`)} testid="monthly" disabled={!q.data || q.isPending || q.isError} />
       </div>
       {q.isPending ? <LoadingBlock /> : q.isError ? <ErrorBlock error={q.error} onRetry={() => void q.refetch()} /> : q.data && (
-        <div className="grid gap-4 lg:grid-cols-2" data-testid="monthly-report">
-          <div className="bk-panel p-3">
-            <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ringkasan {q.data.month_label}</p>
+        <div className="grid min-w-0 gap-5 xl:grid-cols-2" data-testid="monthly-report">
+          <div className="bk-panel ledger-statement min-w-0 p-3">
+            <h2 className="section-heading px-3 py-3 font-heading text-lg font-semibold">Ringkasan {q.data.month_label}</h2>
             <Row label="1. Pendapatan REPORT" value={formatIDR(q.data.omzet)} strong sub="Penjualan tunai tanpa oli + pembayaran piutang − komisi tunai" />
             <Row label="Modal" value={formatIDR(q.data.store.modal)} />
             <Row label="Laba (tanpa oli / spooring)" value={formatIDR(q.data.store.laba)} />
@@ -193,21 +194,21 @@ function MonthlyView() {
             <Row label="Estimasi PPh final 0,5%" value={formatIDR(q.data.pph_final)} sub="Informasi pajak, tidak dipotong ulang dari laba" />
             <Row label="4. Sisa aset (terkini)" value={formatIDR(q.data.sisa_aset)} strong tone="total" sub={`Stok ${formatIDR(q.data.stok_value)} (${q.data.stok_basis}) + piutang ${formatIDR(q.data.piutang_outstanding)} − hutang ${formatIDR(q.data.hutang_outstanding)}`} />
           </div>
-          <div className="bk-panel p-3" data-testid="funding-breakdown">
-            <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Sumber Uang</p>
+          <div className="bk-panel min-w-0 p-3" data-testid="funding-breakdown">
+            <h2 className="section-heading px-3 py-3 font-heading text-lg font-semibold">Sumber uang</h2>
             <div className="rounded-lg border border-amber-500/25 bg-amber-500/5 p-2 mb-3">
-              <p className="px-1 text-sm font-semibold text-amber-700 dark:text-amber-300">{q.data.funding.modal.label} — untuk distributor</p>
+              <p className="px-1 text-sm font-semibold text-amber-700 dark:text-amber-300">{q.data.funding.modal.label}, untuk distributor</p>
               {q.data.funding.modal.items.map((it) => <Row key={it.name} label={it.name} value={formatIDR(it.amount)} />)}
               <Row label="Subtotal dari modal" value={formatIDR(q.data.funding.modal.total)} strong />
             </div>
             <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/5 p-2">
-              <p className="px-1 text-sm font-semibold text-emerald-700 dark:text-emerald-300">{q.data.funding.laba.label} — untuk pengeluaran, pajak, gaji</p>
+              <p className="px-1 text-sm font-semibold text-emerald-700 dark:text-emerald-300">{q.data.funding.laba.label}, untuk pengeluaran, pajak, gaji</p>
               {q.data.funding.laba.items.map((it) => <Row key={it.name} label={it.name} value={formatIDR(it.amount)} />)}
               <Row label="Subtotal dari laba" value={formatIDR(q.data.funding.laba.total)} strong />
             </div>
           </div>
-          <div className="bk-panel p-3 lg:col-span-2" data-testid="owner-summary">
-            <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ringkasan Per Pemilik (bagi hasil)</p>
+          <div className="bk-panel min-w-0 p-3 xl:col-span-2" data-testid="owner-summary">
+            <h2 className="section-heading px-3 py-3 font-heading text-lg font-semibold">Ringkasan per pemilik (bagi hasil)</h2>
             <div className="overflow-x-auto">
               <table className="bk-table">
                 <thead><tr><th>Pemilik</th><th className="text-right">Pendapatan REPORT</th><th className="text-right">Laba REPORT</th></tr></thead>
@@ -241,7 +242,7 @@ function TaxView() {
         <div className="bk-panel p-3 max-w-xl" data-testid="tax-report">
           <div className="flex items-center gap-2 mb-2 px-1">
             <Landmark className="size-4 text-primary" />
-            <p className="text-sm font-semibold">Estimasi PPh Final UMKM 0,5% — {q.data.month_label}</p>
+            <p className="text-sm font-semibold">Estimasi PPh Final UMKM 0,5% · {q.data.month_label}</p>
           </div>
           <Row label={`Dasar pengenaan: ${q.data.basis}`} value={formatIDR(q.data.omzet_base)} strong sub={`Total penjualan sesuai filter: ${formatIDR(q.data.omzet_bruto)}`} />
           {q.data.unassigned_tax_net !== 0 && <p className="bk-notice">Penjualan {formatIDR(q.data.unassigned_tax_net)} belum memiliki atribut TAX pada transaksi; tidak dimasukkan ke dasar pajak.</p>}
@@ -259,18 +260,21 @@ function TaxView() {
 export default function BooksReportPage() {
   const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("harian");
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-4">
-        <h1 className="font-heading text-2xl font-bold tracking-tight">Laporan Kas &amp; Estimasi Pajak</h1>
+    <div className="page-workspace space-y-5">
+      <div className="page-heading">
+        <div className="min-w-0">
+        <h1 data-testid="books-page-title" className="font-heading text-2xl font-bold tracking-tight">Laporan kas dan pajak</h1>
         <p className="text-sm text-muted-foreground">Kas harian dan ringkasan bulanan mengikuti spreadsheet. Estimasi PPh memakai tarif aplikasi 0,5%.</p>
+        </div>
       </div>
-      <div className="mb-5 flex flex-wrap gap-2">
+      <div className="page-tabs flex flex-wrap gap-2" aria-label="Jenis laporan kas dan pajak">
         {TABS.map(({ key, label, icon: Icon }) => (
           <button
             key={key}
             data-testid={`books-tab-${key}`}
+            aria-pressed={tab === key}
             onClick={() => setTab(key)}
-            className={cn("flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+            className={cn("flex min-h-11 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
               tab === key ? "bg-primary text-primary-foreground" : "bg-secondary/50 text-muted-foreground hover:text-foreground")}
           >
             <Icon className="size-4" /> {label}

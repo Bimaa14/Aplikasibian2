@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
 import { Minus, Plus, Search, Trash2 } from "lucide-react";
 import SalesNoteModal from "@/components/pos/SalesNoteModal";
@@ -53,6 +52,7 @@ export default function PosPage() {
   const [receipt, setReceipt] = useState<Transaction | null>(null);
   const [receiptOpen, setReceiptOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
+  const cartRef = useRef<HTMLElement>(null);
   const checkoutRequest = useRef<{ payload: string; id: string } | null>(null);
 
   const productsQuery = useQuery({ queryKey: ["products"], queryFn: () => apiGet<Product[]>("/products") });
@@ -173,21 +173,25 @@ export default function PosPage() {
   }
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div className="page-workspace">
+      <div className="page-heading">
         <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight">Kasir POS</h1>
+          <h1 className="font-heading">Kasir penjualan</h1>
           <p className="text-sm text-muted-foreground">Cari barang/jasa, masukkan ke keranjang, lalu bayar.</p>
         </div>
         <div className="hidden gap-2 md:flex">
-          <Badge variant="outline" className="rounded-md font-mono">[F2: Cari]</Badge>
-          <Badge variant="outline" className="rounded-md font-mono">[F4: Bayar]</Badge>
+          <span className="text-xs text-muted-foreground"><kbd className="rounded border border-input px-2 py-1">F2</kbd> Cari barang</span>
+          <span className="text-xs text-muted-foreground"><kbd className="rounded border border-input px-2 py-1">F4</kbd> Pembayaran</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:h-[calc(100vh-9rem)] lg:grid-cols-12 xl:gap-6">
-        {/* Katalog */}
-        <section className="flex min-h-0 flex-col gap-3 lg:col-span-7 xl:col-span-8">
+      {cart.length > 0 ? (
+        <Button variant="outline" className="pos-cart-jump mb-4 w-full justify-between" data-testid="pos-cart-jump" onClick={() => cartRef.current?.scrollIntoView({ block: 'start' })}>
+          <span>Lihat keranjang ({cart.length} item)</span><span className="font-mono">{formatIDR(totalAmount)}</span>
+        </Button>
+      ) : null}
+      <div className="pos-layout">
+        <section className="pos-catalog flex flex-col gap-3" aria-label="Katalog barang dan jasa">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -196,10 +200,11 @@ export default function PosPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama, SKU, atau merek ban/oli/jasa…"
+              aria-label="Cari barang atau jasa"
               className="pl-9"
             />
           </div>
-          <div className="flex gap-2" data-testid="pos-tabs">
+          <div className="flex flex-wrap gap-2" data-testid="pos-tabs" aria-label="Jenis produk">
             {TABS.map((t) => (
               <Button
                 key={t.key}
@@ -207,12 +212,13 @@ export default function PosPage() {
                 variant={tab === t.key ? "default" : "outline"}
                 size="sm"
                 onClick={() => setTab(t.key)}
+                aria-pressed={tab === t.key}
               >
                 {t.label}
               </Button>
             ))}
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+          <div className="pos-catalog-products min-w-0">
             {productsQuery.isPending ? (
               <LoadingBlock />
             ) : productsQuery.isError ? (
@@ -220,7 +226,7 @@ export default function PosPage() {
             ) : filtered.length === 0 ? (
               <EmptyBlock title="Produk tidak ditemukan" description="Coba kata kunci lain atau pilih tab jenis produk." />
             ) : (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+              <div className="pos-catalog-grid">
                 {filtered.map((p) => {
                   const out = p.type === "barang" && p.stock < 1;
                   return (
@@ -229,10 +235,10 @@ export default function PosPage() {
                       data-testid={`pos-product-card-${p.sku.toLowerCase()}`}
                       disabled={out}
                       onClick={() => addToCart(p)}
-                      className="rounded-lg border border-border bg-card p-3 text-left transition hover:border-primary/60 hover:shadow-[0_0_20px_-5px_rgba(245,158,11,0.3)] disabled:cursor-not-allowed disabled:opacity-40"
+                      className="pos-product"
                     >
                       <span className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{p.sku}</span>
+                        <span className="text-xs text-muted-foreground">{p.sku}</span>
                         <Badge
                           variant="outline"
                           className={cn(
@@ -264,8 +270,7 @@ export default function PosPage() {
           </div>
         </section>
 
-        {/* Keranjang */}
-        <aside className="flex min-h-0 flex-col rounded-xl border border-border bg-card lg:col-span-5 xl:col-span-4">
+        <aside ref={cartRef} className="pos-cart scroll-mt-20" aria-label="Keranjang penjualan">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <p className="font-heading font-bold">Keranjang ({cart.length} item)</p>
             {cart.length > 0 ? (
@@ -282,20 +287,15 @@ export default function PosPage() {
                 className="m-4 border-0 bg-transparent"
               />
             ) : (
-              <AnimatePresence initial={false}>
+              <div>
                 {cart.map((l) => (
-                  <motion.div
+                  <div
                     key={l.product.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex items-center gap-2 border-b border-border/60 px-4 py-3"
+                    className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3"
                     data-testid={`cart-line-${l.product.sku.toLowerCase()}`}
                   >
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold">{l.product.name}</p>
+                    <div className="min-w-0 flex-[1_1_160px]">
+                      <p className="text-sm font-semibold">{l.product.name}</p>
                       <p className="font-mono text-xs text-muted-foreground">
                         {formatIDR(l.product.selling_price)} × {l.qty}
                       </p>
@@ -306,6 +306,7 @@ export default function PosPage() {
                         size="icon-xs"
                         data-testid={`cart-decrement-${l.product.sku.toLowerCase()}`}
                         onClick={() => decrementQty(l.product.id)}
+                        aria-label={`Kurangi jumlah ${l.product.name}`}
                       >
                         <Minus />
                       </Button>
@@ -317,6 +318,7 @@ export default function PosPage() {
                         size="icon-xs"
                         data-testid={`cart-increment-${l.product.sku.toLowerCase()}`}
                         onClick={() => addToCart(l.product)}
+                        aria-label={`Tambah jumlah ${l.product.name}`}
                       >
                         <Plus />
                       </Button>
@@ -325,16 +327,17 @@ export default function PosPage() {
                         size="icon-xs"
                         data-testid={`cart-remove-${l.product.sku.toLowerCase()}`}
                         onClick={() => setCart((prev) => prev.filter((x) => x.product.id !== l.product.id))}
+                        aria-label={`Hapus ${l.product.name} dari keranjang`}
                       >
                         <Trash2 className="text-red-700 dark:text-red-400" />
                       </Button>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
-              </AnimatePresence>
+              </div>
             )}
           </div>
-          <div className="space-y-2 border-t border-border p-4">
+          <div className="pos-cart-total space-y-3 border-t border-border p-4">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal</span>
               <span className="font-mono" data-testid="cart-subtotal">{formatIDR(grossAmount)}</span>
@@ -348,13 +351,13 @@ export default function PosPage() {
               <span className="font-mono text-primary" data-testid="cart-total">{formatIDR(totalAmount)}</span>
             </div>
             <Button
-              className="w-full"
+              className="pos-pay-button w-full"
               size="lg"
               data-testid="cart-checkout-button"
               disabled={cart.length === 0}
               onClick={() => setCheckoutOpen(true)}
             >
-              Bayar
+              Lanjut pembayaran
             </Button>
           </div>
         </aside>
@@ -364,9 +367,9 @@ export default function PosPage() {
       <Dialog open={checkoutOpen} onOpenChange={setCheckoutOpen}>
         <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-md" data-testid="checkout-dialog">
           <DialogHeader>
-            <DialogTitle>Checkout — {formatIDR(totalAmount)}</DialogTitle>
+            <DialogTitle>Pembayaran: {formatIDR(totalAmount)}</DialogTitle>
             <DialogDescription>
-              Pilih metode pembayaran. Untuk tempo (kredit), pelanggan &amp; jatuh tempo wajib diisi — sistem akan
+              Pilih metode pembayaran. Untuk tempo (kredit), pelanggan &amp; jatuh tempo wajib diisi. Sistem akan
               otomatis membuat piutang.
             </DialogDescription>
           </DialogHeader>

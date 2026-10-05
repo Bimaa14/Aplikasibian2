@@ -41,9 +41,10 @@ function Row({
     <div
       data-testid={testid}
       className={cn(
-        "flex items-center justify-between gap-3 border-b border-border/60 px-4 py-2.5 last:border-0",
+        "ledger-line flex flex-col items-start justify-between gap-2 border-b border-border/60 px-4 py-3 last:border-0 sm:flex-row sm:items-center sm:gap-4",
         tone === "total" && "bg-secondary/40",
-        indent && "pl-8"
+        indent && "pl-8",
+        testid === "report-net-profit" && "ledger-total"
       )}
     >
       <span className={cn("text-sm", tone === "total" ? "font-semibold" : "text-muted-foreground")}>{label}</span>
@@ -82,17 +83,17 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 data-testid="margin-report-title" className="font-heading text-2xl font-bold tracking-tight">Laporan REPORT Spreadsheet</h1>
+    <div className="page-workspace space-y-5">
+      <div className="page-heading">
+        <div className="min-w-0">
+          <h1 data-testid="margin-report-title" className="font-heading text-2xl font-bold tracking-tight">Laporan bulanan</h1>
           <p className="text-sm text-muted-foreground">
             Pendapatan, modal, laba, dan spooring mengikuti rumus REPORT. Laba tempo diakui saat pembayaran pertama.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="report-actions flex flex-wrap items-center gap-2">
           <Select value={month} onValueChange={setMonth}>
-            <SelectTrigger data-testid="report-month-select" className="w-48">
+            <SelectTrigger data-testid="report-month-select" aria-label="Bulan laporan" className="w-full sm:w-48">
               <SelectValue>{(v) => monthLabel(v as string)}</SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -103,10 +104,10 @@ export default function ReportsPage() {
               ))}
             </SelectContent>
           </Select>
-          <Button variant="outline" data-testid="report-download-csv" onClick={() => download("csv")}>
+          <Button variant="outline" data-testid="report-download-csv" disabled={!r || reportQuery.isFetching || reportQuery.isError} onClick={() => download("csv")}>
             <FileSpreadsheet className="size-4" /> Unduh CSV
           </Button>
-          <Button data-testid="report-download-pdf" onClick={() => download("pdf")}>
+          <Button data-testid="report-download-pdf" disabled={!r || reportQuery.isFetching || reportQuery.isError} onClick={() => download("pdf")}>
             <FileText className="size-4" /> Unduh PDF
           </Button>
         </div>
@@ -117,13 +118,13 @@ export default function ReportsPage() {
       ) : reportQuery.isError ? (
         <ErrorBlock error={reportQuery.error} onRetry={() => void reportQuery.refetch()} />
       ) : r ? (
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
+        <div className="grid min-w-0 grid-cols-1 gap-5 xl:grid-cols-12">
           {/* Laba-rugi */}
-          <div className="space-y-5 xl:col-span-7">
-            <Card className="overflow-hidden p-0">
+          <div className="min-w-0 space-y-5 xl:col-span-7">
+            <Card className="ledger-statement p-0">
               <CardHeader className="border-b border-border bg-secondary/30 px-4 py-3">
                 <CardTitle className="font-heading text-base">
-                  Laba-Rugi — {r.month_label}
+                  Laba rugi · {r.month_label}
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
@@ -144,7 +145,7 @@ export default function ReportsPage() {
                 <Row label="Penjualan oli tunai (terpisah)" value={formatIDR(r.oil_revenue)} />
                 <Row label="Total Pengeluaran Operasional" value={`-${formatIDR(r.expenses_total)}`} tone="negative" />
                 <Row
-                  label="LABA BERSIH"
+                  label="Laba bersih REPORT"
                   value={formatIDR(r.net_profit)}
                   tone={r.net_profit >= 0 ? "positive" : "negative"}
                   testid="report-net-profit"
@@ -172,7 +173,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Ringkasan + terlaris */}
-          <div className="space-y-5 xl:col-span-5">
+          <div className="min-w-0 space-y-5 xl:col-span-5">
             <Card className="overflow-hidden p-0">
               <CardHeader className="border-b border-border bg-secondary/30 px-4 py-3">
                 <CardTitle className="font-heading text-base">Ringkasan Aktivitas</CardTitle>
@@ -188,7 +189,7 @@ export default function ReportsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="font-heading text-base">Produk &amp; Jasa Terlaris</CardTitle>
+                <CardTitle className="font-heading text-base">Produk dan jasa terlaris</CardTitle>
               </CardHeader>
               <CardContent>
                 {r.top_products.length === 0 ? (
@@ -198,7 +199,7 @@ export default function ReportsPage() {
                     className="border-0 bg-transparent p-2"
                   />
                 ) : (
-                  <Table data-testid="report-top-products">
+                  <Table data-testid="report-top-products" className="report-product-table">
                     <TableHeader>
                       <TableRow>
                         <TableHead>Produk / Jasa</TableHead>
@@ -209,7 +210,7 @@ export default function ReportsPage() {
                     <TableBody>
                       {r.top_products.map((p) => (
                         <TableRow key={`${p.sku}-${p.name}`}>
-                          <TableCell className="max-w-48 truncate text-sm">
+                          <TableCell className="whitespace-normal break-words text-sm">
                             {p.name}
                             {p.sku ? (
                               <Badge variant="outline" className="ml-2 rounded-sm font-mono text-[10px]">
