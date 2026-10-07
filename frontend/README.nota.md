@@ -5,8 +5,11 @@ Transaksi. Kwitansi cicilan piutang/hutang tetap merupakan dokumen tersendiri.
 
 ## Pemakaian
 
-1. Pada checkout tunai, isi **Uang diterima**. Default adalah uang pas; kembalian
-   dihitung otomatis. Backend menolak nominal di bawah total.
+1. Pada checkout tunai, transfer BCA/BRI/BNI, EDC, atau QRIS, isi **Uang diterima**
+   sesuai nominal yang benar-benar diterima, termasuk jika melebihi tagihan.
+   Default mengikuti total; **Uang pas** mengembalikan input ke total terbaru.
+   Tunai menampilkan kembalian, metode lain menampilkan kelebihan pembayaran.
+   Backend menolak nominal di bawah total. Tempo tetap memakai alur piutang.
 2. Di pratinjau nota, pilih ukuran: **9,5 × 5,5 inci** (setengah lembar,
    mengikuti proporsi contoh) atau **9,5 × 11 inci** (ukuran kemasan kertas).
 3. Buka **Identitas toko** untuk mengubah nama, alamat, nomor telepon, dan
@@ -27,7 +30,7 @@ akibat halaman PDF yang lebarnya lebih besar daripada tingginya.
 
 Dokumen dicetak hitam di atas kertas putih tanpa latar berwarna atau gambar
 lubang perforasi. Warna rangkap berasal dari kertas. Lebar dokumen 241,3 mm;
-Margin nota tunai: kiri/kanan 12 mm dan atas/bawah 6 mm; nota tempo memakai kiri/kanan 18 mm. Nota tunai mengikuti contoh kertas: font 10 pt, kolom nama barang lebih lebar, dan area tabel minimal 16 baris pada setengah lembar. Pratinjau memakai dokumen yang
+Margin nota tunai: kiri/kanan 12 mm dan atas/bawah 6 mm; nota tempo memakai kiri/kanan 18 mm. Teks nota memakai Arial reguler, 10 pt untuk transaksi langsung dan 11 pt untuk tempo, tanpa garis tambahan pada huruf. Judul, header kolom, dan total memakai huruf tebal untuk membedakan informasi utama. Kolom nama barang tetap lebih lebar; ruang kosong tabel menyesuaikan rincian dan catatan agar nota pendek muat pada setengah lembar. Pratinjau memakai dokumen yang
 sama dengan cetak, dalam iframe terpisah agar menu aplikasi tidak ikut tercetak.
 Tabel panjang dilanjutkan ke halaman berikutnya dengan header kolom berulang; jumlah akhir tampil sekali. Nota tunai juga mengulang nomor transaksi pada header tabel.
 
@@ -39,10 +42,14 @@ Catatan khusus tempo dapat diedit melalui Identitas toko. Ukuran kertas masih me
 
 ## Data nota
 
-- SKU, uang diterima, dan kembalian disimpan bersama transaksi baru, sehingga
+- SKU, uang diterima, dan kembalian/kelebihan disimpan bersama transaksi baru
+  untuk semua metode pembayaran langsung, sehingga
   perubahan master produk tidak mengubah kode dan harga pada cetak ulang.
-- Transaksi lama yang belum memiliki SKU/uang diterima/kembalian menampilkan
-  tanda `—`; tidak mengarang nominal atau memakai SKU produk terbaru.
+- Nota dan cetak ulang menampilkan nominal diterima yang tersimpan. Kelebihan
+  pembayaran tidak menambah total penjualan atau nominal retur tagihan.
+- Transaksi lama yang belum memiliki SKU menampilkan tanda `-`; uang diterima
+  atau selisih yang belum tersimpan ditulis **Tidak tercatat**, tanpa mengarang
+  nominal atau memakai SKU produk terbaru.
 - Potongan adalah selisih positif `harga × jumlah − subtotal` dari rincian
   tersimpan, dalam total per baris. Potongan item diisi per baris (total seluruh unit
   pada baris itu). Potongan total nota tambahan dialokasikan proporsional terhadap
@@ -62,6 +69,7 @@ Uji browser dengan data tiruan, tanpa memanggil API operasional:
 ```powershell
 npm install --no-save --package-lock=false playwright
 node tests/sales-note.browser.mjs
+node tests/note-print-quality.browser.mjs
 node tests/note-pagination.browser.mjs
 ```
 

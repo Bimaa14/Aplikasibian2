@@ -44,7 +44,7 @@ export default function PosPage() {
   const [cart, setCart] = useState<CartLine[]>([]);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
-  const [cashInput, setCashInput] = useState<string | null>(null);
+  const [receivedInput, setReceivedInput] = useState<string | null>(null);
   const [discountInput, setDiscountInput] = useState('0');
   const [itemDiscounts, setItemDiscounts] = useState<Record<string, string>>({});
   const [surcharges, setSurcharges] = useState<Record<string, string>>({});
@@ -138,7 +138,7 @@ export default function PosPage() {
       setCart([]);
       setCheckoutOpen(false);
       setPaymentMethod("cash");
-      setCashInput(null);
+      setReceivedInput(null);
       setDiscountInput('0');
       setItemDiscounts({});
       setSurcharges({});
@@ -154,16 +154,16 @@ export default function PosPage() {
   });
 
   const creditMissing = paymentMethod === "credit" && (!customerId || !dueDate);
-  const cashReceived = cashInput === null ? totalAmount : Number(cashInput);
-  const cashInvalid = paymentMethod === "cash" && (cashInput === "" || !Number.isFinite(cashReceived) || cashReceived < totalAmount || cashReceived > 1e12);
+  const amountReceived = receivedInput === null ? totalAmount : Number(receivedInput);
+  const receivedInvalid = paymentMethod !== "credit" && (receivedInput === "" || !Number.isFinite(amountReceived) || amountReceived < totalAmount || amountReceived > 1e12);
 
   function submitCheckout() {
-    if (cart.length === 0 || creditMissing || cashInvalid || pricingInvalid || checkoutMutation.isPending) return;
+    if (cart.length === 0 || creditMissing || receivedInvalid || pricingInvalid || checkoutMutation.isPending) return;
     const body = {
       items: cart.map((l) => ({ product_id: l.product.id, qty: l.qty, credit_surcharge: paymentMethod === 'credit' ? Number(surcharges[l.product.id] || 0) : 0, discount_amount: Number(itemDiscounts[l.product.id] || 0) })),
       discount_total: discountAmount,
       payment_method: paymentMethod,
-      cash_received: paymentMethod === "cash" ? cashReceived : null,
+      cash_received: paymentMethod !== "credit" ? amountReceived : null,
       customer_id: customerId || null,
       due_date: paymentMethod === "credit" ? dueDate : null,
       vehicle_plate: vehiclePlate.trim().toUpperCase() || null,
@@ -429,16 +429,16 @@ export default function PosPage() {
               <p className="text-sm" data-testid="checkout-mechanic-fee">Komisi montir: {formatIDR(serviceFeeTotal)}. SERVICE: 50% setelah potongan; item lain sesuai DATABASE.</p>
               {pricingInvalid && <p className="text-xs text-red-700 dark:text-red-400">Periksa tambahan harga dan potongan. Potongan tidak boleh melebihi total; total tempo harus lebih dari nol.</p>}
             </div>
-            {paymentMethod === "cash" && <div className="space-y-2 rounded-lg border border-border p-3">
+            {paymentMethod !== "credit" && <div className="space-y-2 rounded-lg border border-border p-3">
               <Label htmlFor="checkout-cash-received">Uang diterima (Rp)</Label>
               <div className="flex gap-2">
                 <Input id="checkout-cash-received" data-testid="checkout-cash-received" type="number" inputMode="decimal"
-                  min={totalAmount} max={1e12} step="0.01" value={cashInput ?? totalAmount}
-                  aria-invalid={cashInvalid} onChange={(event) => setCashInput(event.target.value)} />
-                <Button type="button" variant="outline" onClick={() => setCashInput(null)}>Uang pas</Button>
+                  min={totalAmount} max={1e12} step="0.01" value={receivedInput ?? totalAmount}
+                  aria-invalid={receivedInvalid} aria-describedby="checkout-received-feedback" onChange={(event) => setReceivedInput(event.target.value)} />
+                <Button type="button" variant="outline" onClick={() => setReceivedInput(null)}>Uang pas</Button>
               </div>
-              {cashInvalid ? <p className="text-xs text-red-700 dark:text-red-400">Isi uang diterima minimal sebesar total transaksi.</p>
-                : <p className="flex justify-between text-sm"><span>Kembalian</span><strong data-testid="checkout-change">{formatIDR(Math.round((cashReceived - totalAmount) * 100) / 100)}</strong></p>}
+              {receivedInvalid ? <p id="checkout-received-feedback" className="text-xs text-red-700 dark:text-red-400" role="alert">Isi uang diterima minimal sebesar total transaksi.</p>
+                : <p id="checkout-received-feedback" className="flex justify-between gap-2 text-sm" aria-live="polite"><span>{paymentMethod === 'cash' ? 'Kembalian' : 'Kelebihan pembayaran'}</span><strong data-testid="checkout-change">{formatIDR(Math.round((amountReceived - totalAmount) * 100) / 100)}</strong></p>}
             </div>}
             <div className="space-y-2">
               <Label htmlFor="checkout-customer">
@@ -500,7 +500,7 @@ export default function PosPage() {
               className="w-full"
               size="lg"
               data-testid="checkout-submit-button"
-              disabled={checkoutMutation.isPending || creditMissing || cashInvalid || pricingInvalid}
+              disabled={checkoutMutation.isPending || creditMissing || receivedInvalid || pricingInvalid}
               onClick={submitCheckout}
             >
               {checkoutMutation.isPending ? "Menyimpan…" : `Bayar ${formatIDR(totalAmount)}`}

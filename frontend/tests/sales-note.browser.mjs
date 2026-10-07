@@ -1,16 +1,19 @@
 // Run from frontend: npm install --no-save --package-lock=false playwright
 // CHROME_PATH may override the locally installed browser. No production API is called.
 import assert from 'node:assert/strict';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, realpath, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
 import { createServer } from 'vite';
 
 process.env.DISABLE_VISUAL_EDITS = 'true';
 process.env.DISABLE_EMERGENT_OVERLAY = 'true';
-const artifacts = resolve('../test_reports/nota');
+const artifacts = resolve(`../test_reports/nota/payment-print-${Date.now()}`);
 await mkdir(artifacts, { recursive: true });
-const vite = await createServer({ server: { host: '127.0.0.1', port: 3101, strictPort: true } });
+const vite = await createServer({ server: {
+  host: '127.0.0.1', port: 3101, strictPort: true,
+  fs: { allow: [resolve('.'), await realpath(resolve('node_modules'))] },
+} });
 let browser;
 try {
   await vite.listen();
@@ -62,6 +65,7 @@ try {
   await page.pdf({ path: resolve(artifacts, 'nota-banyak-barang.pdf'), preferCSSPageSize: true, displayHeaderFooter: false });
 
   let submitted;
+  const savedTransactions = [tx];
   let reportParams;
   await page.route('**/api/**', async route => {
     const path = new URL(route.request().url()).pathname;
@@ -82,42 +86,49 @@ try {
         rows: [{ transaction_id: 'test', invoice_number: 'INV-TEST', date: '2026-09-29', kind: 'sale', payment_method: 'edc', owner: 'bian', category: 'TIRE', tax: 1, product_name: 'Ban Uji', product_sku: 'B001', qty: 1, gross: 175000, discount: 25000, net: 150000 }] };
     }
     if (path === '/api/transactions') {
-      data = [tx];
+      data = savedTransactions;
       if (route.request().method() === 'POST') {
         submitted = route.request().postDataJSON();
         const price = 175000 + submitted.items[0].credit_surcharge;
-        const total = price - submitted.items[0].discount_amount - submitted.discount_total;
-        data = { ...tx, payment_method: submitted.payment_method, due_date: submitted.due_date, discount_total: submitted.discount_total,
+        const qty = submitted.items[0].qty;
+        const total = price * qty - submitted.items[0].discount_amount - submitted.discount_total;
+        data = { ...tx, id: `checkout-${savedTransactions.length}`, invoice_number: `INV-TEST-${savedTransactions.length}`, payment_method: submitted.payment_method, due_date: submitted.due_date, discount_total: submitted.items[0].discount_amount + submitted.discount_total,
           total_amount: total, cash_received: submitted.cash_received, change_amount: submitted.cash_received == null ? null : submitted.cash_received - total,
-          details: [{ ...tx.details[0], price, credit_surcharge: submitted.items[0].credit_surcharge, subtotal: total }] };
+          details: [{ ...tx.details[0], price, qty, discount_amount: submitted.items[0].discount_amount + submitted.discount_total, credit_surcharge: submitted.items[0].credit_surcharge, subtotal: total }] };
+        savedTransactions.unshift(data);
       }
     }
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(data) });
   });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('http://127.0.0.1:3101/transaksi');
+  await page.goto('http://127.0.0.1:3101/#/transaksi');
   await page.getByTitle('Cetak Ulang Nota').click();
   const dialog = page.getByTestId('sales-note-dialog');
   await dialog.waitFor();
   const note = page.frameLocator('iframe[title="Pratinjau nota penjualan"]');
   await note.getByRole('heading', { name: 'Nota Penjualan' }).waitFor();
+  await page.waitForFunction(() => document.querySelector('[data-testid="print-receipt-btn"]')?.disabled === false);
   assert(await page.getByTestId('print-receipt-btn').isEnabled());
   assert((await note.locator('.totals').innerText()).includes('Rp100.000,00'));
   await page.evaluate(() => {
     const target = document.querySelector('iframe').contentWindow;
     target.print = () => {
       target.__printedNote = true;
+      target.__printedCount = (target.__printedCount || 0) + 1;
       const rules = [...target.document.styleSheets].flatMap(sheet => [...sheet.cssRules]);
       target.__printedPageSize = rules.filter(rule => rule.cssText.startsWith('@page')).at(-1).style.getPropertyValue('size');
     };
   });
   await page.getByTestId('print-receipt-btn').click();
+  await page.waitForFunction(() => document.querySelector('iframe').contentWindow.__printedCount === 1);
   assert(await page.evaluate(() => document.querySelector('iframe').contentWindow.__printedNote));
   assert.equal(await page.evaluate(() => document.querySelector('iframe').contentWindow.__printedPageSize), 'auto');
   await page.getByTestId('save-note-pdf-btn').click();
+  await page.waitForFunction(() => document.querySelector('iframe').contentWindow.__printedCount === 2);
   assert.equal(await page.evaluate(() => document.querySelector('iframe').contentWindow.__printedPageSize), '241.3mm 139.7mm');
   await page.getByTestId('print-receipt-btn').click();
+  await page.waitForFunction(() => document.querySelector('iframe').contentWindow.__printedCount === 3);
   assert.equal(await page.evaluate(() => document.querySelector('iframe').contentWindow.__printedPageSize), 'auto');
   await page.getByRole('button', { name: 'Identitas toko' }).click();
   await page.getByLabel('Telepon / HP').fill('Telepon toko contoh');
@@ -137,9 +148,10 @@ try {
   assert(geometry.x >= 0 && geometry.x + geometry.width <= 390, JSON.stringify(geometry));
   await page.screenshot({ path: resolve(artifacts, 'nota-mobile.png') });
   assert(await page.getByTestId('print-receipt-btn').isVisible());
-  await page.getByTestId('close-receipt-btn').click();
+  await page.keyboard.press('Escape');
+  await dialog.waitFor({ state: 'hidden' });
   await page.setViewportSize({ width: 1280, height: 1000 });
-  await page.goto('http://127.0.0.1:3101/pos');
+  await page.goto('http://127.0.0.1:3101/#/pos');
   await page.getByTestId('pos-product-card-b_0299').click();
   await page.getByTestId('cart-checkout-button').click();
   await page.getByTestId('item-discount-p1').fill('175001');
@@ -163,17 +175,70 @@ try {
   await page.getByTestId('checkout-payment-method').selectOption('edc');
   await page.getByTestId('checkout-discount').fill('25000');
   assert((await page.getByTestId('checkout-net-total').innerText()).includes('150.000'));
-  assert.equal(await page.getByTestId('checkout-cash-received').count(), 0);
+  assert.equal(await page.getByTestId('checkout-cash-received').inputValue(), '150000');
   await page.getByTestId('checkout-submit-button').click();
   await page.getByTestId('sales-note-dialog').waitFor();
   assert.equal(submitted.discount_total, 25000);
   assert.equal(submitted.payment_method, 'edc');
-  assert.equal(submitted.cash_received, null);
+  assert.equal(submitted.cash_received, 150000);
   assert((await note.locator('.totals').innerText()).includes('EDC'));
   await page.getByTestId('close-receipt-btn').click();
+  for (const method of ['edc', 'transfer_bca', 'transfer_bri', 'transfer_bni', 'qris']) {
+    await page.getByTestId('pos-product-card-b_0299').click();
+    await page.getByTestId('cart-checkout-button').click();
+    await page.getByTestId('checkout-payment-method').selectOption(method);
+    await page.getByTestId('checkout-discount').fill('25000');
+    const received = page.getByTestId('checkout-cash-received');
+    assert.equal(await received.inputValue(), '150000');
+    for (const invalid of ['', '149999', '1000000000001']) {
+      await received.fill(invalid);
+      assert(await page.getByTestId('checkout-submit-button').isDisabled(), `${method}: reject ${invalid}`);
+      assert.equal(await received.getAttribute('aria-invalid'), 'true');
+    }
+    await page.getByRole('button', { name: 'Uang pas', exact: true }).click();
+    assert.equal(await received.inputValue(), '150000');
+    assert(await page.getByTestId('checkout-submit-button').isEnabled());
+    await received.fill('200000');
+    assert((await page.getByTestId('checkout-change').innerText()).includes('50.000'));
+    if (method === 'transfer_bca') {
+      for (const theme of ['light', 'dark']) {
+        await page.evaluate(value => document.documentElement.classList.toggle('dark', value === 'dark'), theme);
+        for (const width of [390, 768, 1280]) {
+          await page.setViewportSize({ width, height: 1000 });
+          const box = await page.getByTestId('checkout-dialog').boundingBox();
+          assert(box.x >= 0 && box.x + box.width <= width, `${theme}/${width}: checkout fits`);
+          assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${theme}/${width}: no page overflow`);
+          await received.focus();
+          await page.keyboard.press('Tab');
+          assert.equal(await page.getByRole('button', { name: 'Uang pas', exact: true }).evaluate(el => el === document.activeElement), true);
+          if (width === 390) await page.screenshot({ path: resolve(artifacts, `pembayaran-transfer-${theme}-mobile.png`) });
+        }
+      }
+      await page.evaluate(() => document.documentElement.classList.remove('dark'));
+      await page.setViewportSize({ width: 1280, height: 1000 });
+    }
+    await page.getByTestId('checkout-submit-button').click();
+    await page.getByTestId('sales-note-dialog').waitFor();
+    assert.equal(submitted.payment_method, method);
+    assert.equal(submitted.discount_total, 25000);
+    assert.equal(submitted.items[0].discount_amount, 0);
+    assert.equal(submitted.cash_received, 200000);
+    assert((await note.locator('.totals').innerText()).includes('Rp200.000,00'));
+    assert((await note.locator('.totals').innerText()).includes('Rp50.000,00'));
+    const saved = savedTransactions[0];
+    await page.getByTestId('close-receipt-btn').click();
+    await page.goto('http://127.0.0.1:3101/#/transaksi');
+    await page.getByTestId(`print-tx-btn-${saved.invoice_number.toLowerCase()}`).click();
+    await page.getByTestId('sales-note-dialog').waitFor();
+    assert((await note.locator('.totals').innerText()).includes('Rp200.000,00'), `${method}: reprint received amount`);
+    assert((await note.locator('.totals').innerText()).includes('Rp50.000,00'), `${method}: reprint excess`);
+    await page.getByTestId('close-receipt-btn').click();
+    await page.goto('http://127.0.0.1:3101/#/pos');
+  }
   await page.getByTestId('pos-product-card-b_0299').click();
   await page.getByTestId('cart-checkout-button').click();
   await page.getByTestId('checkout-payment-method').selectOption('credit');
+  assert.equal(await page.getByTestId('checkout-cash-received').count(), 0);
   await page.getByLabel('Tambahan tempo Spooring').fill('15000');
   await page.getByTestId('checkout-discount').fill('10000');
   assert((await page.getByTestId('checkout-net-total').innerText()).includes('180.000'));
@@ -185,6 +250,7 @@ try {
   await note.getByRole('heading', { name: 'Nota Penjualan Tempo' }).waitFor();
   assert.equal(submitted.items[0].credit_surcharge, 15000);
   assert.equal(submitted.discount_total, 10000);
+  assert.equal(submitted.cash_received, null);
   assert((await note.locator('.totals').innerText()).includes('Rp180.000,00'));
   await page.getByLabel('Kertas', { exact: true }).selectOption('half');
   await page.waitForFunction(() => document.querySelector('iframe')?.contentDocument?.querySelector('style')?.textContent.includes('min-height:139.7mm'));
@@ -195,7 +261,7 @@ try {
   await printPage.screenshot({ path: resolve(artifacts, 'nota-tempo.png'), fullPage: true });
   await printPage.close();
   await page.getByTestId('close-receipt-btn').click();
-  await page.goto('http://127.0.0.1:3101/laporan-kas');
+  await page.goto('http://127.0.0.1:3101/#/laporan-kas');
   await page.getByRole('button', { name: 'Transaksi Bulanan' }).click();
   await page.getByTestId('monthly-sales-table').waitFor();
   await page.getByLabel('Bulan laporan').fill('2026-09');
@@ -228,7 +294,7 @@ try {
   assert((await page.getByTestId('get-data-table').innerText()).includes('Distributor Uji'));
   await page.screenshot({ path: resolve(artifacts, 'get-data-pembelian.png'), fullPage: true });
   assert.deepEqual(errors, []);
-  console.log('PASS: escaped HTML, legacy/credit/returned notes, half/full/long PDF, reprint, settings persistence, mobile, POS tender/change, EDC invoice discount, custom tempo price and credit note.');
+  console.log('PASS: escaped HTML, legacy/credit/returned notes, half/full/long PDF, native print and PDF controls, settings persistence, every immediate payment received/excess and reprint, invalid-payment rejection, exact-payment reset, mobile/tablet/desktop in light/dark, keyboard input, existing line and invoice discounts, custom tempo price.');
   console.log(`Artifacts: ${artifacts}`);
 } finally {
   await browser?.close();

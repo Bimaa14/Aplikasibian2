@@ -23,6 +23,9 @@ from lib.financial_operations import FinancialOperation, MARKER, financial_lock,
 from lib.runtime_lock import single_writer
 
 
+IMMEDIATE_PAYMENT_METHODS = ("cash", "edc", "transfer_bca", "transfer_bri", "transfer_bni", "qris")
+
+
 @pytest.fixture
 async def isolated(monkeypatch):
     name = "bian_safety_test_" + uuid.uuid4().hex
@@ -361,10 +364,11 @@ async def test_interrupted_rollback_can_resume_without_double_stock_restore(isol
     await assert_clean(db)
 
 
-async def test_note_saves_sku_tender_and_change_for_reprint(isolated):
+@pytest.mark.parametrize("payment_method", IMMEDIATE_PAYMENT_METHODS)
+async def test_note_saves_sku_tender_and_change_for_reprint(isolated, payment_method):
     db, api, _, _ = isolated
     pid = await product(db)
-    body = checkout(pid, cash_received=20000, request_id=uuid.uuid4().hex)
+    body = checkout(pid, payment_method=payment_method, cash_received=20000, request_id=uuid.uuid4().hex)
     response = await api.post("/transactions", json=body)
     assert response.status_code == 201, response.text
     result = response.json()
@@ -375,29 +379,58 @@ async def test_note_saves_sku_tender_and_change_for_reprint(isolated):
     assert reprint["details"][0]["product_sku"] == pid
     assert (reprint["total_amount"], reprint["cash_received"], reprint["change_amount"]) == (10000, 20000, 10000)
     assert (await api.post("/transactions", json=body)).json()["id"] == result["id"]
+    assert (await db.products.find_one({"id": pid}))["stock"] == 4
+    assert await db.transactions.count_documents({}) == 1
+    body["cash_received"] = 25000
+    assert (await api.post("/transactions", json=body)).status_code == 409
     await assert_clean(db)
 
 
-@pytest.mark.parametrize("received", [0, 9999, -1, 1e13])
-async def test_insufficient_or_invalid_cash_does_not_change_stock(isolated, received):
+@pytest.mark.parametrize("payment_method", IMMEDIATE_PAYMENT_METHODS)
+@pytest.mark.parametrize("received", [0, 9999.99, -1, 1e13, 10000.001])
+async def test_insufficient_or_invalid_received_amount_does_not_change_stock(isolated, received, payment_method):
     db, api, _, _ = isolated
     pid = await product(db)
-    response = await api.post("/transactions", json=checkout(pid, cash_received=received))
+    response = await api.post("/transactions", json=checkout(pid, payment_method=payment_method, cash_received=received))
     assert response.status_code == 422, response.text
     assert (await db.products.find_one({"id": pid}))["stock"] == 5
     assert await db.transactions.count_documents({}) == 0
     await assert_clean(db)
 
 
-async def test_old_transaction_does_not_invent_cash_or_sku(isolated):
+@pytest.mark.parametrize("payment_method", IMMEDIATE_PAYMENT_METHODS)
+async def test_old_transaction_does_not_invent_received_amount_or_sku(isolated, payment_method):
     db, api, _, _ = isolated
     pid = await product(db)
-    created = (await api.post("/transactions", json=checkout(pid))).json()
+    created = (await api.post("/transactions", json=checkout(pid, payment_method=payment_method))).json()
     await db.transactions.update_one({"id": created["id"]}, {"$unset": {"cash_received": "", "change_amount": ""}})
     await db.transaction_details.update_many({"transaction_id": created["id"]}, {"$unset": {"product_sku": ""}})
     result = (await api.get(f"/transactions/{created['id']}")).json()
     assert result["cash_received"] is None and result["change_amount"] is None
     assert result["details"][0]["product_sku"] is None
+
+
+@pytest.mark.parametrize("payment_method", IMMEDIATE_PAYMENT_METHODS)
+async def test_overpayment_does_not_inflate_sales_or_return_refund(isolated, payment_method):
+    from lib.sales import sales_report
+
+    db, api, _, _ = isolated
+    pid = await product(db, price=10000.10)
+    response = await api.post("/transactions", json=checkout(pid, payment_method=payment_method, cash_received=20000.31))
+    assert response.status_code == 201, response.text
+    created = response.json()
+    assert created["change_amount"] == 10000.21
+    report = await sales_report(created["date_key"][:7])
+    assert report["net"] == created["total_amount"] == 10000.10
+    assert await db.accounts_receivable.count_documents({}) == 0
+    returned = await api.post(f"/transactions/{created['id']}/return", json={"refund_confirmed": True})
+    assert returned.status_code == 200, returned.text
+    assert returned.json()["refund_amount"] == 10000.10
+    assert returned.json()["cash_received"] == 20000.31
+    assert returned.json()["change_amount"] == 10000.21
+    assert (await sales_report(created["date_key"][:7]))["net"] == 0
+    assert (await db.products.find_one({"id": pid}))["stock"] == 5
+    await assert_clean(db)
 
 
 async def test_real_auth_cookie_logout_and_admin_boundary(isolated, monkeypatch):
