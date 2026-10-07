@@ -40,7 +40,7 @@ const escape = (value: string | number | null | undefined) => String(value ?? ""
   /[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]!,
 );
 const currency = new Intl.NumberFormat("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const money = (value: number | null | undefined) => value == null || !Number.isFinite(value) ? "—" : `Rp${currency.format(value)}`;
+const money = (value: number | null | undefined) => value == null || !Number.isFinite(value) ? "Tidak tercatat" : `Rp${currency.format(value)}`;
 
 function noteDate(value: string) {
   const date = new Date(`${value.slice(0, 10)}T12:00:00`);
@@ -52,18 +52,16 @@ function noteDate(value: string) {
 /** A standalone, offline document shared by the preview and the printer. All data is escaped. */
 export function buildSalesNoteDocument(transaction: Transaction, settings: NoteSettings): string {
   if (transaction.payment_method === "credit") return buildCreditNote(transaction, settings);
-  const credit = false;
   const width = "241.3mm";
   const height = settings.paper === "full" ? "279.4mm" : "139.7mm";
-  // Reserve room for the credit/discount footer and the extra price annotation.
-  const footerRows = credit ? 3 : (transaction.discount_total ?? 0) > 0 ? 1 : 0;
-  // Keep the writing area tall like the continuous-paper reference, even for one item.
-  const blankRows = Math.max(0, (settings.paper === "full" ? 40 : 16) - transaction.details.length - footerRows);
+  const footerRows = ((transaction.discount_total ?? 0) > 0 ? 1 : 0) + (transaction.payment_method !== 'cash' ? 1 : 0);
+  // Reserve space for readable text and payment totals on the half-sheet form.
+  const blankRows = Math.max(0, (settings.paper === "full" ? 40 : 13) - transaction.details.length - footerRows);
   const rows = transaction.details.map((line, index) => {
     // The stored subtotal is authoritative, including historical imported transactions.
     const discount = Math.max(0, Math.round((line.price * line.qty - line.subtotal) * 100) / 100);
     return `<tr class="item-row"><td class="center">${index + 1}</td>
-      <td>${escape(line.product_sku || "—")}</td><td>${escape(line.product_name)}${credit && line.credit_surcharge ? `<br><small>Tambahan tempo/unit ${money(line.credit_surcharge)}</small>` : ''}</td>
+      <td>${escape(line.product_sku || "-")}</td><td>${escape(line.product_name)}</td>
       <td class="number">${money(line.price)}</td><td class="number">${money(discount)}</td>
       <td class="center">${escape(line.qty)}</td><td class="number">${money(line.subtotal)}</td></tr>`;
   }).join("");
@@ -77,45 +75,45 @@ export function buildSalesNoteDocument(transaction: Transaction, settings: NoteS
     * { box-sizing: border-box; }
     html { color-scheme: light; background: #fff; }
     body { margin: 0; padding: 6mm 12mm; width: ${width}; min-height: ${height}; color: #000; background: #fff;
-      font: 700 10pt/1.12 "Times New Roman", Times, serif; -webkit-text-stroke: .3pt #000;
+      font: 400 10pt/1.2 Arial, Helvetica, sans-serif;
       -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     table { width: 100%; border-collapse: collapse; table-layout: fixed; }
     thead { display: table-header-group; break-inside: avoid; }
     tr { break-inside: avoid; page-break-inside: avoid; }
-    .heading { border: 0; padding: 0 0 2mm; font-weight: 700; break-inside: avoid; }
+    .heading { border: 0; padding: 0 0 2mm; break-inside: avoid; }
     h1 { margin: 0 0 1.5mm; text-align: center; font-size: 12pt; font-weight: bold; }
     .header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; align-items: end; }
     .meta { text-align: left; }
     .meta p, .store p { margin: 0 0 .7mm; overflow-wrap: anywhere; }
-    .meta .secondary { font-size: 9pt; }
-    .store { text-align: center; font-weight: bold; }
-    .store-name { font-size: 11pt; }
+    .meta .secondary { font-size: 10pt; }
+    .store { text-align: center; }
+    .store-name { font-size: 11pt; font-weight: 700; }
     .status { margin: 0 0 2mm; border: 1pt solid #000; padding: 1mm; text-align: center; font-weight: bold; }
     .columns th { border: 1.1pt solid #000; padding: 1.5mm 1mm; font-size: 10pt; font-weight: 700; }
-    tbody td { border-left: 1.1pt solid #000; border-right: 1.1pt solid #000; padding: .9mm 1mm; vertical-align: top; overflow-wrap: anywhere; font-weight: 700; }
+    tbody td { border-left: 1.1pt solid #000; border-right: 1.1pt solid #000; padding: .9mm 1mm; vertical-align: top; overflow-wrap: anywhere; }
     tbody tr:last-child td { border-bottom: 1.1pt solid #000; }
     .item-row { height: 4.5mm; }
-    .number { text-align: left; font-variant-numeric: tabular-nums; font-size: 9pt; }
+    .number { text-align: left; font-variant-numeric: tabular-nums; font-size: 10pt; }
     .center { text-align: center; }
     .blank td { height: ${blankRows * 4.5}mm; padding: 0; }
     .bottom { display: grid; grid-template-columns: 1fr 79mm; gap: 5mm; padding-top: 1.5mm;
-      break-inside: avoid; page-break-inside: avoid; font-weight: bold; }
-    .policy { margin: 0; font-size: 9pt; overflow-wrap: anywhere; }
-    .totals { margin: 0; font-size: 9pt; }
+      break-inside: avoid; page-break-inside: avoid; }
+    .policy { margin: 0; font-size: 10pt; overflow-wrap: anywhere; }
+    .totals { margin: 0; font-size: 10pt; }
     .totals div { display: flex; flex-wrap: wrap; gap: 1mm; margin-bottom: .6mm; }
     .totals dt, .totals dd { margin: 0; }
     .totals dd { overflow-wrap: anywhere; }
-    .footnote { margin: 2mm 0 0; font-size: 10pt; font-weight: 700; }
+    .grand-total { font-weight: 700; }
+    .footnote { margin: 2mm 0 0; font-size: 10pt; }
     @media print {
       html { height: auto; }
-      /* The driver's printable height can be shorter than the physical form.
-         Let content determine height so a short note cannot spill a blank page. */
+      /* Content height avoids blank pages when the driver's printable form is shorter. */
       body { width: ${width}; max-width: 100%; height: auto; min-height: 0; padding: 6mm 12mm; overflow: visible; }
     }
   </style></head><body>
   <header class="heading">
-      <h1>${credit ? 'Nota Penjualan Tempo' : 'Nota Penjualan'}</h1>
-      ${returned ? '<p class="status">TRANSAKSI DIRETUR — NOTA DIBATALKAN</p>' : ""}
+      <h1>Nota Penjualan</h1>
+      ${returned ? '<p class="status">TRANSAKSI DIRETUR. NOTA DIBATALKAN</p>' : ""}
       <div class="header-grid"><div class="meta">
         <p><b>Nomor Transaksi : ${escape(transaction.invoice_number)}</b></p>
         <p>${escape(PAYMENT_LABELS[transaction.payment_method])}</p>
@@ -134,15 +132,14 @@ export function buildSalesNoteDocument(transaction: Transaction, settings: NoteS
   </table>
   <div class="bottom"><div><p class="policy">${escape(settings.footer)}</p>
     ${returned ? '<p class="footnote">Nota ini merupakan salinan transaksi yang telah diretur.</p>' : ""}
-    ${transaction.payment_method === 'cash' && transaction.cash_received == null ? '<p class="footnote">Nominal uang diterima dan kembalian tidak tercatat.</p>' : ""}
+    ${transaction.cash_received == null || transaction.change_amount == null ? '<p class="footnote">Nominal pembayaran diterima atau selisihnya tidak tercatat pada transaksi ini.</p>' : ""}
     ${(transaction.discount_total ?? 0) > 0 ? '<p class="footnote">Potongan tercantum pada tiap baris. Total sudah setelah potongan.</p>' : ''}
-    ${credit ? '<p class="footnote">Nota tempo adalah tagihan saat transaksi, bukan bukti pelunasan. Cicilan dicatat melalui kwitansi pembayaran.</p>' : ''}
   </div><dl class="totals">
     ${(transaction.discount_total ?? 0) > 0 ? `<div><dt>Potongan nota :</dt><dd>${money(transaction.discount_total)}</dd></div>` : ''}
-    <div><dt>Total Transaksi :</dt><dd>${money(transaction.total_amount)}</dd></div>
-    ${credit ? `<div><dt>Pembayaran :</dt><dd>Tempo</dd></div><div><dt>Jatuh Tempo :</dt><dd>${escape(transaction.due_date?.split("-").reverse().join("/") || "—")}</dd></div>`
-      : transaction.payment_method === 'cash' ? `<div><dt>Bayar :</dt><dd>${money(transaction.cash_received)}</dd></div><div><dt>Kembalian :</dt><dd>${money(transaction.change_amount)}</dd></div>`
-      : `<div><dt>Pembayaran :</dt><dd>${escape(PAYMENT_LABELS[transaction.payment_method])}</dd></div><div><dt>Terbayar :</dt><dd>${money(transaction.total_amount)}</dd></div>`}
+    <div class="grand-total"><dt>Total Transaksi :</dt><dd>${money(transaction.total_amount)}</dd></div>
+    ${transaction.payment_method !== 'cash' ? `<div><dt>Pembayaran :</dt><dd>${escape(PAYMENT_LABELS[transaction.payment_method])}</dd></div>` : ''}
+    <div><dt>Jumlah diterima :</dt><dd>${money(transaction.cash_received)}</dd></div>
+    <div><dt>${transaction.payment_method === 'cash' ? 'Kembalian' : 'Kelebihan pembayaran'} :</dt><dd>${money(transaction.change_amount)}</dd></div>
   </dl></div>
   </body></html>`;
 }

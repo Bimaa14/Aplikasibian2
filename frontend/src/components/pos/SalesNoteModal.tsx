@@ -9,6 +9,17 @@ import { buildSalesNoteDocument, loadNoteSettings, NOTE_SETTINGS_KEY } from "@/l
 import type { NoteSettings } from "@/lib/sales-note";
 import type { Transaction } from "@/lib/types";
 
+const waitForPaint = () => new Promise<void>((resolve) => {
+  let frameId = 0;
+  const finish = () => {
+    window.clearTimeout(timer);
+    window.cancelAnimationFrame(frameId);
+    resolve();
+  };
+  const timer = window.setTimeout(finish, 150);
+  frameId = window.requestAnimationFrame(() => { frameId = window.requestAnimationFrame(finish); });
+});
+
 export default function SalesNoteModal({ transaction, open, onOpenChange }: {
   transaction: Transaction | null;
   open: boolean;
@@ -17,11 +28,22 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
   const [settings, setSettings] = useState(loadNoteSettings);
   const [showSettings, setShowSettings] = useState(false);
   const [ready, setReady] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+  const [printing, setPrinting] = useState(false);
   const [previewHeight, setPreviewHeight] = useState(540);
   const frame = useRef<HTMLIFrameElement>(null);
+  const readyDocument = useRef<Document | null>(null);
+  const documentVersion = useRef(0);
   const html = useMemo(() => transaction ? buildSalesNoteDocument(transaction, settings) : "", [transaction, settings]);
 
-  useEffect(() => { setReady(false); }, [html, open]);
+  useEffect(() => {
+    documentVersion.current += 1;
+    readyDocument.current = null;
+    setReady(false);
+    setPrinting(false);
+    setPreviewError(null);
+    return () => { documentVersion.current += 1; readyDocument.current = null; };
+  }, [html, open]);
 
   function updateSettings(changes: Partial<NoteSettings>) {
     const next = { ...settings, ...changes };
@@ -30,21 +52,49 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
     catch { toast.error("Pengaturan berlaku sekarang, tetapi tidak bisa disimpan di browser ini."); }
   }
 
-  function print(destination: 'printer' | 'pdf') {
+  async function preparePreview() {
     const target = frame.current?.contentWindow;
     const doc = frame.current?.contentDocument;
-    if (!target || !doc || !ready) return;
-    doc.getElementById('note-printer-page')?.remove();
-    if (destination === 'printer') {
-      // A wide custom PDF page can trigger automatic rotation in printer drivers.
-      // Physical printing must use the driver's selected form and orientation.
-      const style = doc.createElement('style');
-      style.id = 'note-printer-page';
-      style.textContent = '@page { size: auto; margin: 0; }';
-      doc.head.appendChild(style);
+    const version = documentVersion.current;
+    if (!target || !doc || !open) return;
+    try {
+      await doc.fonts.ready;
+      await waitForPaint();
+      if (version !== documentVersion.current || frame.current?.contentDocument !== doc) return;
+      setPreviewHeight(Math.max(doc.body.scrollHeight, settings.paper === "full" ? 1056 : 528) + 2);
+      readyDocument.current = doc;
+      setReady(true);
+    } catch {
+      if (version === documentVersion.current && frame.current?.contentDocument === doc) setPreviewError("Pratinjau gagal dimuat. Tutup nota lalu cetak ulang.");
     }
-    target.focus();
-    target.print();
+  }
+
+  async function print(destination: 'printer' | 'pdf') {
+    const target = frame.current?.contentWindow;
+    const doc = frame.current?.contentDocument;
+    const version = documentVersion.current;
+    if (!target || !doc || !open || !ready || printing || readyDocument.current !== doc) return;
+    setPrinting(true);
+    try {
+      await doc.fonts.ready;
+      if (version !== documentVersion.current || frame.current?.contentDocument !== doc) return;
+      doc.getElementById('note-printer-page')?.remove();
+      if (destination === 'printer') {
+        // The printer driver selects the physical form and orientation.
+        const style = doc.createElement('style');
+        style.id = 'note-printer-page';
+        style.textContent = '@page { size: auto; margin: 0; }';
+        doc.head.appendChild(style);
+      }
+      await waitForPaint();
+      if (version !== documentVersion.current || frame.current?.contentDocument !== doc) return;
+      target.focus();
+      target.print();
+    } catch {
+      if (version === documentVersion.current) toast.error("Jendela cetak tidak dapat dibuka. Coba cetak ulang nota.");
+    } finally {
+      if (version === documentVersion.current) setPrinting(false);
+    }
   }
 
   if (!transaction) return null;
@@ -79,21 +129,20 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
           </div>)}
           <p className="text-xs text-muted-foreground sm:col-span-2">Tersimpan di browser komputer ini dan dipakai saat mencetak nota.</p>
         </div>}
-        <div className="min-h-0 min-w-0 flex-1 overflow-auto rounded-lg border border-border bg-muted/30 p-3" data-testid="sales-note-preview">
+        <div className="min-h-0 min-w-0 flex-1 overflow-auto rounded-lg border border-border bg-muted/30 p-3" data-testid="sales-note-preview" aria-busy={!ready && !previewError}>
+          {previewError ? <p role="alert" className="mb-3 text-sm text-destructive">{previewError}</p>
+            : !ready ? <p role="status" className="mb-3 text-sm text-muted-foreground">Menyiapkan nota...</p> : null}
           <iframe ref={frame} title="Pratinjau nota penjualan" srcDoc={html} sandbox="allow-same-origin allow-modals"
             className="mx-auto block border-0 bg-white shadow-sm" style={{ width: "241.3mm", height: previewHeight }}
-            onLoad={() => {
-              const doc = frame.current?.contentDocument;
-              if (doc) setPreviewHeight(Math.max(doc.body.scrollHeight, settings.paper === "full" ? 1056 : 528) + 2);
-              setReady(true);
-            }} />
+            onLoad={() => void preparePreview()}
+            onError={() => setPreviewError("Pratinjau gagal dimuat. Tutup nota lalu cetak ulang.")} />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">Cetak Nota: pilih printer, Portrait, dan form {settings.paper === 'half' ? '9,5 × 5,5 inci. ' : '9,5 × 11 inci. '}Skala 100%, matikan header/footer browser. Simpan PDF: pilih Save as PDF; ukuran mengikuti pilihan kertas di atas.</p>
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" data-testid="close-receipt-btn" onClick={() => onOpenChange(false)}>Tutup</Button>
-            <Button variant="outline" data-testid="save-note-pdf-btn" onClick={() => print('pdf')} disabled={!ready}><FileDown /> Simpan PDF</Button>
-            <Button data-testid="print-receipt-btn" onClick={() => print('printer')} disabled={!ready}><Printer /> Cetak Nota</Button>
+            <Button variant="outline" data-testid="save-note-pdf-btn" onClick={() => void print('pdf')} disabled={!ready || printing}><FileDown /> Simpan PDF</Button>
+            <Button data-testid="print-receipt-btn" onClick={() => void print('printer')} disabled={!ready || printing}><Printer /> Cetak Nota</Button>
           </div>
         </div>
       </DialogContent>

@@ -29,13 +29,11 @@ class TransactionCreate(BaseModel):
 
     @model_validator(mode="after")
     def credit_rule(self):
-        if self.payment_method != "cash" and self.cash_received is not None:
-            raise ValueError("Uang tunai hanya diisi untuk pembayaran tunai")
         if self.payment_method != "credit" and any(i.credit_surcharge for i in self.items):
             raise ValueError("Tambahan harga hanya tersedia untuk transaksi tempo")
         if self.payment_method == "credit":
             if self.cash_received is not None:
-                raise ValueError("Uang tunai hanya diisi untuk pembayaran tunai")
+                raise ValueError("Uang diterima tidak diisi untuk pembayaran tempo")
             if not self.customer_id:
                 raise ValueError("Pelanggan wajib dipilih untuk pembayaran tempo (credit)")
             if not self.due_date:
