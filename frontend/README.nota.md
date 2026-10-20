@@ -34,6 +34,15 @@ Margin nota tunai: kiri/kanan 12 mm dan atas/bawah 6 mm; nota tempo memakai kiri
 sama dengan cetak, dalam iframe terpisah agar menu aplikasi tidak ikut tercetak.
 Tabel panjang dilanjutkan ke halaman berikutnya dengan header kolom berulang; jumlah akhir tampil sekali. Nota tunai juga mengulang nomor transaksi pada header tabel.
 
+Nota pembayaran langsung (tunai, transfer, EDC, dan QRIS) mencantumkan rekening
+di kiri bawah: Bank BCA, 3761155405, A.N Wati Wulandari. Header, ukuran tabel,
+lebar kolom, dan posisi total tetap mengikuti format sebelumnya.
+
+Untuk Epson LX-310 ESC/P, gunakan resolusi 240 x 144 dpi pada preferensi printer.
+Resolusi ini sudah diterapkan pada preferensi pengguna Windows di komputer ini;
+ukuran kertas dan orientasi tetap mengikuti pilihan pengguna. Cetak ulang dari
+aplikasi terbaru agar tambahan rekening ikut tercetak.
+
 ## Format tempo (buku nota)
 
 Transaksi tempo otomatis memakai form tersendiri sesuai foto: BANYAKNYA, UKURAN, MERK, SATUAN, TOTAL; penerima, tanggal, jatuh tempo, dan ruang tanda tangan Tanda Terima/Hormat Kami. Harga satuan termasuk tambahan tempo dan total baris setelah alokasi potongan. Ukuran, merek, dan alamat pelanggan disimpan saat checkout untuk cetak ulang. Data lama yang tidak lengkap ditampilkan dengan nama barang/tanda kosong, bukan diisi dari master terbaru.

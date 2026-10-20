@@ -1,6 +1,7 @@
 import { buildCreditNote } from './credit-note';
 import type { Transaction } from "./types";
 import { PAYMENT_LABELS } from './payments';
+import { NOTE_BANK_ACCOUNT, NOTE_PRINT_STYLES } from './note-print';
 
 export type NotePaper = "half" | "full";
 export interface NoteSettings {
@@ -105,6 +106,7 @@ export function buildSalesNoteDocument(transaction: Transaction, settings: NoteS
     .totals dd { overflow-wrap: anywhere; }
     .grand-total { font-weight: 700; }
     .footnote { margin: 2mm 0 0; font-size: 10pt; }
+    ${NOTE_PRINT_STYLES}
     @media print {
       html { height: auto; }
       /* Content height avoids blank pages when the driver's printable form is shorter. */
@@ -134,6 +136,7 @@ export function buildSalesNoteDocument(transaction: Transaction, settings: NoteS
     ${returned ? '<p class="footnote">Nota ini merupakan salinan transaksi yang telah diretur.</p>' : ""}
     ${transaction.cash_received == null || transaction.change_amount == null ? '<p class="footnote">Nominal pembayaran diterima atau selisihnya tidak tercatat pada transaksi ini.</p>' : ""}
     ${(transaction.discount_total ?? 0) > 0 ? '<p class="footnote">Potongan tercantum pada tiap baris. Total sudah setelah potongan.</p>' : ''}
+    ${NOTE_BANK_ACCOUNT}
   </div><dl class="totals">
     ${(transaction.discount_total ?? 0) > 0 ? `<div><dt>Potongan nota :</dt><dd>${money(transaction.discount_total)}</dd></div>` : ''}
     <div class="grand-total"><dt>Total Transaksi :</dt><dd>${money(transaction.total_amount)}</dd></div>
