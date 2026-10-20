@@ -74,6 +74,17 @@ try {
         assert.equal(typography.transform, 'none');
         assert.equal(typography.filter, 'none');
         assert.equal(typography.shadow, 'none');
+        if (payment_method !== 'credit') {
+          const bank = page.getByRole('region', { name: 'Rekening pembayaran' });
+          assert.deepEqual(await bank.locator('p').allTextContents(), ['Bank BCA', '3761155405', 'A.N Wati Wulandari']);
+          const bankBounds = await bank.boundingBox();
+          const tableBounds = await page.locator('table').boundingBox();
+          const totalsBounds = await page.locator('.totals').boundingBox();
+          assert(Math.abs(bankBounds.x - tableBounds.x) < 1, 'The account must align with the left edge of the note');
+          assert(bankBounds.y >= tableBounds.y + tableBounds.height, 'The account must stay below the items');
+          assert(bankBounds.x < totalsBounds.x, 'The account must stay on the left of the totals');
+          assert(bankBounds.y + bankBounds.height <= (paper === 'half' ? 528 : 1056) - 22, 'The account must fit above the bottom margin');
+        }
         if (inset) await page.addStyleTag({ content: `@page { margin: ${inset / 2}in; }` });
         const path = resolve(artifacts, `${payment_method}-${paper}-${inset}.pdf`);
         await page.pdf({ path, preferCSSPageSize: true, displayHeaderFooter: false });
@@ -83,6 +94,10 @@ try {
         assert(Math.abs(result.height - (paper === 'half' ? 396 : 792)) < 1);
         assert(result.fonts.length > 0, 'The PDF must contain native text fonts');
         assert.equal(result.images, 0, 'Receipt text must not be rasterized');
+        if (payment_method !== 'credit') {
+          assert.equal((result.text.match(/3761155405/g) || []).length, 1, 'Print the bank account once');
+          assert(result.text.includes('Bank BCA') && result.text.includes('A.N Wati Wulandari'));
+        }
         for (const item of tx.details) assert(result.text.includes(item.product_name));
         assert(result.text.includes('410.000,00'));
         if (payment_method !== 'credit') {
@@ -113,6 +128,7 @@ try {
     const result = inspectPdf(path);
     for (let item = 1; item <= 50; item++) assert(result.text.includes(`ITEM-${item} `), `Missing ${payment_method} item ${item}`);
     assert(result.text.includes(payment_method === 'cash' ? 'Total Transaksi' : 'Total tagihan'));
+    if (payment_method === 'cash') assert.equal((result.text.match(/3761155405/g) || []).length, 1, 'Long notes must retain one bank account footer');
     assert.equal(result.images, 0);
   }
 
@@ -169,7 +185,7 @@ try {
   await page.getByTestId('close-receipt-btn').click();
   assert.deepEqual(errors, []);
 
-  console.log('PASS: regular native text without stroke/filter/scaling, 10pt+ prices, cash/transfer/credit half/full single-page PDFs including reduced print area, actual received/excess amounts, unknown legacy fields, complete 50-item pagination, close/reopen cancellation and delayed-frame timeout recovery. Physical printing was not tested.');
+  console.log('PASS: regular native text without stroke/filter/scaling, 10pt+ prices, exact BCA account at bottom left, cash/transfer/credit half/full single-page PDFs including reduced print area, actual received/excess amounts, unknown legacy fields, complete 50-item pagination, close/reopen cancellation and delayed-frame timeout recovery. Physical printing was not tested.');
   console.log(`Artifacts: ${artifacts}`);
 } finally {
   await browser?.close();

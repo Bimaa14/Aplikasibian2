@@ -1,5 +1,6 @@
 import type { Transaction } from './types';
 import type { NoteSettings } from './sales-note';
+import { NOTE_PRINT_STYLES } from './note-print';
 
 const esc = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 const money = (value: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 }).format(value).replace(/\s/g, '');
@@ -29,6 +30,7 @@ export function buildCreditNote(transaction: Transaction, settings: NoteSettings
     .signatures { display:grid; grid-template-columns:1fr 1fr; gap:30mm; text-align:center; margin-top:3mm; align-items:start; }
     .signature { padding-top:10mm; }
     .notice { font-size:10pt; max-width:110mm; margin:0; } .void { border:2px solid; padding:1mm; text-align:center; margin-bottom:2mm; }
+    ${NOTE_PRINT_STYLES}
     @media print { html { height:auto; } body { width:auto; height:auto; min-height:0; padding:6mm 18mm; overflow:visible; } }
   </style></head><body>
   ${transaction.status === 'returned' ? '<p class="void">TRANSAKSI DIRETUR. NOTA DIBATALKAN</p>' : ''}
