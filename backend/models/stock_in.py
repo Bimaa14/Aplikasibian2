@@ -1,11 +1,10 @@
 """Stok masuk (barang masuk dari distributor) — satu form multi-item.
 
-Efek satu transaksi stok masuk: stok barang naik, cost_price (modal) produk diperbarui,
-dan satu baris hutang (accounts_payable) dibuat otomatis.
+Stok dan modal diperbarui untuk pembelian tunai/tempo. Hanya tempo membuat hutang.
 """
 import uuid
 from datetime import datetime, date
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -17,10 +16,11 @@ class StockInItemCreate(BaseModel):
 
 
 class StockInCreate(BaseModel):
+    payment_method: Literal['cash', 'credit'] = 'credit'
     invoice_date: Optional[date] = None
     supplier_id: str
     invoice_number: str
-    due_date: str  # YYYY-MM-DD — jatuh tempo hutang ke distributor
+    due_date: Optional[str] = None  # Required for credit purchases.
     items: List[StockInItemCreate] = Field(min_length=1)
     note: str = ""
 
@@ -40,6 +40,7 @@ class StockInItem(BaseModel):
 
 
 class StockIn(BaseModel):
+    payment_method: Literal['cash', 'credit'] = 'credit'
     invoice_date: Optional[str] = None
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     reference: str  # SM-YYMMDD-0001
@@ -48,7 +49,7 @@ class StockIn(BaseModel):
     supplier_id: str
     supplier_name: str
     invoice_number: str
-    due_date: str
+    due_date: Optional[str] = None
     total_amount: float
     note: str = ""
     payable_id: Optional[str] = None

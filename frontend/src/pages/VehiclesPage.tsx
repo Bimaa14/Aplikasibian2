@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Car, Droplet, Search, CircleDot } from "lucide-react";
 import { PaymentMethodBadge, TxStatusBadge } from "@/components/StatusBadge";
@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 export default function VehiclesPage() {
   const [search, setSearch] = useState("");
   const [plate, setPlate] = useState<string | null>(null);
+  const detailRegion = useRef<HTMLDivElement>(null);
 
   const listQuery = useQuery({
     queryKey: ["vehicles", search.trim().toUpperCase()],
@@ -32,26 +33,30 @@ export default function VehiclesPage() {
   const detail = detailQuery.data;
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-4">
+    <div className="page-workspace">
+      <div className="page-heading">
+        <div>
         <h1 className="font-heading text-2xl font-bold tracking-tight">Riwayat Kendaraan</h1>
         <p className="text-sm text-muted-foreground">
-          Cari nomor polisi untuk melihat semua servis kendaraan itu — termasuk ban dan oli terakhir yang dipakai.
+          Periksa kunjungan servis serta ban dan oli terakhir berdasarkan nomor polisi.
         </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
-        {/* Daftar kendaraan */}
-        <div className="xl:col-span-5">
-          <div className="relative mb-3">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+      <div className="grid min-w-0 grid-cols-1 items-start gap-5 min-[1200px]:grid-cols-12">
+        <div className="min-w-0 min-[1200px]:col-span-5">
+          <div className="page-toolbar !mb-3">
+          <div className="relative w-full min-w-0">
+            <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
+              aria-label="Cari nomor polisi kendaraan"
               data-testid="vehicle-search-input"
-              className="pl-9 font-mono uppercase"
+              className="pl-10 font-mono uppercase"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari nomor polisi… mis. B 1234 XYZ"
+              placeholder="Cari nomor polisi"
             />
+          </div>
           </div>
 
           {listQuery.isPending ? (
@@ -60,42 +65,51 @@ export default function VehiclesPage() {
             <ErrorBlock error={listQuery.error} onRetry={() => void listQuery.refetch()} />
           ) : vehicles.length === 0 ? (
             <EmptyBlock
-              title="Belum ada riwayat kendaraan"
-              description="Isi nomor polisi saat checkout di Kasir POS agar servis tercatat per kendaraan."
+              title={search.trim() ? "Nomor polisi tidak ditemukan" : "Belum ada riwayat kendaraan"}
+              description={search.trim() ? "Coba nomor polisi lain atau hapus pencarian." : "Isi nomor polisi saat checkout di Kasir POS agar servis tercatat per kendaraan."}
             />
           ) : (
-            <div className="space-y-2" data-testid="vehicles-list">
+            <div className="data-panel max-h-[70dvh] divide-y divide-border overflow-y-auto" data-testid="vehicles-list">
+              <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
+                <h2 className="text-sm font-semibold">Daftar kendaraan</h2>
+                <span className="text-sm text-muted-foreground" data-testid="vehicles-visible-count">{vehicles.length} kendaraan</span>
+              </div>
               {vehicles.map((v) => (
                 <button
                   key={v.plate}
                   data-testid={`vehicle-card-${v.plate.replace(/\s+/g, "-").toLowerCase()}`}
-                  onClick={() => setPlate(v.plate)}
+                  onClick={() => {
+                    setPlate(v.plate);
+                    if (window.matchMedia("(max-width: 1199px)").matches) {
+                      detailRegion.current?.scrollIntoView({ block: "start" });
+                    }
+                  }}
+                  aria-pressed={plate === v.plate}
+                  aria-label={`Lihat riwayat kendaraan ${v.plate}`}
                   className={cn(
-                    "w-full rounded-lg border p-3 text-left transition hover:border-primary/60",
-                    plate === v.plate ? "border-primary bg-primary/5" : "border-border bg-card"
+                    "min-h-11 w-full px-4 py-4 text-left transition-colors hover:bg-secondary/50",
+                    plate === v.plate ? "bg-accent text-accent-foreground" : "bg-card"
                   )}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="flex items-center gap-2 font-mono text-sm font-bold tracking-wider">
-                      <Car className="size-4 text-primary" />
+                      <Car aria-hidden="true" className="size-4 text-muted-foreground" />
                       {v.plate}
                     </span>
-                    <Badge variant="outline" className="rounded-sm text-[10px]">
-                      {v.visit_count}x servis
-                    </Badge>
+                    <span className="shrink-0 text-xs text-muted-foreground">{v.visit_count} kunjungan</span>
                   </div>
-                  <p className="mt-1 truncate text-xs text-muted-foreground">
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                     {v.last_customer ?? "Umum"} · terakhir {formatDate(v.last_visit)} · {formatIDR(v.total_spent)}
                   </p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
+                  <div className="mt-2 space-y-1">
                     {v.last_tire ? (
-                      <span className="inline-flex items-center gap-1 rounded-md border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[10px] text-amber-700 dark:text-amber-300">
-                        <CircleDot className="size-3" /> {v.last_tire}
+                      <span className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <CircleDot aria-hidden="true" className="mt-0.5 size-3 shrink-0" /> {v.last_tire}
                       </span>
                     ) : null}
                     {v.last_oil ? (
-                      <span className="inline-flex items-center gap-1 rounded-md border border-sky-500/30 bg-sky-500/10 px-1.5 py-0.5 text-[10px] text-sky-700 dark:text-sky-300">
-                        <Droplet className="size-3" /> {v.last_oil}
+                      <span className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <Droplet aria-hidden="true" className="mt-0.5 size-3 shrink-0" /> {v.last_oil}
                       </span>
                     ) : null}
                   </div>
@@ -105,12 +119,11 @@ export default function VehiclesPage() {
           )}
         </div>
 
-        {/* Detail kendaraan */}
-        <div className="xl:col-span-7">
+        <div ref={detailRegion} role="region" aria-label="Detail riwayat kendaraan" data-testid="vehicle-detail-region" className="min-w-0 scroll-mt-24 min-[1200px]:col-span-7">
           {!plate ? (
             <EmptyBlock
               title="Pilih kendaraan"
-              description="Klik salah satu nomor polisi di sebelah kiri untuk melihat riwayat servisnya."
+              description="Pilih nomor polisi pada daftar kendaraan untuk melihat riwayat servisnya."
               className="h-full"
             />
           ) : detailQuery.isPending ? (
@@ -122,47 +135,43 @@ export default function VehiclesPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex flex-wrap items-center gap-2 font-heading text-base">
-                    <Car className="size-4 text-primary" />
-                    <span className="font-mono tracking-wider" data-testid="vehicle-detail-plate">
+                    <Car aria-hidden="true" className="size-5 text-muted-foreground" />
+                    <span className="font-mono text-lg tracking-wider" data-testid="vehicle-detail-plate">
                       {detail.plate}
                     </span>
                     <Badge variant="outline" className="rounded-sm">
-                      {detail.visit_count}x servis
+                      {detail.visit_count} kunjungan
                     </Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-lg border border-amber-500/25 bg-amber-500/5 p-3">
-                    <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">
-                      <CircleDot className="size-3.5" /> Ban Terakhir
+                  <div className="rounded-lg border border-border bg-secondary/30 p-4">
+                    <p className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+                      <CircleDot aria-hidden="true" className="size-4" /> Ban terakhir
                     </p>
-                    <p className="mt-1 text-sm font-semibold" data-testid="vehicle-last-tire">
+                    <p className="mt-2 text-sm font-semibold" data-testid="vehicle-last-tire">
                       {detail.last_tire ?? "Belum ada"}
                     </p>
                     {detail.last_tire_date ? (
                       <p className="text-xs text-muted-foreground">Dipasang {formatDate(detail.last_tire_date)}</p>
                     ) : null}
                   </div>
-                  <div className="rounded-lg border border-sky-500/25 bg-sky-500/5 p-3">
-                    <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-sky-700 dark:text-sky-300">
-                      <Droplet className="size-3.5" /> Oli Terakhir
+                  <div className="rounded-lg border border-border bg-secondary/30 p-4">
+                    <p className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+                      <Droplet aria-hidden="true" className="size-4" /> Oli terakhir
                     </p>
-                    <p className="mt-1 text-sm font-semibold" data-testid="vehicle-last-oil">
+                    <p className="mt-2 text-sm font-semibold" data-testid="vehicle-last-oil">
                       {detail.last_oil ?? "Belum ada"}
                     </p>
                     {detail.last_oil_date ? (
                       <p className="text-xs text-muted-foreground">Diganti {formatDate(detail.last_oil_date)}</p>
                     ) : null}
                   </div>
-                  <div className="rounded-lg bg-secondary/50 p-3">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground">Total Belanja</p>
-                    <p className="mt-1 font-mono font-bold text-primary">{formatIDR(detail.total_spent)}</p>
-                  </div>
-                  <div className="rounded-lg bg-secondary/50 p-3">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground">Pemilik / Terakhir</p>
-                    <p className="mt-1 text-sm font-semibold">{detail.last_customer ?? "Umum"}</p>
-                    <p className="text-xs text-muted-foreground">Kunjungan {formatDate(detail.last_visit)}</p>
-                  </div>
+                  <dl className="col-span-full space-y-3 border-t border-border pt-4 text-sm">
+                    <div className="flex flex-wrap justify-between gap-2"><dt className="text-muted-foreground">Total belanja</dt><dd className="font-mono font-semibold" data-testid="vehicle-total-spent">{formatIDR(detail.total_spent)}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-2"><dt className="text-muted-foreground">Pelanggan terakhir</dt><dd className="font-medium">{detail.last_customer ?? "Umum"}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-2"><dt className="text-muted-foreground">Kunjungan terakhir</dt><dd>{formatDate(detail.last_visit)}</dd></div>
+                  </dl>
                 </CardContent>
               </Card>
 
@@ -174,12 +183,12 @@ export default function VehiclesPage() {
                   {detail.services.map((s) => (
                     <div
                       key={s.id}
-                      className="rounded-lg border border-border p-3"
+                      className="rounded-lg border border-border p-4"
                       data-testid={`vehicle-service-${s.invoice_number.toLowerCase()}`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="font-mono text-xs text-muted-foreground">{s.invoice_number}</span>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <PaymentMethodBadge method={s.payment_method} />
                           <TxStatusBadge status={s.status} />
                           <span className="font-mono text-sm font-bold">{formatIDR(s.total_amount)}</span>
@@ -188,8 +197,8 @@ export default function VehiclesPage() {
                       <p className="mt-1 text-xs text-muted-foreground">{formatDateTime(s.date)}</p>
                       <ul className="mt-2 space-y-0.5">
                         {s.details.map((d) => (
-                          <li key={d.id} className="flex justify-between gap-2 text-xs">
-                            <span className="min-w-0 truncate">
+                          <li key={d.id} className="flex flex-wrap justify-between gap-x-3 gap-y-1 py-1 text-sm">
+                            <span className="min-w-0">
                               {d.product_name} <span className="text-muted-foreground">× {d.qty}</span>
                             </span>
                             <span className="shrink-0 font-mono text-muted-foreground">{formatIDR(d.subtotal)}</span>

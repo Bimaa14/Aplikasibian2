@@ -17,13 +17,18 @@ class DayRevenue(BaseModel):
 
 class DashboardStats(BaseModel):
     today: str
+    year: int
+    years_available: List[int]
+    tire_qty_out: float
+    purchase_total: float
+    tire_qty_in: float
     total_revenue: float
     total_cost: float
-    gross_profit: float  # laba kotor barang
+    gross_profit: float  # DASHBOARD J4: laba tunai non-OIL/SERVICE + laba pembayaran piutang
     jasa_amount: float
     service_fee_total: float  # komisi montir
     expenses_total: float
-    net_profit: float  # laba bersih: total profit (sudah neto komisi) - pengeluaran
+    net_profit: float  # DASHBOARD L4 = J4 - semua pengeluaran tercatat
     transaction_count: int
     today_revenue: float
     receivables_outstanding: float

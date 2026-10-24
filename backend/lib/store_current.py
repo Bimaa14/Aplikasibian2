@@ -47,6 +47,7 @@ def enrich_current(w, data):
     for sheet in ('SELLING CASH', 'SELLING CREDIT'):
         source_lines[sheet] = {i: r for i, r in rows(sheet)}
     for e in data['events']:
+        e['source_row'], e['source_sheet'] = e['row'], e['sheet']
         if e['kind'] not in ('cash_sale', 'credit_sale'):
             continue
         r = source_lines[e['sheet']][e['row']]
@@ -55,15 +56,23 @@ def enrich_current(w, data):
         taxes = {p['tax'] for p in matches}
         e['tax'] = next(iter(taxes)) if len(taxes) == 1 else None
         e['tax_source'] = 'DATABASE.K' if e['tax'] is not None else 'unresolved'
+        if e['kind'] == 'cash_sale':
+            cached_tax = text(r[15])
+            e['tax'] = 1 if cached_tax in ('1', '1.0') else 0 if cached_tax in ('0', '0.0') else None
+            e['tax_source'] = 'SELLING CASH.P' if e['tax'] is not None else 'unresolved'
+        e['source_category'] = text(r[17] if e['kind'] == 'cash_sale' else r[18])
         owner_raw = text(r[14] if e['kind'] == 'cash_sale' else r[19])
         e['owner'] = owner_raw.lower() or None
         e['source_owner'] = owner_raw
         e['base_price'] = e['price'] if e['kind'] == 'cash_sale' else num(r[7])
+        # Keep exported values, including manual fee/fixed-cost overrides, intact.
+        e['cash_subtotal'] = e['amount'] if e['kind'] == 'cash_sale' else num(r[14])
+        e['invoice_date'] = e['date']
+        e['source_fee'], e['source_fixed_cost'], e['source_profit'] = e['fee'], e['cost'], e['profit']
         e['credit_surcharge'] = e['price'] - e['base_price'] if e['kind'] == 'credit_sale' else 0
         e['discount_amount'] = round(e['price'] * e['qty'] - e['amount'], 2)
         if len(matches) == 1:
             e['product_size'], e['product_brand'] = matches[0]['size'], matches[0]['brand']
-        e['source_row'], e['source_sheet'] = e['row'], e['sheet']
     data['purchases'], data['transfers'] = [], []
     for i, r in rows('PURCHASE'):
         if not day(r[2]):
@@ -79,6 +88,13 @@ def enrich_current(w, data):
         if day(r[2]):
             data['transfers'].append(dict(row=i, sheet='TRANSFER', date=day(r[2]), amount=num(r[3]),
                                          name=text(r[4]), method=text(r[4]), issue='' if num(r[3]) >= 0 else 'Nominal negatif'))
+    data['daily_inputs'] = None
+    if 'DAILY REPORT' in w:
+        sheet = w['DAILY REPORT']
+        selected_date = day(sheet['E2'].value)
+        if selected_date:
+            data['daily_inputs'] = dict(date=selected_date, modal_bian=num(sheet['E13'].value),
+                                        laba_bian=num(sheet['E14'].value), source_sheet='DAILY REPORT')
     # Preserve all cached source rows, including side tables and unmatched balances, as reference only.
     data['source_rows'] = []
     for sheet in w:
@@ -89,7 +105,7 @@ def enrich_current(w, data):
     data['warnings'] = [
         'File 29 September: stok dibaca dari DATABASE Q (FINAL), kolom G disimpan sebagai referensi. Saldo negatif dipertahankan; nama ganda tetap terpisah berdasarkan baris sumber.',
         'Label kepemilikan sumber dipertahankan. BIAN/Bian menjadi bian; label NON/POLOSAN/NON VPT/NON VAT tetap dapat ditelusuri.',
-        'PPh penjualan hanya TAX = 1 dari DATABASE K. TAX yang tidak dapat dipetakan tidak masuk dasar pajak.',
+        'Get Data mengikuti Code.gs: penjualan tunai TAX = 1 dari SELLING CASH P; tempo kategori Tire memakai nominal tunai O. TAX sumber yang tidak tersedia tetap belum dipetakan.',
         'Pembelian/transfer diimpor sebagai riwayat sumber, tanpa menggerakkan stok atau menebak alokasi pembayaran invoice.',
         'Saldo agregat piutang/hutang tetap arsip sampai nomor invoice dan jatuh tempo dapat dipetakan.',
         'Versi sumber Store yang berbeda dari impor sebelumnya ditahan untuk mencegah data ganda. Perlu rencana migrasi data lama.',

@@ -22,12 +22,16 @@ class MonthlyReport(BaseModel):
     revenue_total: float
     barang_revenue: float
     jasa_revenue: float
-    cost_of_goods: float  # modal barang terjual
-    gross_profit_barang: float  # laba kotor barang
+    cost_of_goods: float  # REPORT F: modal yang diakui
+    gross_profit_barang: float  # REPORT G: laba tanpa oli/spooring
     service_fee_total: float  # komisi montir
     expenses_total: float
     expenses_by_category: List[ExpenseByCategory]
     net_profit: float
+    supplier_payments: float = 0
+    capital_balance: float = 0
+    spooring_net: float = 0
+    oil_revenue: float = 0
     transaction_count: int
     returned_count: int
     returned_amount: float

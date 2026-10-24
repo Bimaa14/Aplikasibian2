@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FileDown, Printer, Settings2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -20,9 +20,10 @@ const waitForPaint = () => new Promise<void>((resolve) => {
   frameId = window.requestAnimationFrame(() => { frameId = window.requestAnimationFrame(finish); });
 });
 
-export default function SalesNoteModal({ transaction, open, onOpenChange }: {
+export default function SalesNoteModal({ transaction, open, autoPrint = false, onOpenChange }: {
   transaction: Transaction | null;
   open: boolean;
+  autoPrint?: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
   const [settings, setSettings] = useState(loadNoteSettings);
@@ -30,10 +31,13 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
   const [ready, setReady] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [printing, setPrinting] = useState(false);
+  const [printError, setPrintError] = useState<string | null>(null);
   const [previewHeight, setPreviewHeight] = useState(540);
   const frame = useRef<HTMLIFrameElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
   const readyDocument = useRef<Document | null>(null);
   const documentVersion = useRef(0);
+  const autoPrintedTransaction = useRef<string | null>(null);
   const html = useMemo(() => transaction ? buildSalesNoteDocument(transaction, settings) : "", [transaction, settings]);
 
   useEffect(() => {
@@ -42,6 +46,7 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
     setReady(false);
     setPrinting(false);
     setPreviewError(null);
+    setPrintError(null);
     return () => { documentVersion.current += 1; readyDocument.current = null; };
   }, [html, open]);
 
@@ -69,12 +74,13 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
     }
   }
 
-  async function print(destination: 'printer' | 'pdf') {
+  const print = useCallback(async (destination: 'printer' | 'pdf') => {
     const target = frame.current?.contentWindow;
     const doc = frame.current?.contentDocument;
     const version = documentVersion.current;
     if (!target || !doc || !open || !ready || printing || readyDocument.current !== doc) return;
     setPrinting(true);
+    setPrintError(null);
     try {
       await doc.fonts.ready;
       if (version !== documentVersion.current || frame.current?.contentDocument !== doc) return;
@@ -91,11 +97,24 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
       target.focus();
       target.print();
     } catch {
-      if (version === documentVersion.current) toast.error("Jendela cetak tidak dapat dibuka. Coba cetak ulang nota.");
+      if (version === documentVersion.current) {
+        const message = "Transaksi sudah tersimpan. Jendela cetak gagal dibuka; pilih Cetak Nota untuk mencoba lagi.";
+        setPrintError(message);
+        toast.error(message);
+      }
     } finally {
-      if (version === documentVersion.current) setPrinting(false);
+      if (version === documentVersion.current) {
+        setPrinting(false);
+        closeButton.current?.focus({ preventScroll: true });
+      }
     }
-  }
+  }, [open, ready, printing]);
+
+  useEffect(() => {
+    if (!autoPrint || !open || !ready || !transaction || autoPrintedTransaction.current === transaction.id || readyDocument.current !== frame.current?.contentDocument) return;
+    autoPrintedTransaction.current = transaction.id;
+    void print('printer');
+  }, [autoPrint, open, ready, transaction, print]);
 
   if (!transaction) return null;
   return (
@@ -103,7 +122,7 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
       <DialogContent className="flex max-h-[94dvh] w-[calc(100vw-1.5rem)] min-w-0 flex-col gap-3 overflow-hidden sm:max-w-[1040px]" data-testid="sales-note-dialog">
         <DialogHeader className="pr-8">
           <DialogTitle>Nota Penjualan</DialogTitle>
-          <DialogDescription>{transaction.invoice_number} · Pratinjau dan cetak nota.</DialogDescription>
+          <DialogDescription>{transaction.invoice_number} sudah tersimpan. Cetak ulang menggunakan transaksi yang sama.</DialogDescription>
         </DialogHeader>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex min-w-0 max-w-full items-center gap-2">
@@ -129,6 +148,7 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
           </div>)}
           <p className="text-xs text-muted-foreground sm:col-span-2">Tersimpan di browser komputer ini dan dipakai saat mencetak nota.</p>
         </div>}
+        {printError ? <p role="alert" data-testid="sales-note-print-error" className="text-sm text-destructive">{printError}</p> : null}
         <div className="min-h-0 min-w-0 flex-1 overflow-auto rounded-lg border border-border bg-muted/30 p-3" data-testid="sales-note-preview" aria-busy={!ready && !previewError}>
           {previewError ? <p role="alert" className="mb-3 text-sm text-destructive">{previewError}</p>
             : !ready ? <p role="status" className="mb-3 text-sm text-muted-foreground">Menyiapkan nota...</p> : null}
@@ -140,7 +160,7 @@ export default function SalesNoteModal({ transaction, open, onOpenChange }: {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">Cetak Nota: pilih printer, Portrait, dan form {settings.paper === 'half' ? '9,5 × 5,5 inci. ' : '9,5 × 11 inci. '}Skala 100%, matikan header/footer browser. Simpan PDF: pilih Save as PDF; ukuran mengikuti pilihan kertas di atas.</p>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" data-testid="close-receipt-btn" onClick={() => onOpenChange(false)}>Tutup</Button>
+            <Button ref={closeButton} variant="outline" data-testid="close-receipt-btn" onClick={() => onOpenChange(false)}>Tutup</Button>
             <Button variant="outline" data-testid="save-note-pdf-btn" onClick={() => void print('pdf')} disabled={!ready || printing}><FileDown /> Simpan PDF</Button>
             <Button data-testid="print-receipt-btn" onClick={() => void print('printer')} disabled={!ready || printing}><Printer /> Cetak Nota</Button>
           </div>

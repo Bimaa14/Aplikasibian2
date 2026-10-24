@@ -46,6 +46,13 @@ export interface TransactionDetail {
   base_price?: number | null;
   credit_surcharge?: number;
   discount_amount?: number;
+  discount_per_unit?: number | null;
+  cash_subtotal?: number | null;
+  source_cost_price?: number | null;
+  spreadsheet_cost?: number;
+  spreadsheet_cost_total?: number;
+  spreadsheet_fee?: number;
+  spreadsheet_profit?: number;
   product_sku?: string | null;
   id: string;
   transaction_id: string;
@@ -65,6 +72,9 @@ export interface Transaction {
   discount_total?: number;
   cash_received?: number | null;
   change_amount?: number | null;
+  credit_term_days?: number | null;
+  down_payment_amount?: number;
+  down_payment_method?: Exclude<PaymentMethod, "credit"> | null;
   id: string;
   invoice_number: string;
   date: string;
@@ -86,6 +96,9 @@ export interface Transaction {
 
 // --- Stok masuk (barang masuk dari distributor) ---
 export interface StockInItem {
+  owner?: ProductOwner | null;
+  tax?: 0 | 1 | null;
+  category?: Product['category'] | null;
   product_id: string;
   product_name: string;
   sku: string;
@@ -97,6 +110,8 @@ export interface StockInItem {
 }
 
 export interface StockIn {
+  payment_method?: 'cash' | 'credit';
+  invoice_date?: string | null;
   id: string;
   reference: string;
   date: string;
@@ -104,7 +119,7 @@ export interface StockIn {
   supplier_id: string;
   supplier_name: string;
   invoice_number: string;
-  due_date: string;
+  due_date: string | null;
   total_amount: number;
   note: string;
   payable_id: string | null;
@@ -153,6 +168,10 @@ export interface MonthlyReport {
   expenses_total: number;
   expenses_by_category: ExpenseByCategory[];
   net_profit: number;
+  supplier_payments: number;
+  capital_balance: number;
+  spooring_net: number;
+  oil_revenue: number;
   transaction_count: number;
   returned_count: number;
   returned_amount: number;
@@ -191,6 +210,7 @@ export interface AccountsPayable {
 }
 
 export interface Expense {
+  payment_source?: string;
   id: string;
   date: string;
   amount: number;
@@ -218,6 +238,11 @@ export interface DayRevenue {
 
 export interface DashboardStats {
   today: string;
+  year: number;
+  years_available: number[];
+  tire_qty_out: number;
+  purchase_total: number;
+  tire_qty_in: number;
   total_revenue: number;
   total_cost: number;
   gross_profit: number;

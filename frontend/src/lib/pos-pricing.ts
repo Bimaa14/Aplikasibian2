@@ -1,7 +1,7 @@
 import type { Product } from './types';
 
 /** Allocate invoice discounts after item discounts, using the same cents as checkout. */
-export function mechanicFeeTotal(lines: { product: Product; qty: number; price: number; discount: number }[], invoiceDiscount: number) {
+export function mechanicFeeTotal(lines: { product: Product; qty: number; price: number; discount: number }[], invoiceDiscount = 0, credit = false) {
   const net = lines.map(l => Math.round(l.price * 100) * l.qty - Math.round(l.discount * 100));
   const total = net.reduce((sum, amount) => sum + amount, 0);
   const discount = Math.round(invoiceDiscount * 100);
@@ -11,6 +11,6 @@ export function mechanicFeeTotal(lines: { product: Product; qty: number; price: 
     .sort((a, b) => b.remainder - a.remainder || a.index - b.index);
   for (const { index } of order.slice(0, discount - allocated.reduce((sum, amount) => sum + amount, 0))) allocated[index]++;
   return lines.reduce((sum, line, i) => sum + (line.product.name.trim().toUpperCase() === 'SERVICE'
-    ? Math.floor((net[i] - allocated[i] + 1) / 2)
+    ? (credit ? Math.round(line.product.selling_price * 100) * line.qty : net[i] - allocated[i]) / 2
     : Math.round(line.product.service_fee * 100) * line.qty), 0) / 100;
 }

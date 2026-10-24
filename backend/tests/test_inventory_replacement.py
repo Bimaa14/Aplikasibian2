@@ -26,7 +26,9 @@ async def test_checkout_mechanic_fee_matches_master(isolated, kind, fee, method)
     assert tx['service_fee'] == fee * 2
     assert tx['details'][0]['service_fee'] == fee
     assert tx['details'][0]['spreadsheet_fee'] == fee * 2
-    assert tx['total_profit'] == 390000 - fee * 2 - (10000 if kind == 'barang' else 0)
+    # Excel's SERVICE category deducts the fixed modal once even for jasa;
+    # TIRE deducts qty*modal and does not subtract its separately paid fee.
+    assert tx['total_profit'] == (390000 - fee * 2 - 5000 if kind == 'jasa' else 380000)
     saved = (await api.get('/transactions/' + tx['id'])).json()
     assert saved['service_fee'] == fee * 2
 
@@ -80,7 +82,7 @@ async def test_service_commission_after_item_and_invoice_discounts(isolated, met
     assert response.status_code == 201, response.text
     tx = response.json()
     net = (120000 + surcharge) * qty - 5000
-    fee = net / 2
+    fee = 150000 * qty / 2 if method == 'credit' else net / 2
     assert tx['discount_total'] == 60000 * qty + 10000
     assert tx['service_fee'] == fee + 10000 * qty
     lines = {d['product_id']: d for d in tx['details']}

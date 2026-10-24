@@ -1,5 +1,5 @@
 """Literal formulas from REPORT and Laporan Laba - Rugi, independent of cached cells."""
-from decimal import Decimal, ROUND_CEILING, ROUND_HALF_UP
+from decimal import Decimal, ROUND_CEILING
 
 
 def n(value):
@@ -7,19 +7,60 @@ def n(value):
 
 
 def line_values(product, qty, credit=False, discount=0):
-    category = product.get('category') or ('SERVICE' if product['type'] == 'jasa' else 'TIRE')
+    """SELLING CASH I/J/M/N and SELLING CREDIT K/N/O/P/Q.
+
+    ``discount`` is the complete line discount, so callers can also reconstruct
+    older saved invoices. The checkout UI supplies Excel's per-unit H value.
+    ``base_price`` is the undiscounted cash H price on a credit line.
+    """
+    category = (product.get('category') or ('SERVICE' if product['type'] == 'jasa' else 'TIRE')).upper()
+    quantity = n(qty)
     cost = (n(product.get('cost_price', 0)) / 5000).to_integral_value(rounding=ROUND_CEILING) * 5000
-    total = n(product['selling_price']) * qty - n(discount)
-    # Only the item named SERVICE uses 50% of the discounted line total.
-    fee = ((total / 2).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    total = n(product['selling_price']) * quantity - n(discount)
+    cash_total = n(product.get('base_price', product['selling_price'])) * quantity if credit else total
+    # SERVICE is an item-name check, independent of its category. Credit K
+    # uses the CASH total O; a higher tempo price does not increase its fee.
+    fee = ((cash_total / 2)
            if str(product.get('name', '')).strip().upper() == 'SERVICE'
-           else n(product.get('service_fee', 0)) * qty)
-    profit = total - cost * qty - fee
-    if category == 'SERVICE':
-        profit = total - fee - cost  # Literal Excel uses cost once for SERVICE, not qty*cost.
-    elif credit and category not in ('TIRE', 'COMPLEMENTARY'):
+           else n(product.get('service_fee', 0)) * quantity)
+    cost_total = cost if category == 'SERVICE' else cost * quantity
+    if category in ('SERVICE', 'COMPLEMENTARY'):
+        profit = total - cost_total - fee
+    elif credit and category != 'TIRE':
         profit = Decimal(0)
-    return dict(category=category, spreadsheet_cost=float(cost), spreadsheet_profit=float(profit), spreadsheet_fee=float(fee))
+    else:
+        # CASH N and CREDIT Q do not subtract the DATABASE fee for TIRE/OIL.
+        profit = total - cost_total
+    return dict(category=category, spreadsheet_cost=float(cost),
+                spreadsheet_cost_total=float(cost_total), cash_subtotal=float(cash_total),
+                spreadsheet_profit=float(profit), spreadsheet_fee=float(fee))
+
+
+def line_snapshot_values(detail, credit=False):
+    """Calculate native invoices from their saved inputs, never today's master.
+
+    Workbook rows keep their cached manual costs, fees and profit overrides.
+    """
+    if detail.get('import_source') or detail.get('source_sheet') in ('SELLING CASH', 'SELLING CREDIT'):
+        cost = detail.get('spreadsheet_cost', detail.get('cost_price', 0))
+        category = detail.get('category', 'TIRE').upper()
+        quantity = detail.get('qty', 0)
+        cash_total = detail.get('cash_subtotal')
+        if cash_total is None:
+            base_price = detail.get('base_price') if detail.get('base_price') is not None else detail['price']
+            cash_total = base_price * quantity if credit else detail['subtotal']
+        return dict(category=category, spreadsheet_cost=cost,
+                    spreadsheet_cost_total=cost if category == 'SERVICE' else cost * quantity,
+                    spreadsheet_fee=detail.get('spreadsheet_fee', detail.get('service_fee', 0) * quantity),
+                    spreadsheet_profit=detail.get('spreadsheet_profit', 0),
+                    cash_subtotal=cash_total)
+    product = dict(name=detail['product_name'], type=detail['product_type'],
+                   category=detail.get('category'), selling_price=detail['price'],
+                   base_price=detail.get('base_price') if detail.get('base_price') is not None else detail['price'],
+                   cost_price=detail.get('source_cost_price') if detail.get('source_cost_price') is not None else detail.get('cost_price', 0),
+                   service_fee=detail.get('service_fee', 0))
+    return line_values(product, detail['qty'], credit,
+                       n(detail['price']) * n(detail['qty']) - n(detail['subtotal']))
 
 
 def store_report(events, month):

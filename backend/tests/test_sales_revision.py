@@ -57,7 +57,8 @@ async def test_non_cash_sale_return_and_daily_cash(isolated, method):
     assert tx['total_amount'] == 9000
     assert await db.accounts_receivable.count_documents({}) == 0
     daily = (await api.get('/books/daily', params={'date': today_iso()})).json()
-    assert daily['cash_sales'] == 0 and daily['non_cash_sales'] == 9000
+    assert daily['cash_sales'] == 9000 and daily['non_cash_sales'] == 9000
+    assert daily['transfer_payments'] == 9000 and daily['net_cash'] == 0
     url = '/transactions/' + tx['id'] + '/return'
     assert (await api.post(url, json={})).status_code == 422
     returned = await api.post(url, json={'refund_confirmed': True})

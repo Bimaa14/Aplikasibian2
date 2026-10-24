@@ -1,6 +1,7 @@
 """Isolated tests for the one-time demo administrator setup route."""
 
 import pytest
+from unittest.mock import AsyncMock
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from pymongo.errors import DuplicateKeyError
@@ -9,10 +10,25 @@ import server
 from routers import setup_demo
 
 
+@pytest.fixture(autouse=True)
+def isolate_financial_read_middleware(monkeypatch):
+    # These setup tests use fake users, never the configured operational DB.
+    # GET middleware must not recover real financial journals during form tests.
+    monkeypatch.setattr(server, "financial_lock", AsyncMock())
+
+
 class FakeUsers:
     def __init__(self, duplicate: bool = False):
         self.duplicate = duplicate
         self.documents: list[dict] = []
+        self.find_calls = 0
+
+    async def find_one(self, query: dict, projection=None):
+        self.find_calls += 1
+        conditions = query.get("$or", [query])
+        return next((dict(document) for document in self.documents
+                     if any(all(document.get(key) == value for key, value in condition.items())
+                            for condition in conditions)), None)
 
     async def insert_one(self, document: dict):
         if self.duplicate:
@@ -51,14 +67,48 @@ async def test_setup_creates_fixed_admin_only_once(monkeypatch, setup_key):
 
 @pytest.mark.asyncio
 async def test_setup_never_overwrites_existing_account(monkeypatch, setup_key):
+    fake_db = FakeDatabase()
+    original = {"_id": "demo-admin", "username": "demo-admin", "password_hash": "original-hash"}
+    fake_db.users.documents.append(dict(original))
+    monkeypatch.setattr(setup_demo, "db", fake_db)
+
+    with pytest.raises(HTTPException) as error:
+        await setup_demo.setup_demo("a" * 32, "password-demo-aman")
+
+    assert error.value.status_code == 404
+    assert fake_db.users.documents == [original]
+
+
+@pytest.mark.asyncio
+async def test_setup_racing_insert_is_closed_without_overwriting(monkeypatch, setup_key):
     fake_db = FakeDatabase(duplicate=True)
     monkeypatch.setattr(setup_demo, "db", fake_db)
 
-    response = await setup_demo.setup_demo("a" * 32, "password-demo-aman")
+    with pytest.raises(HTTPException) as error:
+        await setup_demo.setup_demo("a" * 32, "password-demo-aman")
 
-    assert response.status_code == 200
+    assert error.value.status_code == 404
     assert not fake_db.users.documents
-    assert "sudah ada" in response.body.decode()
+
+
+@pytest.mark.parametrize("method", ["GET", "POST"])
+def test_setup_closes_after_success_even_with_key_remaining(monkeypatch, setup_key, method):
+    fake_db = FakeDatabase()
+    monkeypatch.setattr(setup_demo, "db", fake_db)
+    monkeypatch.setattr(server, "COOKIE_SAMESITE", "lax")
+    client = TestClient(server.app, base_url="https://demo.example")
+
+    created = client.post("/api/setup-demo", data={
+        "secret": "a" * 32, "password": "password-demo-aman",
+    })
+    assert created.status_code == 200
+    original = dict(fake_db.users.documents[0])
+
+    kwargs = {"data": {"secret": "a" * 32, "password": "different-password-demo"}} if method == "POST" else {}
+    closed = client.request(method, "/api/setup-demo", **kwargs)
+
+    assert closed.status_code == 404
+    assert fake_db.users.documents == [original]
 
 
 @pytest.mark.asyncio
@@ -74,13 +124,20 @@ async def test_setup_rejects_bad_secret_without_writing(monkeypatch, setup_key):
 
 
 @pytest.mark.asyncio
-async def test_setup_is_disabled_without_valid_key(monkeypatch):
-    monkeypatch.delenv("DEMO_SETUP_KEY", raising=False)
+@pytest.mark.parametrize("key", [None, "too-short"])
+async def test_setup_is_disabled_without_valid_key(monkeypatch, key):
+    fake_db = FakeDatabase()
+    monkeypatch.setattr(setup_demo, "db", fake_db)
+    if key is None:
+        monkeypatch.delenv("DEMO_SETUP_KEY", raising=False)
+    else:
+        monkeypatch.setenv("DEMO_SETUP_KEY", key)
 
     with pytest.raises(HTTPException) as error:
         await setup_demo.setup_demo_form()
 
     assert error.value.status_code == 404
+    assert fake_db.users.find_calls == 0
 
 
 @pytest.mark.asyncio

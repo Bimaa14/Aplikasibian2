@@ -52,6 +52,7 @@ function Button({
   return (
     <ButtonPrimitive
       data-slot="button"
+      data-size={size}
       render={render}
       // Native unless render swaps in a non-<button> element (e.g. <Link/>).
       nativeButton={

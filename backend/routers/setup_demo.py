@@ -66,22 +66,28 @@ label,input,button{{display:block;width:100%;box-sizing:border-box}}input,button
     return HTMLResponse(content, headers=_SECURITY_HEADERS)
 
 
-def _require_enabled() -> bytes:
+async def _require_enabled() -> bytes:
     key = _setup_key()
     if key is None:
+        raise HTTPException(status_code=404, detail="Not found")
+    existing = await db.users.find_one(
+        {"$or": [{"_id": _ACCOUNT_ID}, {"username": _USERNAME}]},
+        {"_id": 1},
+    )
+    if existing is not None:
         raise HTTPException(status_code=404, detail="Not found")
     return key
 
 
 @router.get("", response_class=HTMLResponse)
 async def setup_demo_form() -> HTMLResponse:
-    _require_enabled()
+    await _require_enabled()
     return _page()
 
 
 @router.post("", response_class=HTMLResponse)
 async def setup_demo(secret: str = Form(...), password: str = Form(...)) -> HTMLResponse:
-    expected = _require_enabled()
+    expected = await _require_enabled()
     if not hmac.compare_digest(secret.encode("utf-8"), expected):
         raise HTTPException(status_code=403, detail="Setup ditolak")
 
@@ -100,6 +106,7 @@ async def setup_demo(secret: str = Form(...), password: str = Form(...)) -> HTML
     try:
         await db.users.insert_one(document)
     except DuplicateKeyError:
-        return _page("Akun demo admin sudah ada. Tidak ada akun yang diubah.")
+        # A concurrent setup request may have created it after the existence check.
+        raise HTTPException(status_code=404, detail="Not found")
 
     return _page("Akun demo admin berhasil dibuat. Tutup halaman ini lalu login secara terpisah.")

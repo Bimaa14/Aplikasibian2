@@ -3,8 +3,44 @@
 import hashlib
 import os
 import tempfile
-from contextlib import contextmanager
+import uuid
+from contextlib import asynccontextmanager, contextmanager
+from datetime import datetime, timezone
 from pathlib import Path
+
+from pymongo.errors import DuplicateKeyError
+from pymongo.write_concern import WriteConcern
+
+
+@asynccontextmanager
+async def cloud_single_writer(database):
+    """Fail closed if another container can still write or recover this database.
+
+    No timeout/TTL: a paused process must never lose ownership while it can still
+    write. After a forced stop, an operator must verify it is stopped before
+    clearing a stale lock. Graceful shutdown releases ownership automatically.
+    """
+    if os.environ.get("CLOUD_SINGLE_WRITER", "false").lower() != "true":
+        yield
+        return
+    owner = uuid.uuid4().hex
+    locks = database.runtime_locks.with_options(
+        write_concern=WriteConcern(w="majority", j=True, wtimeout=10000),
+    )
+    try:
+        await locks.insert_one({
+            "_id": "financial-writer", "owner": owner,
+            "started_at": datetime.now(timezone.utc),
+        })
+    except DuplicateKeyError as exc:
+        raise RuntimeError(
+            "Database demo masih dikunci server lain. Hentikan server sebelumnya; "
+            "bersihkan runtime_locks hanya setelah memastikan proses lama sudah berhenti."
+        ) from exc
+    try:
+        yield
+    finally:
+        await locks.delete_one({"_id": "financial-writer", "owner": owner})
 
 
 @contextmanager

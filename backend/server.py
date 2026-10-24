@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from urllib.parse import urlsplit
 from fastapi import FastAPI, APIRouter, Response
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 import os
@@ -20,10 +21,14 @@ from lib.db import client, db, ensure_indexes
 from lib.debts import migrate_returned_debts
 from lib.financial_operations import recover_financial_operations
 from lib.financial_operations import financial_lock
-from lib.runtime_lock import single_writer
+from lib.runtime_lock import single_writer, cloud_single_writer
 from lib.auth import COOKIE_SAMESITE
+from lib.frontend_hosting import mount_frontend
 
 CORS_ORIGINS = [origin.strip().rstrip("/") for origin in os.environ.get("CORS_ORIGINS", "").split(",") if origin.strip()]
+render_origin = os.environ.get("RENDER_EXTERNAL_URL", "").strip().rstrip("/")
+if render_origin and render_origin not in CORS_ORIGINS:
+    CORS_ORIGINS.append(render_origin)
 UNSAFE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
 
 
@@ -69,8 +74,9 @@ def is_trusted_request_origin(request):
 async def lifespan(app: FastAPI):
     with single_writer(db.name):
         try:
-            await prepare_database()
-            yield
+            async with cloud_single_writer(db):
+                await prepare_database()
+                yield
         finally:
             client.close()
 
@@ -99,6 +105,16 @@ app = FastAPI(
     redoc_url=None,
     openapi_url="/openapi.json" if os.environ.get("ENABLE_API_DOCS", "false").lower() == "true" else None,
 )
+
+
+@app.get("/healthz", include_in_schema=False)
+async def health_check():
+    try:
+        await db.command("ping")
+    except Exception:
+        logger.warning("Health check: database unavailable")
+        return JSONResponse({"status": "unavailable"}, status_code=503)
+    return {"status": "ok"}
 
 
 @app.middleware("http")
@@ -169,11 +185,12 @@ api_router.include_router(books.router)
 
 # Include the router in the main app
 app.include_router(api_router)
+mount_frontend(app)
 
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=CORS_ORIGINS or ["*"],
+    allow_origins=CORS_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -25,9 +25,26 @@ def text(x):
     return str(x).strip() if x is not None else ''
 
 
-@lru_cache(maxsize=2)
-def dataset(source):
-    path = (Path(__file__).resolve().parents[2] / 'refrensi-spreadsheet' / 'Perkasa Jaya - Store information system (1).xlsx') if source == 'store_current' else Path(os.environ['WORKBOOK_DIR']) / FILES[source]
+def _validated_store_workbook_path(value):
+    path = Path(value).expanduser().resolve(strict=True)
+    if not path.is_file() or path.suffix.lower() != '.xlsx':
+        raise ValueError('workbook_path must point to an existing .xlsx file')
+    return path
+
+
+@lru_cache(maxsize=3)
+def dataset(source, workbook_path=None):
+    """Read a source, optionally isolating a Store candidate from the active file/cache."""
+    if workbook_path is not None:
+        if source != 'store_current':
+            raise ValueError('workbook_path is only supported for store_current')
+        path = _validated_store_workbook_path(workbook_path)
+    elif source == 'store_current':
+        configured = os.environ.get('STORE_WORKBOOK_PATH', '').strip()
+        path = (_validated_store_workbook_path(configured) if configured else
+                Path(__file__).resolve().parents[2] / 'refrensi-spreadsheet' / 'Perkasa Jaya - Store information system (1).xlsx')
+    else:
+        path = Path(os.environ['WORKBOOK_DIR']) / FILES[source]
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     w = openpyxl.load_workbook(path, read_only=True, data_only=True)
     data = {'source': source, 'digest': digest, 'filename': path.name, 'events': [], 'products': [], 'receivables': [], 'payables': [], 'checks': [], 'warnings': []}
@@ -75,7 +92,7 @@ def dataset(source):
                     e.update(invoice=text(r[3]), customer=text(r[4]), name=text(r[5]), qty=num(r[6]), price=num(r[8]), due_date=day(r[9]), fee=num(r[10]), cost=num(r[13]), amount=num(r[15]), profit=num(r[16]), category=text(r[18]).upper())
                 elif kind == 'credit_payment': e.update(customer=text(r[4]), amount=num(r[5]), profit=num(r[6]), invoice_date=day(r[3]))
                 elif kind == 'supplier_payment': e.update(supplier=text(r[3]), amount=num(r[4]))
-                else: e.update(amount=num(r[3]), description=text(r[4]), category=text(r[5]))
+                else: e.update(amount=num(r[3]), description=text(r[4]), category=text(r[5]), payment_source=text(r[6]))
                 data['events'].append(e)
         for row, r in rows('REPORT'):
             try: month = datetime.strptime(text(r[3]), '%B %Y').strftime('%Y-%m')

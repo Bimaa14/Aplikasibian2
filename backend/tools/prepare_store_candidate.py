@@ -126,7 +126,7 @@ async def prepare_candidate(source, target, raw, output):
                         product_name=e['name'], product_type='jasa' if e['category'] in ('SERVICE', 'COMPLEMENTARY') else 'barang',
                         product_size=e.get('product_size', ''), product_brand=e.get('product_brand', ''),
                         product_sku=candidates[0]['sku'] if len(candidates) == 1 else None,
-                        qty=int(e['qty']), price=e['price'], base_price=e['base_price'], credit_surcharge=e['credit_surcharge'],
+                        qty=int(e['qty']), price=e['price'], base_price=e['base_price'], cash_subtotal=e['cash_subtotal'], credit_surcharge=e['credit_surcharge'],
                         discount_amount=e['discount_amount'], subtotal=e['amount'], cost_price=e['cost'],
                         service_fee=e['fee']/e['qty'], spreadsheet_fee=e['fee'], spreadsheet_profit=e['profit'],
                         category=e['category'], owner=e['owner'], tax=e['tax'], tax_source=e['tax_source'],

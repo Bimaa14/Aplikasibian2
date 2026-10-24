@@ -3,12 +3,14 @@
 from datetime import datetime, timedelta, timezone
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from lib.auth import require_user
 from lib.db import db
 from lib.dates import today_iso
 from lib.debts import hydrate
+from lib.reporting import dashboard_report, live_purchases
+from routers.excel_reports import live_events
 from models.dashboard import DashboardStats, DayRevenue
 from models.product import Product
 from models.transaction import Transaction
@@ -19,20 +21,21 @@ IDN_DAYS = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"]
 
 
 @router.get("", response_model=DashboardStats)
-async def dashboard():
+async def dashboard(year: int | None = Query(default=None, ge=1900, le=9999)):
     today = today_iso()
-
-    txs = await db.transactions.find({"status": "completed"}, {"_id": 0}).to_list(10000)
-    total_revenue = sum(t.get("total_amount", 0) for t in txs)
-    total_cost = sum(t.get("total_cost", 0) for t in txs)
-    barang_amount = sum(t.get("barang_amount", 0) for t in txs)
-    jasa_amount = sum(t.get("jasa_amount", 0) for t in txs)
-    service_fee_total = sum(t.get("service_fee", 0) for t in txs)
-    total_profit = sum(t.get("total_profit", 0) for t in txs)  # jasa sudah neto komisi montir
-    today_revenue = sum(t.get("total_amount", 0) for t in txs if t.get("date_key") == today)
-
-    expenses = await db.expenses.find({}, {"_id": 0}).to_list(10000)
-    expenses_total = sum(e.get("amount", 0) for e in expenses)
+    selected_year = year if isinstance(year, int) else int(today[:4])
+    events = await live_events()
+    totals = dashboard_report(events, selected_year)
+    txs = await db.transactions.find({'date_key': {'$regex': f'^{selected_year}-'},
+                                      'status': {'$in': ['completed', 'returned']},
+                                      'report_excluded': {'$ne': True}}, {'_id': 0}).to_list(None)
+    purchases = [p for p in await live_purchases() if p.get('date', '')[:4] == str(selected_year)
+                 and (p.get('category') or '').upper() == 'TIRE']
+    total_cost = sum(e.get('cost', 0) * e.get('qty', 0) for e in events
+                     if e.get('date', '')[:4] == str(selected_year)
+                     and e['kind'] in ('cash_sale', 'credit_sale') and (e.get('category') or '').upper() == 'TIRE')
+    today_revenue = sum(e.get('amount', 0) for e in events if e.get('date') == today
+                        and e['kind'] in ('cash_sale', 'credit_sale') and (e.get('category') or '').upper() != 'OIL')
 
     receivables_unpaid = [hydrate(d) async for d in db.accounts_receivable.find({"status": {"$in": ["unpaid", "partial"]}}, {"_id": 0})]
     receivables_outstanding = sum(r['remaining'] for r in receivables_unpaid)
@@ -67,10 +70,13 @@ async def dashboard():
     base = datetime.strptime(today, "%Y-%m-%d")
     rev_by_key: dict = {}
     profit_by_key: dict = {}
-    for t in txs:
-        key = t.get("date_key", "")
-        rev_by_key[key] = rev_by_key.get(key, 0) + t.get("total_amount", 0)
-        profit_by_key[key] = profit_by_key.get(key, 0) + t.get("total_profit", 0)
+    for event in events:
+        key = event.get('date', '')
+        category = (event.get('category') or '').upper()
+        if event['kind'] in ('cash_sale', 'credit_sale') and category != 'OIL':
+            rev_by_key[key] = rev_by_key.get(key, 0) + event.get('amount', 0)
+        if (event['kind'] == 'cash_sale' and category not in ('OIL', 'SERVICE')) or event['kind'] == 'credit_payment':
+            profit_by_key[key] = profit_by_key.get(key, 0) + event.get('profit', 0)
     revenue_by_day: List[DayRevenue] = []
     for i in range(6, -1, -1):
         day = base - timedelta(days=i)
@@ -90,13 +96,12 @@ async def dashboard():
 
     return DashboardStats(
         today=today,
-        total_revenue=total_revenue,
+        year=selected_year,
+        years_available=sorted({int(e['date'][:4]) for e in events if e.get('date')} | {int(today[:4]), selected_year}, reverse=True),
+        purchase_total=sum(p.get('amount', 0) for p in purchases),
+        tire_qty_in=sum(p.get('qty', 0) for p in purchases),
+        **totals,
         total_cost=total_cost,
-        gross_profit=barang_amount - total_cost,
-        jasa_amount=jasa_amount,
-        service_fee_total=service_fee_total,
-        expenses_total=expenses_total,
-        net_profit=total_profit - expenses_total,
         transaction_count=len(txs),
         today_revenue=today_revenue,
         receivables_outstanding=receivables_outstanding,

@@ -31,6 +31,7 @@ async def create_expense(body: ExpenseCreate):
         amount=body.amount,
         category=body.category,
         description=body.description,
+        payment_source=body.payment_source,
     )
     await db.expenses.insert_one(expense.model_dump())
     return expense

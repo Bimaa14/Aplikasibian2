@@ -1,4 +1,4 @@
-"""Daily spreadsheet breakdown stays separate from physical cash and oil."""
+"""Daily H6:H9 detail follows DAILY REPORT cash/expense recognition."""
 import pytest
 from routers import books
 
@@ -17,10 +17,14 @@ async def test_daily_breakdown_and_csv(monkeypatch):
     async def live_events():
         return events
 
+    async def daily_inputs(day):
+        return dict(modal_bian=0, laba_bian=0, parameters_saved=False)
+
     monkeypatch.setattr(books, "live_events", live_events)
+    monkeypatch.setattr(books, '_daily_inputs', daily_inputs)
     report = await books._daily_data("2026-09-25")
     assert report["modal"] == 78000
-    assert report["laba"] == 27000
+    assert report["laba"] == 24000
     assert report["spooring"] == 10000
     assert report["oil_revenue"] == 40000
     assert report["oil_benefit"] == 10000
@@ -37,6 +41,10 @@ async def test_empty_daily_breakdown(monkeypatch):
     async def live_events():
         return []
 
+    async def daily_inputs(day):
+        return dict(modal_bian=0, laba_bian=0, parameters_saved=False)
+
     monkeypatch.setattr(books, "live_events", live_events)
+    monkeypatch.setattr(books, '_daily_inputs', daily_inputs)
     report = await books._daily_data("2026-09-25")
     assert all(report[key] == 0 for key in ("modal", "laba", "spooring", "oil_revenue", "oil_benefit", "net_cash"))

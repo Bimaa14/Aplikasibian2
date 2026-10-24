@@ -1,6 +1,7 @@
-"""Stok masuk: catat barang masuk dari distributor → stok naik, modal diperbarui, hutang dibuat."""
+"""Pembelian tunai/tempo: stok naik, modal diperbarui; tempo membuat hutang."""
 
 from datetime import date, datetime, timezone
+from decimal import Decimal
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -42,36 +43,38 @@ async def _create_stock_in(body: StockInCreate, operation: FinancialOperation):
     supplier = await db.suppliers.find_one({"id": body.supplier_id}, {"_id": 0})
     if not supplier:
         raise HTTPException(status_code=404, detail="Distributor tidak ditemukan")
-    try:
-        due = date.fromisoformat(body.due_date).isoformat()
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Format jatuh tempo harus YYYY-MM-DD")
+    due = None
+    if body.payment_method == 'credit':
+        if not body.due_date:
+            raise HTTPException(422, 'Jatuh tempo wajib diisi untuk pembelian tempo')
+        try:
+            due = date.fromisoformat(body.due_date).isoformat()
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Format jatuh tempo harus YYYY-MM-DD")
 
-    # gabungkan item duplikat (product terakhir menentukan modal)
-    merged: dict = {}
-    for item in body.items:
-        prev = merged.get(item.product_id)
-        merged[item.product_id] = {
-            "qty": (prev["qty"] if prev else 0) + item.qty,
-            "cost_price": item.cost_price,
-        }
-
-    products = await db.products.find({"id": {"$in": list(merged)}, "active": {"$ne": False}}, {"_id": 0}).to_list(500)
+    # Preserve every purchase line: different prices for the same product must
+    # contribute their own subtotals, as PURCHASE rows do in the workbook.
+    product_ids = list(dict.fromkeys(item.product_id for item in body.items))
+    products = await db.products.find({"id": {"$in": product_ids}, "active": {"$ne": False}}, {"_id": 0}).to_list(None)
     by_id = {p["id"]: p for p in products}
-    if len(by_id) != len(merged):
+    if len(by_id) != len(product_ids):
         raise HTTPException(status_code=400, detail="Ada produk yang tidak ditemukan")
     for pid, p in by_id.items():
         if p["type"] != "barang":
             raise HTTPException(status_code=400, detail=f"{p['name']} adalah jasa — tidak punya stok")
 
     items: List[StockInItem] = []
-    total_amount = 0.0
-    for pid, info in merged.items():
+    total = Decimal(0)
+    movements = {}
+    for line in body.items:
+        pid = line.product_id
         p = by_id[pid]
-        qty, cost = info["qty"], info["cost_price"]
-        subtotal = qty * cost
-        total_amount += subtotal
-        stock_before = int(p.get("stock", 0))
+        qty, cost = line.qty, line.cost_price
+        subtotal = Decimal(str(cost)) * qty
+        total += subtotal
+        previous = movements.get(pid, {"qty": 0})
+        stock_before = int(p.get("stock", 0)) + previous['qty']
+        movements[pid] = {"qty": previous['qty'] + qty, "cost_price": cost}
         items.append(
             StockInItem(
                 owner=p.get("owner"), tax=p.get("tax"), category=p.get("category"),
@@ -80,14 +83,15 @@ async def _create_stock_in(body: StockInCreate, operation: FinancialOperation):
                 sku=p["sku"],
                 qty=qty,
                 cost_price=cost,
-                subtotal=subtotal,
+                subtotal=float(subtotal),
                 stock_before=stock_before,
                 stock_after=stock_before + qty,
             )
         )
 
+    total_amount = float(total)
     if total_amount <= 0:
-        raise HTTPException(422, "Total stok masuk harus lebih dari nol untuk membuat hutang")
+        raise HTTPException(422, "Total pembelian harus lebih dari nol")
 
     now = datetime.now(timezone.utc)
     date_key = today_iso()
@@ -95,6 +99,7 @@ async def _create_stock_in(body: StockInCreate, operation: FinancialOperation):
     base_seq = await db.stock_in.count_documents({"date_key": date_key})
 
     record = StockIn(
+        payment_method=body.payment_method,
         invoice_date=body.invoice_date.isoformat() if body.invoice_date else date_key,
         reference="",
         date=now,
@@ -108,13 +113,15 @@ async def _create_stock_in(body: StockInCreate, operation: FinancialOperation):
         items=items,
     )
     doc = record.model_dump()
-    payable = AccountsPayable(
-        supplier_id=body.supplier_id, supplier_name=supplier["name"],
-        invoice_number=record.invoice_number, amount=total_amount,
-        remaining=total_amount, due_date=due,
-    )
-    record.payable_id = payable.id
-    doc["payable_id"] = payable.id
+    payable = None
+    if body.payment_method == 'credit':
+        payable = AccountsPayable(
+            supplier_id=body.supplier_id, supplier_name=supplier["name"],
+            invoice_number=record.invoice_number, amount=total_amount,
+            remaining=total_amount, due_date=due,
+        )
+        record.payable_id = payable.id
+        doc["payable_id"] = payable.id
     for attempt in range(5):
         record.reference = f"SM-{yymmdd}-{base_seq + 1 + attempt:04d}"
         doc["reference"] = record.reference
@@ -127,14 +134,16 @@ async def _create_stock_in(body: StockInCreate, operation: FinancialOperation):
         raise HTTPException(status_code=500, detail="Gagal membuat nomor referensi stok masuk")
 
     # stok naik + modal (cost_price) produk diperbarui ke harga beli terbaru
-    for item in items:
+    for pid, movement in movements.items():
         await operation.update(
-            "products", item.product_id,
-            {"$inc": {"stock": item.qty}, "$set": {"cost_price": item.cost_price}},
+            "products", pid,
+            {"$inc": {"stock": movement['qty']}, "$set": {"cost_price": movement['cost_price']}},
             condition={"type": "barang"},
         )
 
-    # hutang distributor otomatis
-    await operation.insert("accounts_payable", payable.model_dump())
+    # DATABASE AG includes PURCHASE Cash directly. A paid cash purchase does
+    # not create another unpaid invoice or a PAYMENT SUPPLIER ledger entry.
+    if payable is not None:
+        await operation.insert("accounts_payable", payable.model_dump())
 
     return record

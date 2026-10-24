@@ -1,18 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
 import { Minus, Plus, Search, Trash2 } from "lucide-react";
 import SalesNoteModal from "@/components/pos/SalesNoteModal";
 import { EmptyBlock, ErrorBlock, LoadingBlock } from "@/components/StateBlock";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { apiGet, apiPost } from "@/lib/api";
-import { formatIDR, getApiErrorMessage, todayLocalISO } from "@/lib/format";
+import { formatIDR, getApiErrorMessage } from "@/lib/format";
 import type { Customer, PaymentMethod, Product, Transaction } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { PAYMENT_OPTIONS } from "@/lib/payments";
@@ -22,12 +19,15 @@ type CartLine = { product: Product; qty: number };
 type TabKey = "semua" | "barang" | "jasa";
 type CheckoutBody = {
   request_id: string;
-  items: { product_id: string; qty: number; credit_surcharge: number; discount_amount: number }[];
+  items: { product_id: string; qty: number; credit_surcharge: number; discount_per_unit: number }[];
   discount_total: number;
   payment_method: PaymentMethod;
   cash_received: number | null;
   customer_id: string | null;
   due_date: string | null;
+  credit_term_days: number | null;
+  down_payment_amount: number;
+  down_payment_method: Exclude<PaymentMethod, "credit"> | null;
   vehicle_plate: string | null;
 };
 
@@ -42,26 +42,32 @@ export default function PosPage() {
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<TabKey>("semua");
   const [cart, setCart] = useState<CartLine[]>([]);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [receivedInput, setReceivedInput] = useState<string | null>(null);
-  const [discountInput, setDiscountInput] = useState('0');
   const [itemDiscounts, setItemDiscounts] = useState<Record<string, string>>({});
   const [surcharges, setSurcharges] = useState<Record<string, string>>({});
   const [customerId, setCustomerId] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [creditTermDays, setCreditTermDays] = useState("14");
+  const [useDownPayment, setUseDownPayment] = useState(false);
+  const [downPaymentInput, setDownPaymentInput] = useState("");
+  const [downPaymentMethod, setDownPaymentMethod] = useState<Exclude<PaymentMethod, "credit">>("cash");
   const [vehiclePlate, setVehiclePlate] = useState("");
   const [receipt, setReceipt] = useState<Transaction | null>(null);
   const [receiptOpen, setReceiptOpen] = useState(false);
+  const [autoPrint, setAutoPrint] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
+  const cartRef = useRef<HTMLElement>(null);
+  const checkoutRef = useRef<HTMLDivElement>(null);
+  const submitting = useRef(false);
   const checkoutRequest = useRef<{ payload: string; id: string } | null>(null);
 
   const productsQuery = useQuery({ queryKey: ["products"], queryFn: () => apiGet<Product[]>("/products") });
   const customersQuery = useQuery({ queryKey: ["customers"], queryFn: () => apiGet<Customer[]>("/customers") });
+  const systemQuery = useQuery({ queryKey: ["system"], queryFn: () => apiGet<{ today: string }>("/system") });
 
-  const products = productsQuery.data ?? [];
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
+    const products = productsQuery.data ?? [];
     return products.filter((p) => {
       if (tab !== "semua" && p.type !== tab) return false;
       if (!term) return true;
@@ -71,21 +77,21 @@ export default function PosPage() {
         p.brand.toLowerCase().includes(term)
       );
     });
-  }, [products, search, tab]);
+  }, [productsQuery.data, search, tab]);
 
   const unitPrice = (product: Product) => product.selling_price + (paymentMethod === 'credit' ? Number(surcharges[product.id] || 0) : 0);
   const grossAmount = cart.reduce((sum, line) => sum + Math.round(unitPrice(line.product) * 100) * line.qty, 0) / 100;
-  const discountAmount = Number(discountInput || 0);
-  const itemDiscountTotal = cart.reduce((sum, l) => sum + Math.round(Number(itemDiscounts[l.product.id] || 0) * 100), 0) / 100;
-  const totalAmount = Math.max(0, Math.round((grossAmount - itemDiscountTotal - discountAmount) * 100) / 100);
+  const isCredit = paymentMethod === "credit";
+  const itemDiscount = (productId: string) => isCredit ? 0 : Number(itemDiscounts[productId] || 0);
+  const itemDiscountTotal = cart.reduce((sum, l) => sum + Math.round(itemDiscount(l.product.id) * 100) * l.qty, 0) / 100;
+  const totalAmount = Math.max(0, Math.round((grossAmount - itemDiscountTotal) * 100) / 100);
   const pricingInvalid = cart.some(l => {
-    const discount = Number(itemDiscounts[l.product.id] || 0);
-    return !Number.isFinite(discount) || discount < 0 || discount > unitPrice(l.product) * l.qty || discount > 1e12;
-  }) || !Number.isFinite(discountAmount) || discountAmount < 0 || discountAmount > grossAmount - itemDiscountTotal || discountAmount > 1e12 ||
+    const discount = itemDiscount(l.product.id);
+    return !Number.isFinite(discount) || discount < 0 || discount > unitPrice(l.product) || discount > 1e12;
+  }) ||
     (paymentMethod === 'credit' && (totalAmount <= 0 || cart.some(l => !Number.isFinite(Number(surcharges[l.product.id] || 0)) || Number(surcharges[l.product.id] || 0) < 0 || Number(surcharges[l.product.id] || 0) > 1e12)));
-  const serviceFeeTotal = mechanicFeeTotal(cart.map(l => ({ ...l, price: unitPrice(l.product), discount: Number(itemDiscounts[l.product.id] || 0) })), discountAmount);
+  const serviceFeeTotal = mechanicFeeTotal(cart.map(l => ({ ...l, price: unitPrice(l.product), discount: itemDiscount(l.product.id) * l.qty })), 0, isCredit);
 
-  // Pintasan keyboard: F2 fokus pencarian, F4 buka checkout
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "F2") {
@@ -94,7 +100,10 @@ export default function PosPage() {
       }
       if (e.key === "F4") {
         e.preventDefault();
-        if (cart.length > 0) setCheckoutOpen(true);
+        if (cart.length > 0) {
+          checkoutRef.current?.scrollIntoView({ block: "center" });
+          checkoutRef.current?.focus({ preventScroll: true });
+        }
       }
     };
     window.addEventListener("keydown", onKey);
@@ -102,6 +111,7 @@ export default function PosPage() {
   }, [cart.length]);
 
   function addToCart(product: Product) {
+    if (submitting.current) return;
     setCart((prev) => {
       const idx = prev.findIndex((l) => l.product.id === product.id);
       if (idx >= 0) {
@@ -131,66 +141,99 @@ export default function PosPage() {
   const checkoutMutation = useMutation({
     mutationFn: (body: CheckoutBody) => apiPost<Transaction>("/transactions", body),
     onSuccess: (tx) => {
+      submitting.current = false;
       checkoutRequest.current = null;
       toast.success(`Transaksi ${tx.invoice_number} berhasil disimpan`);
       setReceipt(tx);
+      setAutoPrint(true);
       setReceiptOpen(true);
       setCart([]);
-      setCheckoutOpen(false);
       setPaymentMethod("cash");
       setReceivedInput(null);
-      setDiscountInput('0');
       setItemDiscounts({});
       setSurcharges({});
       setCustomerId("");
-      setDueDate("");
+      setCreditTermDays("14");
+      setUseDownPayment(false);
+      setDownPaymentInput("");
+      setDownPaymentMethod("cash");
       setVehiclePlate("");
       void queryClient.invalidateQueries({ queryKey: ["products"] });
       void queryClient.invalidateQueries({ queryKey: ["transactions"] });
       void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       void queryClient.invalidateQueries({ queryKey: ["receivables"] });
+      void queryClient.invalidateQueries({ queryKey: ["receivables-summary"] });
+      void queryClient.invalidateQueries({ queryKey: ["books"] });
+      void queryClient.invalidateQueries({ queryKey: ["books-daily"] });
+      void queryClient.invalidateQueries({ queryKey: ["books-monthly"] });
+      void queryClient.invalidateQueries({ queryKey: ["excel-reports"] });
+      void queryClient.invalidateQueries({ queryKey: ["reports"] });
     },
-    onError: (error) => toast.error(getApiErrorMessage(error)),
+    onError: (error) => {
+      submitting.current = false;
+      toast.error(getApiErrorMessage(error));
+    },
   });
 
-  const creditMissing = paymentMethod === "credit" && (!customerId || !dueDate);
+  const termDays = Number(creditTermDays);
+  const termInvalid = isCredit && (!Number.isInteger(termDays) || termDays < 1 || termDays > 3650);
+  const creditMissing = isCredit && (!customerId || !(customersQuery.data ?? []).some(customer => customer.id === customerId));
+  const downPaymentAmount = isCredit && useDownPayment ? Number(downPaymentInput) : 0;
+  const downPaymentInvalid = isCredit && useDownPayment && (downPaymentInput === "" || !Number.isFinite(downPaymentAmount) || downPaymentAmount <= 0 || downPaymentAmount >= totalAmount || downPaymentAmount > 1e12);
+  const remainingAmount = Math.max(0, Math.round((totalAmount - downPaymentAmount) * 100) / 100);
+  const dueDatePreview = isCredit && !termInvalid && systemQuery.data?.today
+    ? (() => { const date = new Date(`${systemQuery.data.today}T12:00:00Z`); date.setUTCDate(date.getUTCDate() + termDays); return date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }); })()
+    : null;
   const amountReceived = receivedInput === null ? totalAmount : Number(receivedInput);
   const receivedInvalid = paymentMethod !== "credit" && (receivedInput === "" || !Number.isFinite(amountReceived) || amountReceived < totalAmount || amountReceived > 1e12);
 
   function submitCheckout() {
-    if (cart.length === 0 || creditMissing || receivedInvalid || pricingInvalid || checkoutMutation.isPending) return;
+    if (cart.length === 0 || creditMissing || termInvalid || downPaymentInvalid || receivedInvalid || pricingInvalid || submitting.current || checkoutMutation.isPending) return;
     const body = {
-      items: cart.map((l) => ({ product_id: l.product.id, qty: l.qty, credit_surcharge: paymentMethod === 'credit' ? Number(surcharges[l.product.id] || 0) : 0, discount_amount: Number(itemDiscounts[l.product.id] || 0) })),
-      discount_total: discountAmount,
+      items: cart.map((l) => ({ product_id: l.product.id, qty: l.qty, credit_surcharge: isCredit ? Number(surcharges[l.product.id] || 0) : 0, discount_per_unit: itemDiscount(l.product.id) })),
+      discount_total: 0,
       payment_method: paymentMethod,
       cash_received: paymentMethod !== "credit" ? amountReceived : null,
       customer_id: customerId || null,
-      due_date: paymentMethod === "credit" ? dueDate : null,
+      due_date: null,
+      credit_term_days: isCredit ? termDays : null,
+      down_payment_amount: downPaymentAmount,
+      down_payment_method: isCredit && useDownPayment ? downPaymentMethod : null,
       vehicle_plate: vehiclePlate.trim().toUpperCase() || null,
     };
     const payload = JSON.stringify(body);
     if (checkoutRequest.current?.payload !== payload) {
       checkoutRequest.current = { payload, id: crypto.randomUUID() };
     }
+    submitting.current = true;
     checkoutMutation.mutate({ ...body, request_id: checkoutRequest.current.id });
   }
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div className="page-workspace">
+      <div className="page-heading">
         <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight">Kasir POS</h1>
+          <h1 className="font-heading">Kasir penjualan</h1>
           <p className="text-sm text-muted-foreground">Cari barang/jasa, masukkan ke keranjang, lalu bayar.</p>
         </div>
         <div className="hidden gap-2 md:flex">
-          <Badge variant="outline" className="rounded-md font-mono">[F2: Cari]</Badge>
-          <Badge variant="outline" className="rounded-md font-mono">[F4: Bayar]</Badge>
+          <span className="text-xs text-muted-foreground"><kbd className="rounded border border-input px-2 py-1">F2</kbd> Cari barang</span>
+          <span className="text-xs text-muted-foreground"><kbd className="rounded border border-input px-2 py-1">F4</kbd> Pembayaran</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:h-[calc(100vh-9rem)] lg:grid-cols-12 xl:gap-6">
-        {/* Katalog */}
-        <section className="flex min-h-0 flex-col gap-3 lg:col-span-7 xl:col-span-8">
+      {receipt ? <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-md border border-border bg-card px-4 py-3">
+        <p className="text-sm">{receipt.invoice_number} sudah tersimpan.</p>
+        <Button variant="outline" size="sm" data-testid="reprint-last-transaction" onClick={() => { setAutoPrint(false); setReceiptOpen(true); }}>Cetak ulang nota</Button>
+      </div> : null}
+
+      {cart.length > 0 ? (
+        <Button variant="outline" className="pos-cart-jump mb-4 w-full justify-between" data-testid="pos-cart-jump" onClick={() => cartRef.current?.scrollIntoView({ block: 'start' })}>
+          <span>Lihat keranjang ({cart.length} item)</span><span className="font-mono">{formatIDR(totalAmount)}</span>
+        </Button>
+      ) : null}
+      <div className="pos-layout">
+        <section className="pos-catalog flex flex-col gap-3" aria-label="Katalog barang dan jasa">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -199,10 +242,11 @@ export default function PosPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama, SKU, atau merek ban/oli/jasa…"
+              aria-label="Cari barang atau jasa"
               className="pl-9"
             />
           </div>
-          <div className="flex gap-2" data-testid="pos-tabs">
+          <div className="flex flex-wrap gap-2" data-testid="pos-tabs" aria-label="Jenis produk">
             {TABS.map((t) => (
               <Button
                 key={t.key}
@@ -210,12 +254,13 @@ export default function PosPage() {
                 variant={tab === t.key ? "default" : "outline"}
                 size="sm"
                 onClick={() => setTab(t.key)}
+                aria-pressed={tab === t.key}
               >
                 {t.label}
               </Button>
             ))}
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+          <div className="pos-catalog-products min-w-0">
             {productsQuery.isPending ? (
               <LoadingBlock />
             ) : productsQuery.isError ? (
@@ -223,19 +268,19 @@ export default function PosPage() {
             ) : filtered.length === 0 ? (
               <EmptyBlock title="Produk tidak ditemukan" description="Coba kata kunci lain atau pilih tab jenis produk." />
             ) : (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+              <div className="pos-catalog-grid">
                 {filtered.map((p) => {
                   const out = p.type === "barang" && p.stock < 1;
                   return (
                     <button
                       key={p.id}
                       data-testid={`pos-product-card-${p.sku.toLowerCase()}`}
-                      disabled={out}
+                      disabled={out || checkoutMutation.isPending}
                       onClick={() => addToCart(p)}
-                      className="rounded-lg border border-border bg-card p-3 text-left transition hover:border-primary/60 hover:shadow-[0_0_20px_-5px_rgba(245,158,11,0.3)] disabled:cursor-not-allowed disabled:opacity-40"
+                      className="pos-product"
                     >
                       <span className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{p.sku}</span>
+                        <span className="text-xs text-muted-foreground">{p.sku}</span>
                         <Badge
                           variant="outline"
                           className={cn(
@@ -267,8 +312,8 @@ export default function PosPage() {
           </div>
         </section>
 
-        {/* Keranjang */}
-        <aside className="flex min-h-0 flex-col rounded-xl border border-border bg-card lg:col-span-5 xl:col-span-4">
+        <aside ref={cartRef} className="pos-cart pos-checkout !static !max-h-none scroll-mt-20" aria-label="Keranjang dan pembayaran">
+          <fieldset disabled={checkoutMutation.isPending} className="m-0 min-w-0 border-0 p-0">
           <div className="flex items-center justify-between border-b border-border px-4 py-3">
             <p className="font-heading font-bold">Keranjang ({cart.length} item)</p>
             {cart.length > 0 ? (
@@ -277,7 +322,13 @@ export default function PosPage() {
               </Button>
             ) : null}
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto">
+          <div className="grid grid-cols-2 gap-2 border-b border-border p-4" aria-label="Jenis penjualan">
+            <Button type="button" variant={isCredit ? "outline" : "secondary"} className={cn(!isCredit && "border-primary ring-1 ring-primary font-semibold")} data-testid="payment-cash-btn" aria-pressed={!isCredit}
+              onClick={() => setPaymentMethod(current => current === "credit" ? "cash" : current)}>Cash</Button>
+            <Button type="button" variant={isCredit ? "secondary" : "outline"} className={cn(isCredit && "border-primary ring-1 ring-primary font-semibold")} data-testid="payment-credit-btn" aria-pressed={isCredit}
+              onClick={() => setPaymentMethod("credit")}>Tempo</Button>
+          </div>
+          <div>
             {cart.length === 0 ? (
               <EmptyBlock
                 title="Keranjang kosong"
@@ -285,20 +336,15 @@ export default function PosPage() {
                 className="m-4 border-0 bg-transparent"
               />
             ) : (
-              <AnimatePresence initial={false}>
+              <div>
                 {cart.map((l) => (
-                  <motion.div
+                  <div
                     key={l.product.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex items-center gap-2 border-b border-border/60 px-4 py-3"
+                    className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3"
                     data-testid={`cart-line-${l.product.sku.toLowerCase()}`}
                   >
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold">{l.product.name}</p>
+                    <div className="min-w-0 flex-[1_1_160px]">
+                      <p className="text-sm font-semibold">{l.product.name}</p>
                       <p className="font-mono text-xs text-muted-foreground">
                         {formatIDR(l.product.selling_price)} × {l.qty}
                       </p>
@@ -309,6 +355,7 @@ export default function PosPage() {
                         size="icon-xs"
                         data-testid={`cart-decrement-${l.product.sku.toLowerCase()}`}
                         onClick={() => decrementQty(l.product.id)}
+                        aria-label={`Kurangi jumlah ${l.product.name}`}
                       >
                         <Minus />
                       </Button>
@@ -320,6 +367,7 @@ export default function PosPage() {
                         size="icon-xs"
                         data-testid={`cart-increment-${l.product.sku.toLowerCase()}`}
                         onClick={() => addToCart(l.product)}
+                        aria-label={`Tambah jumlah ${l.product.name}`}
                       >
                         <Plus />
                       </Button>
@@ -328,20 +376,93 @@ export default function PosPage() {
                         size="icon-xs"
                         data-testid={`cart-remove-${l.product.sku.toLowerCase()}`}
                         onClick={() => setCart((prev) => prev.filter((x) => x.product.id !== l.product.id))}
+                        aria-label={`Hapus ${l.product.name} dari keranjang`}
                       >
                         <Trash2 className="text-red-700 dark:text-red-400" />
                       </Button>
                     </div>
-                  </motion.div>
+                    <div className="w-full space-y-1">
+                      <Label htmlFor={isCredit ? `surcharge-${l.product.id}` : `item-discount-${l.product.id}`}>
+                        {isCredit ? "Tambahan tempo (Rp per unit)" : "Potongan harga (Rp per unit)"}
+                      </Label>
+                      {isCredit ? <Input id={`surcharge-${l.product.id}`} data-testid={`surcharge-${l.product.id}`} type="number" inputMode="decimal" min="0" max="1000000000000" step="0.01"
+                        value={surcharges[l.product.id] ?? "0"} onChange={event => setSurcharges(previous => ({ ...previous, [l.product.id]: event.target.value }))} />
+                        : <Input id={`item-discount-${l.product.id}`} data-testid={`item-discount-${l.product.id}`} type="number" inputMode="decimal" min="0" max={l.product.selling_price} step="0.01"
+                          value={itemDiscounts[l.product.id] ?? "0"} onChange={event => setItemDiscounts(previous => ({ ...previous, [l.product.id]: event.target.value }))} />}
+                      <p className="text-xs text-muted-foreground">{isCredit ? "Harga tempo" : "Harga setelah potongan"}/unit: {formatIDR(unitPrice(l.product) - itemDiscount(l.product.id))}</p>
+                    </div>
+                  </div>
                 ))}
-              </AnimatePresence>
+              </div>
             )}
           </div>
-          <div className="space-y-2 border-t border-border p-4">
+          {cart.length > 0 ? <div ref={checkoutRef} tabIndex={-1} className="space-y-4 border-t border-border p-4 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2" data-testid="checkout-panel" aria-label="Pembayaran">
+            <div className="space-y-2">
+              <Label htmlFor="checkout-customer">Pelanggan {isCredit ? "(wajib)" : "(opsional)"}</Label>
+              <select id="checkout-customer" data-testid="checkout-customer-select" className="bk-control" value={customerId}
+                disabled={customersQuery.isPending || customersQuery.isError} aria-invalid={creditMissing} onChange={event => setCustomerId(event.target.value)}>
+                <option value="">{customersQuery.isPending ? "Memuat pelanggan..." : isCredit ? "Pilih pelanggan" : "Umum / Tanpa Nama"}</option>
+                {(customersQuery.data ?? []).map(customer => <option key={customer.id} value={customer.id}>{customer.name}</option>)}
+              </select>
+              {customersQuery.isError ? <div role="alert" className="text-sm text-destructive">{getApiErrorMessage(customersQuery.error)} <Button type="button" size="sm" variant="outline" onClick={() => void customersQuery.refetch()}>Muat ulang pelanggan</Button></div>
+                : !customersQuery.isPending && (customersQuery.data ?? []).length === 0 ? <p className="text-xs text-muted-foreground">Belum ada pelanggan. Tambahkan melalui menu Pelanggan sebelum penjualan tempo.</p> : null}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="checkout-vehicle-plate">Nomor mobil (opsional)</Label>
+              <Input id="checkout-vehicle-plate" data-testid="checkout-vehicle-plate-input" className="font-mono uppercase" maxLength={30}
+                value={vehiclePlate} onChange={event => setVehiclePlate(event.target.value)} placeholder="mis. B 1234 XYZ" />
+            </div>
+            {isCredit ? <>
+              <div className="space-y-2">
+                <Label htmlFor="checkout-term-days">Tenor tempo (hari)</Label>
+                <Input id="checkout-term-days" data-testid="checkout-term-days" type="number" inputMode="numeric" min="1" max="3650" step="1"
+                  value={creditTermDays} aria-invalid={termInvalid} aria-describedby="checkout-term-feedback" onChange={event => setCreditTermDays(event.target.value)} />
+                <p id="checkout-term-feedback" className={cn("text-xs", termInvalid ? "text-destructive" : "text-muted-foreground")}>
+                  {termInvalid ? "Isi tenor 1 sampai 3650 hari, tanpa desimal." : dueDatePreview ? `Jatuh tempo: ${dueDatePreview}` : "Jatuh tempo dihitung dari tanggal transaksi saat disimpan."}
+                </p>
+                {systemQuery.isPending ? <p role="status" className="text-xs text-muted-foreground">Memuat tanggal transaksi...</p> : systemQuery.isError ? <div className="text-xs text-muted-foreground">Tanggal pratinjau belum tersedia. <Button type="button" size="sm" variant="outline" onClick={() => void systemQuery.refetch()}>Muat ulang tanggal</Button></div> : null}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="checkout-down-payment-option">Uang muka</Label>
+                <select id="checkout-down-payment-option" data-testid="checkout-down-payment-option" className="bk-control" value={useDownPayment ? "with" : "none"}
+                  onChange={event => setUseDownPayment(event.target.value === "with")}>
+                  <option value="none">Tanpa uang muka</option><option value="with">Pakai uang muka</option>
+                </select>
+              </div>
+              {useDownPayment ? <div className="space-y-2">
+                <Label htmlFor="checkout-down-payment-amount">Nominal uang muka (Rp)</Label>
+                <Input id="checkout-down-payment-amount" data-testid="checkout-down-payment-amount" type="number" inputMode="decimal" min="0.01" max={Math.max(0, totalAmount - 0.01)} step="0.01"
+                  value={downPaymentInput} aria-invalid={downPaymentInvalid} aria-describedby="checkout-dp-feedback" onChange={event => setDownPaymentInput(event.target.value)} />
+                {downPaymentInvalid ? <p id="checkout-dp-feedback" role="alert" className="text-xs text-destructive">Uang muka harus lebih dari nol dan lebih kecil dari total. Untuk pelunasan penuh, pilih Cash.</p> : null}
+              </div> : null}
+            </> : null}
+            <div className="space-y-2">
+              <Label htmlFor="checkout-payment-method">{isCredit ? "Pembayaran uang muka" : "Pembayaran"}</Label>
+              <select id="checkout-payment-method" data-testid="checkout-payment-method" className="bk-control" disabled={isCredit && !useDownPayment}
+                value={isCredit ? downPaymentMethod : paymentMethod}
+                onChange={event => isCredit ? setDownPaymentMethod(event.target.value as Exclude<PaymentMethod, "credit">) : setPaymentMethod(event.target.value as PaymentMethod)}>
+                {PAYMENT_OPTIONS.filter(([key]) => key !== "credit").map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+              </select>
+              {isCredit && !useDownPayment ? <p className="text-xs text-muted-foreground">Belum ada pembayaran. Seluruh total menjadi piutang.</p> : null}
+            </div>
+            {!isCredit ? <div className="space-y-2">
+              <Label htmlFor="checkout-cash-received">Bayar (Rp)</Label>
+              <div className="flex gap-2">
+                <Input id="checkout-cash-received" data-testid="checkout-cash-received" type="number" inputMode="decimal" min={totalAmount} max={1e12} step="0.01"
+                  value={receivedInput ?? (Number.isFinite(totalAmount) ? totalAmount : "")} aria-invalid={receivedInvalid} aria-describedby={receivedInvalid ? "checkout-received-error" : "checkout-received-feedback"} onChange={event => setReceivedInput(event.target.value)} />
+                <Button type="button" variant="outline" onClick={() => setReceivedInput(null)}>Uang pas</Button>
+              </div>
+              {receivedInvalid ? <p id="checkout-received-error" role="alert" className="text-xs text-destructive">Isi pembayaran minimal sebesar total transaksi.</p> : null}
+            </div> : null}
+            {creditMissing ? <p role="alert" className="text-xs text-destructive" data-testid="checkout-credit-warning">Pilih pelanggan untuk penjualan tempo.</p> : null}
+            {pricingInvalid ? <p role="alert" className="text-xs text-destructive">Periksa tambahan harga dan potongan. Potongan maksimal sebesar harga barang, dan total tempo harus lebih dari nol.</p> : null}
+          </div> : null}
+          <div className="pos-cart-total space-y-3 border-t border-border p-4">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal</span>
               <span className="font-mono" data-testid="cart-subtotal">{formatIDR(grossAmount)}</span>
             </div>
+            {itemDiscountTotal > 0 ? <div className="flex justify-between text-sm"><span className="text-muted-foreground">Potongan</span><span className="font-mono">−{formatIDR(itemDiscountTotal)}</span></div> : null}
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Service Fee Mekanik</span>
               <span className="font-mono" data-testid="cart-service-fee">{formatIDR(serviceFeeTotal)}</span>
@@ -350,166 +471,30 @@ export default function PosPage() {
               <span>Total</span>
               <span className="font-mono text-primary" data-testid="cart-total">{formatIDR(totalAmount)}</span>
             </div>
+            {cart.length > 0 ? <>
+              <p className="text-xs text-muted-foreground" data-testid="checkout-mechanic-fee">Komisi SERVICE: 50% {isCredit ? "harga tunai" : "setelah potongan"}; item lain mengikuti komisi yang tersimpan.</p>
+              {isCredit ? <div className="space-y-2 border-t border-border pt-3 text-sm" aria-live="polite">
+                <div className="flex justify-between gap-2"><span>Uang muka</span><span className="font-mono">{formatIDR(Number.isFinite(downPaymentAmount) ? downPaymentAmount : 0)}</span></div>
+                <div className="flex justify-between gap-2 font-semibold"><span>Sisa piutang</span><span data-testid="checkout-remaining" className="font-mono">{formatIDR(Number.isFinite(remainingAmount) ? remainingAmount : 0)}</span></div>
+              </div> : <p id="checkout-received-feedback" className="flex justify-between gap-2 border-t border-border pt-3 text-sm" aria-live="polite"><span>{paymentMethod === "cash" ? "Kembalian" : "Kelebihan pembayaran"}</span><strong className="font-mono" data-testid="checkout-change">{formatIDR(receivedInvalid || pricingInvalid ? 0 : Math.round((amountReceived - totalAmount) * 100) / 100)}</strong></p>}
+              {checkoutMutation.isError ? <p role="alert" data-testid="checkout-save-error" className="text-sm text-destructive">{getApiErrorMessage(checkoutMutation.error)}. Coba Print lagi untuk melanjutkan permintaan yang sama.</p> : null}
             <Button
-              className="w-full"
+              className="pos-pay-button w-full"
               size="lg"
-              data-testid="cart-checkout-button"
-              disabled={cart.length === 0}
-              onClick={() => setCheckoutOpen(true)}
+              data-testid="checkout-submit-button"
+              disabled={checkoutMutation.isPending || creditMissing || termInvalid || downPaymentInvalid || receivedInvalid || pricingInvalid}
+              onClick={submitCheckout}
             >
-              Bayar
+              {checkoutMutation.isPending ? "Menyimpan..." : "Print"}
             </Button>
+            <p className="text-xs text-muted-foreground">Transaksi disimpan sebelum dialog cetak dibuka. Batal cetak tetap tersimpan.</p>
+            </> : null}
           </div>
+          </fieldset>
         </aside>
       </div>
 
-      {/* Dialog checkout */}
-      <Dialog open={checkoutOpen} onOpenChange={setCheckoutOpen}>
-        <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-md" data-testid="checkout-dialog">
-          <DialogHeader>
-            <DialogTitle>Checkout — {formatIDR(totalAmount)}</DialogTitle>
-            <DialogDescription>
-              Pilih metode pembayaran. Untuk tempo (kredit), pelanggan &amp; jatuh tempo wajib diisi — sistem akan
-              otomatis membuat piutang.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                data-testid="payment-cash-btn"
-                onClick={() => setPaymentMethod("cash")}
-                className={cn(
-                  "rounded-lg border px-3 py-3 font-semibold transition",
-                  paymentMethod === "cash"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:border-muted-foreground"
-                )}
-              >
-                Tunai
-              </button>
-              <button
-                type="button"
-                data-testid="payment-credit-btn"
-                onClick={() => setPaymentMethod("credit")}
-                className={cn(
-                  "rounded-lg border px-3 py-3 font-semibold transition",
-                  paymentMethod === "credit"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:border-muted-foreground"
-                )}
-              >
-                Tempo (Kredit)
-              </button>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="checkout-payment-method">Tipe pembayaran</Label>
-              <select id="checkout-payment-method" data-testid="checkout-payment-method" className="bk-control" value={paymentMethod} onChange={e => setPaymentMethod(e.target.value as PaymentMethod)}>
-                {PAYMENT_OPTIONS.map(([key, label]) => <option key={key} value={key}>{label}</option>)}
-              </select>
-            </div>
-            {paymentMethod === 'credit' && <div className="space-y-3 rounded-lg border border-border p-3">
-              <p className="text-sm font-semibold">Tambahan harga tempo per unit</p>
-              {cart.map(line => <div key={line.product.id} className="space-y-1">
-                <Label htmlFor={`surcharge-${line.product.id}`}>{line.product.name} · {line.qty} unit</Label>
-                <Input id={`surcharge-${line.product.id}`} aria-label={`Tambahan tempo ${line.product.name}`} type="number" min="0" max="1000000000000" step="0.01"
-                  value={surcharges[line.product.id] ?? '0'} onChange={e => setSurcharges(previous => ({ ...previous, [line.product.id]: e.target.value }))} />
-                <p className="text-xs text-muted-foreground">Harga tempo/unit: {formatIDR(unitPrice(line.product))}</p>
-              </div>)}
-            </div>}
-            <div className="space-y-2 rounded-lg border border-border p-3">
-              {cart.map(line => <div key={line.product.id} className="space-y-1">
-                <Label htmlFor={`item-discount-${line.product.id}`}>Potongan item {line.product.name} (Rp, total {line.qty} unit)</Label>
-                <Input id={`item-discount-${line.product.id}`} data-testid={`item-discount-${line.product.id}`} type="number" min="0" max={unitPrice(line.product) * line.qty} step="0.01" value={itemDiscounts[line.product.id] || '0'} onChange={e => setItemDiscounts(prev => ({ ...prev, [line.product.id]: e.target.value }))} />
-              </div>)}
-              <Label htmlFor="checkout-discount">Potongan total nota (Rp)</Label>
-              <Input id="checkout-discount" data-testid="checkout-discount" type="number" min="0" max={Math.max(0, grossAmount - itemDiscountTotal)} step="0.01" value={discountInput} onChange={e => setDiscountInput(e.target.value)} />
-              <p className="text-sm">Sebelum potongan: {formatIDR(grossAmount)}</p>
-              <p className="text-sm font-semibold" data-testid="checkout-net-total">Total bayar: {formatIDR(totalAmount)}</p>
-              <p className="text-sm" data-testid="checkout-mechanic-fee">Komisi montir: {formatIDR(serviceFeeTotal)}. SERVICE: 50% setelah potongan; item lain sesuai DATABASE.</p>
-              {pricingInvalid && <p className="text-xs text-red-700 dark:text-red-400">Periksa tambahan harga dan potongan. Potongan tidak boleh melebihi total; total tempo harus lebih dari nol.</p>}
-            </div>
-            {paymentMethod !== "credit" && <div className="space-y-2 rounded-lg border border-border p-3">
-              <Label htmlFor="checkout-cash-received">Uang diterima (Rp)</Label>
-              <div className="flex gap-2">
-                <Input id="checkout-cash-received" data-testid="checkout-cash-received" type="number" inputMode="decimal"
-                  min={totalAmount} max={1e12} step="0.01" value={receivedInput ?? totalAmount}
-                  aria-invalid={receivedInvalid} aria-describedby="checkout-received-feedback" onChange={(event) => setReceivedInput(event.target.value)} />
-                <Button type="button" variant="outline" onClick={() => setReceivedInput(null)}>Uang pas</Button>
-              </div>
-              {receivedInvalid ? <p id="checkout-received-feedback" className="text-xs text-red-700 dark:text-red-400" role="alert">Isi uang diterima minimal sebesar total transaksi.</p>
-                : <p id="checkout-received-feedback" className="flex justify-between gap-2 text-sm" aria-live="polite"><span>{paymentMethod === 'cash' ? 'Kembalian' : 'Kelebihan pembayaran'}</span><strong data-testid="checkout-change">{formatIDR(Math.round((amountReceived - totalAmount) * 100) / 100)}</strong></p>}
-            </div>}
-            <div className="space-y-2">
-              <Label htmlFor="checkout-customer">
-                Pelanggan {paymentMethod === "credit" ? "(wajib)" : "(opsional)"}
-              </Label>
-              <Select value={customerId || "none"} onValueChange={(v) => setCustomerId(v === "none" ? "" : v)}>
-                <SelectTrigger id="checkout-customer" data-testid="checkout-customer-select">
-                  <SelectValue>
-                    {(v) => {
-                      const val = v as string;
-                      if (val === "none") return "Umum / Tanpa Nama";
-                      return (customersQuery.data ?? []).find((c) => c.id === val)?.name ?? "Pilih pelanggan";
-                    }}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Umum / Tanpa Nama</SelectItem>
-                  {(customersQuery.data ?? []).map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            {paymentMethod === "credit" ? (
-              <div className="space-y-2">
-                <Label htmlFor="checkout-due-date">Jatuh Tempo (wajib)</Label>
-                <Input
-                  id="checkout-due-date"
-                  data-testid="checkout-due-date-input"
-                  type="date"
-                  min={todayLocalISO()}
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                />
-              </div>
-            ) : null}
-            <div className="space-y-2">
-              <Label htmlFor="checkout-vehicle-plate">Nomor Polisi (opsional)</Label>
-              <Input
-                id="checkout-vehicle-plate"
-                data-testid="checkout-vehicle-plate-input"
-                className="font-mono uppercase"
-                value={vehiclePlate}
-                onChange={(e) => setVehiclePlate(e.target.value)}
-                placeholder="mis. B 1234 XYZ"
-              />
-              <p className="text-xs text-muted-foreground">
-                Diisi agar servis tercatat di Riwayat Kendaraan (ban &amp; oli terakhir).
-              </p>
-            </div>
-            {creditMissing ? (
-              <p className="text-xs text-red-700 dark:text-red-400" data-testid="checkout-credit-warning">
-                Pembayaran tempo wajib memilih pelanggan dan tanggal jatuh tempo.
-              </p>
-            ) : null}
-            <Button
-              className="w-full"
-              size="lg"
-              data-testid="checkout-submit-button"
-              disabled={checkoutMutation.isPending || creditMissing || receivedInvalid || pricingInvalid}
-              onClick={submitCheckout}
-            >
-              {checkoutMutation.isPending ? "Menyimpan…" : `Bayar ${formatIDR(totalAmount)}`}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <SalesNoteModal transaction={receipt} open={receiptOpen} onOpenChange={setReceiptOpen} />
+      <SalesNoteModal transaction={receipt} open={receiptOpen} autoPrint={autoPrint} onOpenChange={setReceiptOpen} />
     </div>
   );
 }

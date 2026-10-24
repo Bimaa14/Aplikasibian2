@@ -1,14 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, Package, ReceiptText } from "lucide-react";
+import { useState } from 'react';
+import { AlertTriangle, CalendarClock, Package, ReceiptText } from "lucide-react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "@/lib/recharts";
 import { DebtStatusBadge, TxStatusBadge } from "@/components/StatusBadge";
 import { EmptyBlock, ErrorBlock, LoadingBlock } from "@/components/StateBlock";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiGet } from "@/lib/api";
-import { formatDate, formatDateTime, formatIDR, formatIDRCompact } from "@/lib/format";
+import { formatDate, formatIDR, formatIDRCompact, todayLocalISO } from "@/lib/format";
 import type { DashboardStats } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -27,18 +29,12 @@ function KpiCard({
   tone?: "primary" | "success" | "danger" | "plain";
   onClick?: () => void;
 }) {
-  return (
-    <Card
-      size="sm"
-      data-testid={testid}
-      className={cn("bg-card", onClick && "cursor-pointer transition-shadow hover:shadow-md hover:ring-1 hover:ring-primary/30")}
-      onClick={onClick}
-    >
-      <CardContent className="space-y-1.5">
-        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
+  const content = (
+    <>
+        <p className="text-sm font-medium text-muted-foreground">{label}</p>
         <p
           className={cn(
-            "font-heading text-xl font-bold tracking-tight tabular-nums",
+            "dashboard-metric-value",
             tone === "primary" && "text-primary",
             tone === "success" && "text-emerald-700 dark:text-emerald-400",
             tone === "danger" && "text-red-700 dark:text-red-400"
@@ -46,9 +42,13 @@ function KpiCard({
         >
           {value}
         </p>
-        <div className="text-xs text-muted-foreground">{sub}</div>
-      </CardContent>
-    </Card>
+        <div className="text-xs leading-relaxed text-muted-foreground">{sub}</div>
+    </>
+  );
+  return onClick ? (
+    <button type="button" data-testid={testid} className="dashboard-metric" onClick={onClick}>{content}</button>
+  ) : (
+    <div data-testid={testid} className="dashboard-metric">{content}</div>
   );
 }
 
@@ -62,23 +62,26 @@ const AGING_BUCKETS = [
 
 export default function DashboardPage() {
   const navigate = useNavigate();
+  const [year, setYear] = useState(Number(todayLocalISO().slice(0, 4)));
   const statsQuery = useQuery({
-    queryKey: ["dashboard"],
-    queryFn: () => apiGet<DashboardStats>("/dashboard"),
+    queryKey: ["dashboard", year],
+    queryFn: () => apiGet<DashboardStats>(`/dashboard?year=${year}`),
   });
   const stats = statsQuery.data;
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <div className="page-workspace">
+      <div className="page-heading">
         <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight">Dashboard Keuangan</h1>
-          <p className="text-sm text-muted-foreground">Ringkasan pendapatan, laba, dan arus tagihan bengkel.</p>
+          <h1 className="font-heading">Ringkasan keuangan</h1>
+          <p className="text-sm text-muted-foreground">Perhitungan tahunan mengikuti DASHBOARD spreadsheet. Saldo tagihan dan stok memakai data terkini.</p>
         </div>
         {stats ? (
-          <Badge variant="outline" className="rounded-md" data-testid="dashboard-today-badge">
-            Hari ini · {formatDate(stats.today)}
-          </Badge>
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="text-sm text-muted-foreground">Tahun <select aria-label="Tahun dashboard" className="bk-control ml-1" value={year} onChange={(e) => setYear(Number(e.target.value))}>{stats.years_available.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+            <span className="text-sm text-muted-foreground" data-testid="dashboard-today-badge">{formatDate(stats.today)}</span>
+            <Button data-testid="dashboard-open-pos" onClick={() => navigate('/pos')}>Buka kasir</Button>
+          </div>
         ) : null}
       </div>
 
@@ -88,31 +91,28 @@ export default function DashboardPage() {
         <ErrorBlock error={statsQuery.error} onRetry={() => void statsQuery.refetch()} />
       ) : stats ? (
         <div className="space-y-5">
-          {/* KPI row */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="dashboard-metrics">
             <KpiCard
               testid="kpi-revenue"
-              label="Total Pendapatan"
+              label="Penjualan Tanpa Oli"
               value={formatIDR(stats.total_revenue)}
               tone="primary"
               onClick={() => navigate("/transaksi")}
               sub={
                 <span className="flex items-center gap-1">
-                  <ArrowUpRight className="size-3 text-emerald-700 dark:text-emerald-400" />
                   Hari ini {formatIDR(stats.today_revenue)} · {stats.transaction_count} transaksi
                 </span>
               }
             />
             <KpiCard
               testid="kpi-gross-profit"
-              label="Laba Kotor (Barang)"
+              label="Laba Kotor DASHBOARD"
               value={formatIDR(stats.gross_profit)}
               tone="success"
               onClick={() => navigate("/laporan")}
               sub={
                 <span className="flex items-center gap-1">
-                  <ArrowUpRight className="size-3 text-emerald-700 dark:text-emerald-400" />
-                  Jasa {formatIDR(stats.jasa_amount)} · komisi montir {formatIDR(stats.service_fee_total)}
+                  Laba tunai tanpa oli / service + laba pembayaran piutang
                 </span>
               }
             />
@@ -124,8 +124,7 @@ export default function DashboardPage() {
               onClick={() => navigate("/laporan-kas")}
               sub={
                 <span className="flex items-center gap-1">
-                  <ArrowDownRight className="size-3 text-red-700 dark:text-red-400" />
-                  Setelah komisi montir + pengeluaran {formatIDR(stats.expenses_total)}
+                  Laba kotor − pengeluaran tercatat {formatIDR(stats.expenses_total)}
                 </span>
               }
             />
@@ -159,6 +158,12 @@ export default function DashboardPage() {
             />
           </div>
 
+          <div className="dashboard-inventory">
+            <KpiCard testid="kpi-tire-out" label="Ban Keluar" value={`${stats.tire_qty_out} unit`} sub={`Penjualan TIRE tunai dan tempo tahun ${stats.year}`} />
+            <KpiCard testid="kpi-purchase" label="Pembelian Ban" value={formatIDR(stats.purchase_total)} sub="PURCHASE kategori TIRE pada tanggal barang masuk" />
+            <KpiCard testid="kpi-tire-in" label="Ban Masuk" value={`${stats.tire_qty_in} unit`} sub={`PURCHASE kategori TIRE tahun ${stats.year}`} />
+          </div>
+
           {/* Ringkasan umur tunggakan (aging) */}
           <Card data-testid="aging-summary-card">
             <CardHeader>
@@ -173,8 +178,8 @@ export default function DashboardPage() {
                 ["Hutang distributor", stats.payables_aging, "payables"],
               ] as const).map(([title, data, key]) => (
                 <div key={key} data-testid={`aging-${key}`}>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</p>
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                  <p className="mb-2 text-sm font-semibold text-muted-foreground">{title}</p>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-5">
                     {AGING_BUCKETS.map(([bk, label, tone]) => (
                       <div key={bk} data-testid={`aging-${key}-${bk}`} className={cn("rounded-lg border p-2.5", tone)}>
                         <p className="text-[11px] text-muted-foreground">{label}</p>
@@ -246,7 +251,7 @@ export default function DashboardPage() {
               <CardContent className="space-y-3">
                 {stats.overdue_receivables.length === 0 && stats.overdue_payables.length === 0 ? (
                   <EmptyBlock
-                    title="Aman!"
+                    title="Tidak ada tunggakan"
                     description="Tidak ada tagihan yang lewat jatuh tempo."
                     className="border-0 bg-transparent p-4"
                   />
@@ -260,7 +265,7 @@ export default function DashboardPage() {
                       >
                         <div className="flex items-center justify-between gap-2">
                           <span className="truncate font-semibold">{r.customer_name}</span>
-                          <span className="font-mono text-red-700 dark:text-red-400">{formatIDR(r.amount)}</span>
+                          <span className="font-mono text-red-700 dark:text-red-400">{formatIDR(r.remaining)}</span>
                         </div>
                         <div className="mt-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
                           <span className="font-mono">{r.invoice_number}</span>
@@ -276,7 +281,7 @@ export default function DashboardPage() {
                       >
                         <div className="flex items-center justify-between gap-2">
                           <span className="truncate font-semibold">{p.supplier_name}</span>
-                          <span className="font-mono text-amber-700 dark:text-amber-300">{formatIDR(p.amount)}</span>
+                          <span className="font-mono text-amber-700 dark:text-amber-300">{formatIDR(p.remaining)}</span>
                         </div>
                         <div className="mt-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
                           <span className="font-mono">{p.invoice_number}</span>
@@ -333,7 +338,7 @@ export default function DashboardPage() {
                 ) : (
                   <ul className="space-y-2" data-testid="recent-transactions-list">
                     {stats.recent_transactions.map((t) => (
-                      <li key={t.id} className="flex items-center justify-between gap-2 rounded-lg bg-secondary/50 px-3 py-2 text-sm">
+                      <li key={t.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-secondary/50 px-3 py-2 text-sm">
                         <div className="min-w-0">
                           <p className="truncate font-mono text-xs text-muted-foreground">{t.invoice_number}</p>
                           <p className="truncate font-semibold">{t.customer_name ?? "Umum"}</p>

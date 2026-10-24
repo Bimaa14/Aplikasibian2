@@ -16,6 +16,7 @@ def source_data():
     for cell, value in {'C2':'Tyre','D2':'175/65 14','F2':'Test','G2':2,'H2':10000,'I2':5000,'J2':'IBU','K2':'1','L2':0,'M2':'Tire','Q2':-3,'W2':'Customer','V2':'C1','AE2':'Supplier','AD2':'D1'}.items():
         w['DATABASE'][cell] = value
     w['SELLING CASH']['O2'] = 'IBU'
+    w['SELLING CASH']['P2'] = 1
     for cell, value in {'C2':datetime(2026,9,1),'D2':datetime(2026,8,31),'E2':'Supplier','F2':'1','G2':'PO1','H2':'IBU','I2':'Tyre','J2':2,'L2':5000,'M2':'Cash','N2':10000,'P2':'Tire'}.items():
         w['PURCHASE'][cell]=value
     for cell, value in {'C2':datetime(2026,9,1),'D2':9000,'E2':'BCA'}.items():
@@ -30,7 +31,7 @@ def test_exact_stock_owner_and_tax_from_database():
     p = raw['products'][0]
     assert p['stock'] == -3 and p['source_stock_opening'] == 2
     assert p['owner'] == 'ibu' and p['tax'] == 1 and not p['issue']
-    assert raw['events'][0]['tax_source'] == 'DATABASE.K'
+    assert raw['events'][0]['tax_source'] == 'SELLING CASH.P'
     assert raw['events'][0]['discount_amount'] == 1000
     assert raw['purchases'][0]['invoice_date'] == '2026-08-31'
     assert raw['transfers'][0]['method'] == 'BCA'
