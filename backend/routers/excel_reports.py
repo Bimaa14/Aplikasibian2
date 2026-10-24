@@ -114,7 +114,8 @@ async def live_events(include_imported=True):
                     refund_amount, refund_ratio = n(0), n(0)
             for p in payments:
                 events.append(dict(**meta, date=p['payment_date'], kind=kind, amount=p['amount'],
-                                   profit=p.get('profit_amount', 0), method=p.get('method', 'cash'), payment_id=p.get('id')))
+                                   profit=p.get('profit_amount', 0), method=p.get('method', 'cash'), payment_id=p.get('id'),
+                                   profit_allocation=p.get('profit_allocation') or ('invoice' if p.get('is_down_payment') else None)))
                 if kind == 'credit_payment' and p.get('method', 'cash') != 'cash':
                     transfer = dict(**meta, date=p['payment_date'], kind='transfer', amount=p['amount'],
                                     method=p['method'], payment_id=p.get('id'), origin='credit_payment')
@@ -124,7 +125,9 @@ async def live_events(include_imported=True):
                                        'amount': -float(n(p['amount']) * refund_ratio), 'is_return': True})
             if kind == 'credit_payment' and debt.get('return_date') and refund_amount:
                 events.append(dict(**meta, date=debt['return_date'], kind=kind, amount=-float(refund_amount),
-                                   profit=-sum(p.get('profit_amount', 0) for p in payments), is_return=True))
+                                   profit=-sum(p.get('profit_amount', 0) for p in payments), is_return=True,
+                                   profit_allocation='invoice' if payments and all(
+                                       p.get('profit_allocation') == 'invoice' or p.get('is_down_payment') for p in payments) else None))
     async for e in db.expenses.find({'import_source': {'$exists': False}, 'report_excluded': {'$ne': True}}, {'_id': 0}):
         events.append(dict(date=e['date'], kind='expense', amount=e['amount'], category=e['category'],
                            description=e.get('description', ''), payment_source=e.get('payment_source', 'Cashier')))

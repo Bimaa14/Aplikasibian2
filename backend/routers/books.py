@@ -22,7 +22,7 @@ from routers.excel_reports import live_events
 from lib.sales import sales_report, OwnerFilter, CategoryFilter, TaxFilter
 from models.transaction import PaymentMethod
 from lib.custom_report import get_data_report
-from lib.excel_rules import store_report
+from lib.excel_rules import n, store_report
 from lib.reporting import daily_report
 from lib.workbooks import dataset
 
@@ -76,9 +76,21 @@ async def _daily_inputs(day: str) -> dict:
 async def _daily_data(day: str) -> dict:
     events = await live_events()
     inputs = await _daily_inputs(day)
+    transfers = {}
+    for event in events:
+        if event.get('date') != day or event.get('kind') != 'transfer':
+            continue
+        method = str(event.get('method') or event.get('bank') or 'other').strip().lower()
+        aliases = {'bca': 'transfer_bca', 'bri': 'transfer_bri', 'bni': 'transfer_bni',
+                   'danamon': 'transfer_danamon'}
+        method = aliases.get(method, method)
+        transfers[method] = transfers.get(method, n(0)) + n(event.get('amount'))
     return {
         "date": day,
         **daily_report(events, day, inputs['modal_bian'], inputs['laba_bian']),
+        "receivable_profit": float(sum((n(e.get('profit')) for e in events
+                                        if e.get('date') == day and e.get('kind') == 'credit_payment'), n(0))),
+        "transfer_breakdown": {method: float(value) for method, value in transfers.items()},
         "parameters_saved": inputs['parameters_saved'],
         "months_available": _months_from(events),
     }
@@ -120,12 +132,13 @@ async def _owner_summary(month: str, events=None) -> list:
     for event in events:
         event_owner = event.get('owner')
         if event['kind'] == 'credit_payment' and not event_owner:
-            # W14 recognizes profit for every invoice with this customer/date,
-            # even when the payment is attached to only one native invoice.
-            # An ambiguous group must never inherit that invoice's owner.
             group_key = invoice_key(event)
-            matches = (owner_by_invoice[group_key] if group_key in owner_by_invoice
-                       else owner_by_tx.get(event.get('transaction_id'), set()))
+            transaction_id = event.get('transaction_id')
+            # New receipts use invoice allocation; old W14 receipts retain their group.
+            if event.get('profit_allocation') == 'invoice':
+                matches = owner_by_tx.get(transaction_id, owner_by_invoice.get(group_key, set()))
+            else:
+                matches = owner_by_invoice.get(group_key, owner_by_tx.get(transaction_id, set()))
             if len(matches) == 1:
                 event_owner = next(iter(matches))
         key = event_owner if event_owner in OWNER_LABEL else 'unassigned'

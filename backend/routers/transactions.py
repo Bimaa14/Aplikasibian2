@@ -3,7 +3,7 @@
 import os
 import re
 import uuid
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from typing import List, Optional
 from zoneinfo import ZoneInfo
 
@@ -18,7 +18,7 @@ from pymongo.errors import DuplicateKeyError
 from lib.auth import require_user
 from lib.db import db
 from lib.dates import today_iso
-from models.finance import AccountsReceivable
+from models.finance import AccountsReceivable, Payment
 from models.transaction import Transaction, TransactionCreate, TransactionDetail
 
 router = APIRouter(prefix="/transactions", tags=["transactions"], dependencies=[Depends(require_user)])
@@ -187,11 +187,16 @@ async def _create_transaction(body: TransactionCreate, user: dict, operation: Fi
     total_amount = round(total_amount, 2)
     if body.payment_method == "credit" and total_amount <= 0:
         raise HTTPException(422, "Transaksi tempo harus memiliki total lebih dari nol")
+    if body.payment_method == "credit" and cents(body.down_payment_amount) >= cents(total_amount):
+        raise HTTPException(422, "Uang muka harus lebih kecil dari total transaksi")
     if body.cash_received is not None and body.cash_received < round(total_amount, 2):
         raise HTTPException(422, "Uang diterima kurang dari total transaksi")
 
     now = datetime.now(timezone.utc)
     date_key = today_iso()  # server-side "today" in APP_TZ
+    due_date = body.due_date.isoformat() if body.due_date else None
+    if body.credit_term_days is not None:
+        due_date = (date.fromisoformat(date_key) + timedelta(days=body.credit_term_days)).isoformat()
     tx = Transaction(
         invoice_number="",
         date=now,
@@ -210,7 +215,10 @@ async def _create_transaction(body: TransactionCreate, user: dict, operation: Fi
         service_fee=service_fee,
         total_profit=total_profit,
         spreadsheet_profit=sum(d.spreadsheet_profit for d in details),
-        due_date=body.due_date.isoformat() if body.due_date else None,
+        due_date=due_date,
+        credit_term_days=body.credit_term_days,
+        down_payment_amount=body.down_payment_amount,
+        down_payment_method=body.down_payment_method if body.down_payment_amount else None,
         vehicle_plate=(body.vehicle_plate or "").strip().upper() or None,
     )
 
@@ -244,15 +252,33 @@ async def _create_transaction(body: TransactionCreate, user: dict, operation: Fi
 
     # kredit (tempo) → otomatis buat piutang
     if body.payment_method == "credit":
+        down_payments = []
+        if body.down_payment_amount:
+            profit_cents = max(0, cents(tx.spreadsheet_profit + tx.service_fee))
+            down_payments.append(Payment(
+                id=str(uuid.uuid5(uuid.NAMESPACE_URL, f"checkout-down-payment:{tx.id}")),
+                amount=body.down_payment_amount,
+                payment_date=date_key,
+                method=body.down_payment_method,
+                note="Uang muka saat penjualan",
+                request_id=f"checkout-down-payment:{tx.id}",
+                profit_amount=min(cents(body.down_payment_amount), profit_cents) / 100,
+                profit_is_manual=False,
+                is_down_payment=True,
+                recorded_by=user["id"],
+            ))
         receivable = AccountsReceivable(
             transaction_id=tx.id,
             invoice_number=tx.invoice_number,
             customer_id=body.customer_id or "",
             customer_name=customer_name,
             amount=total_amount,
-            remaining=total_amount,
+            paid_amount=body.down_payment_amount,
+            remaining=(cents(total_amount) - cents(body.down_payment_amount)) / 100,
+            status="partial" if down_payments else "unpaid",
+            payments=down_payments,
             issued_date=date_key,
-            due_date=body.due_date.isoformat() if body.due_date else today_iso(),
+            due_date=due_date,
         )
         await operation.insert("accounts_receivable", receivable.model_dump())
 

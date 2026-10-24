@@ -112,6 +112,22 @@ try {
     }
   }
 
+  for (const paper of ['half', 'full']) {
+    for (const inset of [0, 0.25]) {
+      const html = buildSalesNoteDocument({ ...tx, payment_method: 'credit', down_payment_amount: 100000,
+        down_payment_method: 'transfer_bca', credit_term_days: 40, vehicle_plate: 'D 1234 ABC', cash_received: null, change_amount: null }, { ...DEFAULT_NOTE_SETTINGS, paper });
+      await page.setContent(html);
+      if (inset) await page.addStyleTag({ content: `@page { margin: ${inset / 2}in; }` });
+      const path = resolve(artifacts, `credit-dp-${paper}-${inset}.pdf`);
+      await page.pdf({ path, preferCSSPageSize: true, displayHeaderFooter: false });
+      const result = inspectPdf(path);
+      assert.equal(result.pages, 1, `credit DP ${paper} inset=${inset}: ${JSON.stringify(await page.evaluate(() => Object.fromEntries(['header', 'table', '.bottom', '.summary', '.notice', '.totals', '.signatures'].map(selector => { const bounds = document.querySelector(selector).getBoundingClientRect(); return [selector, { top: bounds.top, height: bounds.height, bottom: bounds.bottom }]; }))))}`);
+      assert.equal(result.images, 0);
+      for (const expected of ['410.000,00', '100.000,00', '310.000,00', 'Transfer BCA', 'Sisa piutang awal', '40 hari', 'D 1234 ABC']) assert(result.text.includes(expected), `Missing DP field: ${expected}`);
+      if (paper === 'half' && !inset) await page.screenshot({ path: resolve(artifacts, 'credit-dp-half.png'), clip: { x: 0, y: 0, width: 913, height: 528 } });
+    }
+  }
+
   for (const payment_method of ['cash', 'edc', 'transfer_bca', 'transfer_bri', 'transfer_bni', 'qris']) {
     const html = buildSalesNoteDocument({ ...tx, payment_method, cash_received: null, change_amount: null }, DEFAULT_NOTE_SETTINGS);
     await page.setContent(html);

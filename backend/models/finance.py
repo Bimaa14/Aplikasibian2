@@ -12,7 +12,7 @@ class PaymentInput(BaseModel):
     method: Literal['cash', 'transfer', 'edc', 'transfer_bca', 'transfer_bri', 'transfer_bni', 'qris'] = 'cash'
     note: str = Field(default='', max_length=500)
     request_id: str = Field(min_length=8, max_length=100)
-    profit_amount: Optional[float] = Field(default=None, allow_inf_nan=False)
+    profit_amount: Optional[float] = Field(default=None, ge=0, le=1e12, allow_inf_nan=False, multiple_of=0.01)
 
 
 class Payment(BaseModel):
@@ -21,9 +21,11 @@ class Payment(BaseModel):
     payment_date: str
     method: str
     note: str = ''
-    request_id: str
+    request_id: str = ''
     profit_amount: float = 0
     profit_is_manual: Optional[bool] = None
+    profit_allocation: Optional[Literal['invoice']] = None
+    is_down_payment: bool = False
     recorded_by: str = ''
 
 
@@ -48,8 +50,17 @@ class DebtBase(BaseModel):
 class AccountsReceivable(DebtBase):
     transaction_id: str
     invoice_number: str = ''
-    customer_id: str
+    customer_id: str = ''
     customer_name: str = ''
+
+
+class CustomerReceivableSummary(BaseModel):
+    customer_id: Optional[str] = None
+    customer_name: str = ''
+    total_credit: float = 0
+    total_paid: float = 0
+    outstanding: float = 0
+    invoice_count: int = 0
 
 
 class AccountsPayable(DebtBase):

@@ -8,7 +8,7 @@ import { createServer } from 'vite';
 
 process.env.DISABLE_VISUAL_EDITS = 'true';
 process.env.DISABLE_EMERGENT_OVERLAY = 'true';
-const artifacts = resolve(`../test_reports/nota/payment-print-${Date.now()}`);
+const artifacts = resolve(`../test_reports/nota/excel-alignment-${Date.now()}`);
 await mkdir(artifacts, { recursive: true });
 const dependencyDirectory = await realpath(resolve('node_modules'));
 const vite = await createServer({ server: { host: '127.0.0.1', port: 3101, strictPort: true,
@@ -50,6 +50,7 @@ try {
     executablePath: process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true,
   });
   const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
+  await page.addInitScript(() => { window.print = () => {}; });
   await page.setContent(html);
   assert.equal(await page.locator('.store-logo').count(), 0);
   await page.screenshot({ path: resolve(artifacts, 'nota-contoh.png'), clip: { x: 0, y: 0, width: 913, height: 529 } });
@@ -93,7 +94,9 @@ try {
         const qty = submitted.items[0].qty;
         const discount = submitted.items[0].discount_per_unit * qty;
         const total = price * qty - discount - submitted.discount_total;
-        data = { ...tx, id: `checkout-${savedTransactions.length}`, invoice_number: `INV-TEST-${savedTransactions.length}`, payment_method: submitted.payment_method, due_date: submitted.due_date, discount_total: discount + submitted.discount_total,
+        const dueDate = submitted.credit_term_days ? new Date(Date.parse('2026-09-29T12:00:00Z') + submitted.credit_term_days * 86400000).toISOString().slice(0, 10) : submitted.due_date;
+        data = { ...tx, id: `checkout-${savedTransactions.length}`, invoice_number: `INV-TEST-${savedTransactions.length}`, payment_method: submitted.payment_method, due_date: dueDate, credit_term_days: submitted.credit_term_days,
+          down_payment_amount: submitted.down_payment_amount, down_payment_method: submitted.down_payment_method, discount_total: discount + submitted.discount_total,
           total_amount: total, cash_received: submitted.cash_received, change_amount: submitted.cash_received == null ? null : submitted.cash_received - total,
           details: [{ ...tx.details[0], price, qty, discount_per_unit: submitted.items[0].discount_per_unit, discount_amount: discount, credit_surcharge: submitted.items[0].credit_surcharge, subtotal: total }] };
         savedTransactions.unshift(data);
@@ -155,11 +158,11 @@ try {
   await page.goto('http://127.0.0.1:3101/#/pos');
   await page.getByTestId('pos-product-card-b_0299').click();
   await page.getByTestId('cart-increment-b_0299').click();
-  await page.getByTestId('cart-checkout-button').click();
+  await page.getByTestId('checkout-panel').waitFor();
   await page.getByTestId('item-discount-p1').fill('175001');
   assert(await page.getByTestId('checkout-submit-button').isDisabled());
   await page.getByTestId('item-discount-p1').fill('5000');
-  assert((await page.getByTestId('checkout-net-total').innerText()).includes('340.000'));
+  assert((await page.getByTestId('cart-total').innerText()).includes('340.000'));
   assert.equal(await page.getByTestId('checkout-discount').count(), 0);
   await page.getByTestId('checkout-cash-received').fill('100000');
   assert(await page.getByTestId('checkout-submit-button').isDisabled());
@@ -175,11 +178,11 @@ try {
   assert((await note.locator('.totals').innerText()).includes('Rp60.000,00'));
   await page.getByTestId('close-receipt-btn').click();
   await page.getByTestId('pos-product-card-b_0299').click();
-  await page.getByTestId('cart-checkout-button').click();
+  await page.getByTestId('checkout-panel').waitFor();
   assert.equal(await page.getByTestId('item-discount-p1').inputValue(), '0');
   await page.getByTestId('checkout-payment-method').selectOption('edc');
   await page.getByTestId('item-discount-p1').fill('25000');
-  assert((await page.getByTestId('checkout-net-total').innerText()).includes('150.000'));
+  assert((await page.getByTestId('cart-total').innerText()).includes('150.000'));
   assert.equal(await page.getByTestId('checkout-cash-received').inputValue(), '150000');
   await page.getByTestId('checkout-submit-button').click();
   await page.getByTestId('sales-note-dialog').waitFor();
@@ -191,7 +194,7 @@ try {
   await page.getByTestId('close-receipt-btn').click();
   for (const method of ['edc', 'transfer_bca', 'transfer_bri', 'transfer_bni', 'qris']) {
     await page.getByTestId('pos-product-card-b_0299').click();
-    await page.getByTestId('cart-checkout-button').click();
+    await page.getByTestId('checkout-panel').waitFor();
     await page.getByTestId('checkout-payment-method').selectOption(method);
     await page.getByTestId('item-discount-p1').fill('25000');
     const received = page.getByTestId('checkout-cash-received');
@@ -211,7 +214,7 @@ try {
         await page.evaluate(value => document.documentElement.classList.toggle('dark', value === 'dark'), theme);
         for (const width of [390, 768, 1280]) {
           await page.setViewportSize({ width, height: 1000 });
-          const box = await page.getByTestId('checkout-dialog').boundingBox();
+          const box = await page.getByTestId('checkout-panel').boundingBox();
           assert(box.x >= 0 && box.x + box.width <= width, `${theme}/${width}: checkout fits`);
           assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${theme}/${width}: no page overflow`);
           await received.focus();
@@ -240,23 +243,27 @@ try {
     await page.goto('http://127.0.0.1:3101/#/pos');
   }
   await page.getByTestId('pos-product-card-b_0299').click();
-  await page.getByTestId('cart-checkout-button').click();
-  await page.getByTestId('checkout-payment-method').selectOption('credit');
+  await page.getByTestId('payment-credit-btn').click();
   assert.equal(await page.getByTestId('checkout-cash-received').count(), 0);
-  await page.getByLabel('Tambahan tempo Spooring').fill('15000');
-  await page.getByTestId('item-discount-p1').fill('10000');
-  assert((await page.getByTestId('checkout-net-total').innerText()).includes('180.000'));
-  await page.getByTestId('checkout-customer-select').click();
-  await page.getByRole('option', { name: 'Pelanggan Uji' }).click();
-  await page.getByTestId('checkout-due-date-input').fill('2099-10-10');
+  assert.equal(await page.getByTestId('item-discount-p1').count(), 0);
+  assert(await page.getByTestId('checkout-payment-method').isDisabled());
+  await page.getByTestId('surcharge-p1').fill('15000');
+  assert((await page.getByTestId('cart-total').innerText()).includes('190.000'));
+  await page.getByTestId('checkout-customer-select').selectOption('c1');
+  await page.getByTestId('checkout-term-days').fill('40');
   await page.getByTestId('checkout-submit-button').click();
   await page.getByTestId('sales-note-dialog').waitFor();
   await note.getByRole('heading', { name: 'Nota Penjualan Tempo' }).waitFor();
   assert.equal(submitted.items[0].credit_surcharge, 15000);
   assert.equal(submitted.discount_total, 0);
-  assert.equal(submitted.items[0].discount_per_unit, 10000);
+  assert.equal(submitted.items[0].discount_per_unit, 0);
+  assert.equal(submitted.credit_term_days, 40);
+  assert.equal(submitted.due_date, null);
+  assert.equal(submitted.down_payment_amount, 0);
+  assert.equal(submitted.down_payment_method, null);
   assert.equal(submitted.cash_received, null);
-  assert((await note.locator('.totals').innerText()).includes('Rp180.000,00'));
+  assert((await note.locator('.totals').innerText()).includes('Rp190.000,00'));
+  assert((await note.locator('.recipient').innerText()).includes('08/11/2026 (40 hari)'));
   await page.getByLabel('Kertas', { exact: true }).selectOption('half');
   await page.waitForFunction(() => document.querySelector('iframe')?.contentDocument?.querySelector('style')?.textContent.includes('min-height:139.7mm'));
   const tempoHtml = await page.locator('iframe').getAttribute('srcdoc');

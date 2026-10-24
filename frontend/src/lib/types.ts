@@ -72,6 +72,9 @@ export interface Transaction {
   discount_total?: number;
   cash_received?: number | null;
   change_amount?: number | null;
+  credit_term_days?: number | null;
+  down_payment_amount?: number;
+  down_payment_method?: Exclude<PaymentMethod, "credit"> | null;
   id: string;
   invoice_number: string;
   date: string;

@@ -9,13 +9,16 @@ import { formatIDR, getApiErrorMessage, todayLocalISO } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import MonthlySalesView from './MonthlySalesView';
 import SalesFilters, { initialSalesFilters, salesFilterQuery } from '@/components/SalesFilters';
+import { printDailyReport } from '@/lib/daily-report-print';
 
 type DailyReport = {
   non_cash_sales: number;
   date: string;
   cash_sales: number;
   receivable_payments: number;
+  receivable_profit: number;
   transfer_payments: number;
+  transfer_breakdown: Record<string, number>;
   montir_fee: number;
   expenses: number;
   net_cash: number;
@@ -72,13 +75,13 @@ function Row({ label, value, tone = "plain", strong = false, sub }: { label: str
   );
 }
 
-function ReportActions({ csvHref, testid, disabled }: { csvHref: string; testid: string; disabled: boolean }) {
+function ReportActions({ csvHref, testid, disabled, onPrint }: { csvHref: string; testid: string; disabled: boolean; onPrint?: () => void }) {
   return (
     <div className="report-actions flex flex-wrap items-center gap-2 print:hidden">
       <button type="button" data-testid={`${testid}-csv-button`} disabled={disabled} onClick={() => { const link = document.createElement('a'); link.href = csvHref; link.click(); }} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60">
         <Download className="size-4" /> Unduh CSV
       </button>
-      <button type="button" data-testid={`${testid}-print-button`} disabled={disabled} onClick={() => window.print()} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60">
+      <button type="button" data-testid={`${testid}-print-button`} disabled={disabled} onClick={onPrint ?? (() => window.print())} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60">
         <Printer className="size-4" /> Cetak
       </button>
     </div>
@@ -89,6 +92,14 @@ function DailyView() {
   const today = todayLocalISO();
   const [date, setDate] = useState(today);
   const q = useQuery({ queryKey: ["books-daily", date], queryFn: () => apiGet<DailyReport>(`/books/daily?date=${date}`) });
+  const [printing, setPrinting] = useState(false);
+  async function printReport() {
+    if (!q.data || printing) return;
+    setPrinting(true);
+    try { await printDailyReport(q.data); }
+    catch (error) { toast.error(getApiErrorMessage(error)); }
+    finally { setPrinting(false); }
+  }
   return (
     <div className="space-y-4">
       <div className="page-toolbar flex flex-wrap items-center justify-between gap-3">
@@ -96,7 +107,7 @@ function DailyView() {
           <label htmlFor="daily-report-date" className="text-sm text-muted-foreground">Tanggal</label>
           <input id="daily-report-date" type="date" data-testid="daily-date-input" className="bk-control w-auto" value={date} max={today} onChange={(e) => setDate(e.target.value)} />
         </div>
-        <ReportActions csvHref={fileUrl(`/books/daily/csv?date=${date}`)} testid="daily" disabled={!q.data || q.isPending || q.isError} />
+        <ReportActions csvHref={fileUrl(`/books/daily/csv?date=${date}`)} testid="daily" disabled={!q.data || q.isPending || q.isError || printing} onPrint={() => void printReport()} />
       </div>
       {q.isPending ? <LoadingBlock /> : q.isError ? <ErrorBlock error={q.error} onRetry={() => void q.refetch()} /> : q.data && (
         <div className="grid min-w-0 gap-5 xl:grid-cols-2" data-testid="daily-report">
@@ -119,6 +130,7 @@ function DailyView() {
             <p className="mb-2 px-1 text-sm font-semibold">Modal dan Laba</p>
             <Row label="Modal toko" value={formatIDR(q.data.modal)} strong />
             <Row label="Laba toko" value={formatIDR(q.data.laba)} strong sub="Setelah pengeluaran kasir dan laba Bian" />
+            <Row label="Termasuk laba dari pembayaran piutang" value={formatIDR(q.data.receivable_profit)} sub="Uang muka dan cicilan tanggal ini; sudah termasuk laba toko di atas" />
             <Row label="Spooring / Service" value={formatIDR(q.data.spooring)} />
             <p className="mt-2 px-1 text-xs text-muted-foreground">Mengikuti rincian DAILY REPORT: modal toko, laba setelah pengeluaran kasir, dan spooring termasuk komisi tempo.</p>
           </div>
