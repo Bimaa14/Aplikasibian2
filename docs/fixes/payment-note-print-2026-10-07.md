@@ -1,31 +1,22 @@
-# Pembayaran diterima dan teks nota
+# Pembayaran diterima dan cetak nota
 
-Perbaikan ini disiapkan dari commit `4280cd0` untuk pembayaran berlebih dan hasil cetak yang sulit dibaca. Perubahan lokal lain pada laporan, perhitungan harga, dan tampilan aplikasi tidak disertakan.
+Pembayaran cash, EDC, BCA, Mandiri, BRI, dan transfer dapat menyimpan nominal sebenarnya yang diterima. Total penjualan tetap mengikuti barang dan potongan; selisih disimpan terpisah. Nota tunai menampilkan kembalian, sedangkan nota non-tunai menampilkan kelebihan pembayaran. Pembayaran tempo tetap mengikuti alur piutang.
 
-## Perubahan
+Cetak nota menggunakan teks Arial asli dengan ukuran minimal 10 pt, tanpa text stroke. Huruf tebal dipakai untuk judul dan total. Print menunggu dokumen siap, dan dokumen yang sudah ditutup tidak dapat memicu cetak berikutnya. Ukuran setengah/penuh serta pengaturan area cetak tetap tersedia.
 
-- Tunai, EDC, transfer BCA/BRI/BNI, dan QRIS menerima nominal pembayaran sebenarnya, termasuk jika melebihi tagihan. Nominal serta selisih disimpan untuk cetak ulang.
-- Data lama yang tidak memiliki nominal pembayaran tetap ditandai Tidak tercatat. Penjualan dan retur tetap mengikuti tagihan.
-- Nota langsung/tempo memakai Arial reguler 10 sampai 11 pt tanpa stroke tambahan pada huruf. Judul/header/total mempertahankan huruf tebal untuk hierarki.
-- Ruang kosong tabel disesuaikan agar nota pendek tetap satu halaman dengan huruf yang terbaca.
-- Cetak menunggu font/layout, membatalkan operasi ketika nota ditutup/diganti, dan memulihkan tombol setelah dibuka ulang.
+## Verifikasi pada Demo-Bian
 
-## Verifikasi pada versi yang dikirim
+- PASS: build produksi dan lint.
+- PASS: 49 regresi backend memakai database Mongo lokal terisolasi; pembayaran berlebih, validasi nominal, cetak ulang, idempotensi, stok, dan retur.
+- PASS: browser kasir untuk semua metode langsung, nominal pas/berlebih/invalid, cetak ulang, tempo, potongan per unit, keyboard, serta viewport 390/768/1280 dalam tema terang/gelap. API uji memakai fixture.
+- PASS: 12 PDF pendek pada ukuran setengah/penuh dan area cetak 0/0,25 inci masing-masing satu halaman; dua PDF 50 barang mempertahankan seluruh teks dan total. Font berupa teks asli, tanpa gambar raster.
+- PASS: printer browser untuk tutup/buka ulang serta frame terlambat.
+- PASS antislop: arah kasir Perkasa Jaya yang sudah ada dipertahankan; label selisih mengikuti metode, feedback terhubung ke input, keyboard dan reflow diuji.
 
-- PASS: `npm run build`, TypeScript dan build produksi selesai.
-- PASS: 49 regresi backend untuk nominal diterima, seluruh metode langsung, input tidak valid, request berulang, data lama, cetak ulang, penjualan, dan retur. Database pengujian acak dibuang setelah tes.
-- PASS: `node tests/sales-note.browser.mjs`, memakai API tiruan. Enam metode langsung, nominal lebih, validasi, reset Uang pas, cetak ulang, tempo tanpa nominal diterima, kontrol cetak/PDF, Escape, Tab, serta dialog pada 390/768/1280 px dalam dua tema lulus tanpa page error.
-- PASS: `node tests/note-print-quality.browser.mjs`, memakai data tiruan. Dua belas PDF pendek tunai/transfer/tempo pada kedua ukuran kertas, termasuk simulasi area cetak lebih kecil, tetap satu halaman. Dua PDF 50 barang mempertahankan semua barang dan total.
-- PASS: harga minimal 10 pt reguler, stroke nol, tanpa filter/transform/shadow. PDF berisi font asli dan nol gambar raster.
-- PASS: menutup nota saat menunggu font/frame membatalkan cetak lama; membuka ulang dapat mencetak sekali. Frame terlambat pulih melalui batas waktu.
-- PASS: gambar nota transfer akhir diperiksa langsung; jumlah diterima Rp500.000 dan kelebihan Rp90.000 tampil jelas pada fixture tagihan Rp410.000.
-- PASS: pemeriksaan whitespace dan lint file printer selesai tanpa error. Build masih memberi peringatan ukuran bundle yang sudah tersedia.
+Artefak lokal: `test_reports/nota/payment-print-1791376526097` dan `test_reports/nota/print-quality-1791376385147`. Printer fisik belum diuji; lakukan satu cetak nyata menggunakan form dan orientasi yang cocok di driver.
 
-## Delivery Gate untuk perubahan ini
+## Target deployment
 
-- Hard Gate PASS: input berlabel dan memiliki validasi yang diumumkan; loading/error cetak tersedia; Tab/Escape dan ukuran dialog diuji; teks nota hitam/putih memiliki kontras 21:1; data transaksi tidak dikarang; tidak ada aset atau navigasi baru.
-- Purpose Gate PASS: Arial reguler dan ukuran 10 sampai 11 pt meningkatkan keterbacaan; tebal terbatas pada hierarki; spasi footer menjaga ukuran form; ikon cetak/PDF tetap menandai tindakan yang nyata.
-- Liveliness PASS: format kasir/nota Perkasa Jaya dipertahankan dengan ENERGY 1 / RHYTHM 1 / MOTION 1. Total menjadi fokus, tabel mengikuti rincian, dan ruang kosong dipakai untuk struktur dokumen.
-- Craftsmanship/Quality Locks PASS: perilaku keenam metode dan kontrol cetak diuji; nilai tagihan/retur tidak berubah karena nominal lebih; tema dan lebar dialog diperiksa; tidak menambahkan bagian dekoratif atau klaim tanpa bukti.
+Repo produksi: `Bimaa14/Demo-Bian`, branch `main`. Railway: project `sublime-reflection`, service `bian-client-demo`, environment `production`.
 
-Printer fisik pengguna belum diuji. Verifikasi di atas menguji source, browser, font PDF, isi nota, dan ukuran halaman.
+Docker mengaktifkan `CLOUD_SINGLE_WRITER=true`. Hentikan deployment aktif secara graceful dan tunggu Offline sebelum menjalankan penggantinya agar lock database dilepas. Jangan menghapus lock saat proses lama masih berjalan. Perubahan ini tidak membutuhkan migrasi workbook atau data laporan.

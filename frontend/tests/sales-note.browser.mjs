@@ -1,7 +1,7 @@
 // Run from frontend: npm install --no-save --package-lock=false playwright
 // CHROME_PATH may override the locally installed browser. No production API is called.
 import assert from 'node:assert/strict';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, realpath, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
 import { createServer } from 'vite';
@@ -10,7 +10,9 @@ process.env.DISABLE_VISUAL_EDITS = 'true';
 process.env.DISABLE_EMERGENT_OVERLAY = 'true';
 const artifacts = resolve(`../test_reports/nota/excel-alignment-${Date.now()}`);
 await mkdir(artifacts, { recursive: true });
-const vite = await createServer({ server: { host: '127.0.0.1', port: 3101, strictPort: true } });
+const dependencyDirectory = await realpath(resolve('node_modules'));
+const vite = await createServer({ server: { host: '127.0.0.1', port: 3101, strictPort: true,
+  fs: { allow: [process.cwd(), dependencyDirectory] } } });
 let browser;
 try {
   await vite.listen();

@@ -1,5 +1,6 @@
 // Generated fixtures only; this check never calls the operational API or a physical printer.
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 import { mkdir, realpath, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
@@ -9,10 +10,16 @@ import { createServer } from 'vite';
 process.env.DISABLE_VISUAL_EDITS = 'true';
 process.env.DISABLE_EMERGENT_OVERLAY = 'true';
 const artifacts = resolve(`../test_reports/nota/print-quality-${Date.now()}`);
-const python = resolve('../backend/venv/Scripts/python.exe');
+const pythonRelativePath = process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python';
+const python = process.env.PYTHON || ['../backend/venv', '../backend/.venv', '../.venv']
+  .map(directory => resolve(directory, pythonRelativePath)).find(existsSync)
+  || (process.platform === 'win32' ? 'python' : 'python3');
+const windowsChrome = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+const chrome = process.env.CHROME_PATH || (process.platform === 'win32' && existsSync(windowsChrome) ? windowsChrome : undefined);
+const port = Number(process.env.NOTE_TEST_PORT || 3103);
 await mkdir(artifacts, { recursive: true });
 const dependencyDirectory = await realpath(resolve('node_modules'));
-const vite = await createServer({ server: { host: '127.0.0.1', port: 3103, strictPort: true,
+const vite = await createServer({ server: { host: '127.0.0.1', port, strictPort: true,
   fs: { allow: [process.cwd(), dependencyDirectory] } } });
 let browser;
 
@@ -36,7 +43,7 @@ print(json.dumps({'pages':len(r.pages),'width':float(r.pages[0].mediabox.width),
 try {
   await vite.listen();
   const { buildSalesNoteDocument, DEFAULT_NOTE_SETTINGS } = await vite.ssrLoadModule('/src/lib/sales-note.ts');
-  browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true });
+  browser = await chromium.launch({ executablePath: chrome, headless: true });
   const page = await browser.newPage({ viewport: { width: 1000, height: 1200 } });
   const tx = {
     invoice_number: 'INV-PRINT-UJI', date_key: '2026-10-07', status: 'completed', customer_name: 'Pelanggan Uji',
@@ -151,7 +158,7 @@ try {
     if (path === '/api/transactions') data = [{ ...tx, id: 'printer-fixture', date: '2026-10-07T03:00:00Z', payment_method: 'cash', due_date: null }];
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(data) });
   });
-  await page.goto('http://127.0.0.1:3103/#/transaksi');
+  await page.goto(`http://127.0.0.1:${port}/#/transaksi`);
   const reprint = page.getByTitle('Cetak Ulang Nota');
   const print = page.getByTestId('print-receipt-btn');
   const ready = () => page.waitForFunction(() => document.querySelector('[data-testid="print-receipt-btn"]')?.disabled === false);

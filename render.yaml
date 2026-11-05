@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+# Create this service only against an isolated, disposable demo database.
+previews:
+  generation: "off"
+
+services:
+  - type: web
+    name: bian-client-demo
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeployTrigger: "off"
+    numInstances: 1
+    healthCheckPath: /healthz
+    maxShutdownDelaySeconds: 120
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: bian_client_demo
+      - key: APP_TZ
+        value: Asia/Jakarta
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: COOKIE_SAMESITE
+        value: lax
+      - key: CLOUD_SINGLE_WRITER
+        value: "true"
+      - key: CORS_ORIGINS
+        value: ""
+      - key: FRONTEND_DIST
+        value: /app/frontend/dist
+      - key: WORKBOOK_DIR
+        value: /app/imports/workbooks
+      - key: ENABLE_API_DOCS
+        value: "false"
+      - key: DEMO_SETUP_KEY
+        sync: false
