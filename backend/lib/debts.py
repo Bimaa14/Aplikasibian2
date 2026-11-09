@@ -40,7 +40,7 @@ async def pay(collection, debt_id, body, user):
         d = hydrate(raw)
         existing = next((p for p in d['payments'] if p.get('request_id') == body.request_id), None)
         if existing:
-            if (any(existing.get(k) != getattr(body, k) for k in ('amount', 'method', 'note'))
+            if (any(existing.get(k) != getattr(body, k) for k in ('amount', 'method', 'note', 'cash_amount', 'transfer_amount', 'transfer_method'))
                     or existing['payment_date'] != body.payment_date.isoformat()
                     or (body.profit_amount is not None and existing['profit_amount'] != body.profit_amount)
                     or (existing.get('profit_is_manual') is not None

@@ -189,9 +189,16 @@ async def _create_transaction(body: TransactionCreate, user: dict, operation: Fi
         raise HTTPException(422, "Transaksi tempo harus memiliki total lebih dari nol")
     if body.payment_method == "credit" and cents(body.down_payment_amount) >= cents(total_amount):
         raise HTTPException(422, "Uang muka harus lebih kecil dari total transaksi")
-    if body.cash_received is not None and body.cash_received < round(total_amount, 2):
+    if body.payment_method == "mix":
+        if cents(body.cash_amount or 0) + cents(body.transfer_amount or 0) != cents(total_amount):
+            raise HTTPException(422, "Jumlah tunai dan transfer harus sama dengan total transaksi")
+    min_cash_target = round(body.cash_amount or 0, 2) if body.payment_method == "mix" else round(total_amount, 2)
+    if body.cash_received is not None and body.cash_received < min_cash_target:
         raise HTTPException(422, "Uang diterima kurang dari total transaksi")
 
+    has_mix = body.payment_method == "mix" or (
+        body.payment_method == "credit" and bool(body.down_payment_amount) and body.down_payment_method == "mix"
+    )
     now = datetime.now(timezone.utc)
     date_key = today_iso()  # server-side "today" in APP_TZ
     due_date = body.due_date.isoformat() if body.due_date else None
@@ -208,7 +215,10 @@ async def _create_transaction(body: TransactionCreate, user: dict, operation: Fi
         total_amount=total_amount,
         discount_total=sum(discounts.values()) / 100,
         cash_received=body.cash_received,
-        change_amount=max(0, round(body.cash_received - total_amount, 2)) if body.cash_received is not None else None,
+        change_amount=max(0, round(body.cash_received - min_cash_target, 2)) if body.cash_received is not None else None,
+        cash_amount=body.cash_amount if has_mix else None,
+        transfer_amount=body.transfer_amount if has_mix else None,
+        transfer_method=body.transfer_method if has_mix else None,
         barang_amount=barang_amount,
         jasa_amount=jasa_amount,
         total_cost=total_cost,
@@ -255,11 +265,15 @@ async def _create_transaction(body: TransactionCreate, user: dict, operation: Fi
         down_payments = []
         if body.down_payment_amount:
             profit_cents = max(0, cents(tx.spreadsheet_profit + tx.service_fee))
+            dp_is_mix = body.down_payment_method == "mix"
             down_payments.append(Payment(
                 id=str(uuid.uuid5(uuid.NAMESPACE_URL, f"checkout-down-payment:{tx.id}")),
                 amount=body.down_payment_amount,
                 payment_date=date_key,
                 method=body.down_payment_method,
+                cash_amount=body.cash_amount if dp_is_mix else None,
+                transfer_amount=body.transfer_amount if dp_is_mix else None,
+                transfer_method=body.transfer_method if dp_is_mix else None,
                 note="Uang muka saat penjualan",
                 request_id=f"checkout-down-payment:{tx.id}",
                 profit_amount=min(cents(body.down_payment_amount), profit_cents) / 100,

@@ -63,11 +63,11 @@ def _valid_month(m: str) -> bool:
     return len(m) == 7 and _valid_date(m + '-01')
 
 
-async def _daily_inputs(day: str) -> dict:
+async def _daily_inputs(day: str, has_imported: bool = True) -> dict:
     saved = await db.books_daily_parameters.find_one({'_id': day}, {'_id': 0})
     if saved:
         return {**saved, 'parameters_saved': True}
-    source = (await asyncio.to_thread(dataset, 'store_current')).get('daily_inputs') or {}
+    source = ((await asyncio.to_thread(dataset, 'store_current')).get('daily_inputs') or {}) if has_imported else {}
     defaults = source if source.get('date') == day else {}
     return dict(date=day, modal_bian=defaults.get('modal_bian', 0),
                 laba_bian=defaults.get('laba_bian', 0), parameters_saved=False)
@@ -75,7 +75,8 @@ async def _daily_inputs(day: str) -> dict:
 
 async def _daily_data(day: str) -> dict:
     events = await live_events()
-    inputs = await _daily_inputs(day)
+    has_imported = any(e.get('import_source') == 'store_current' for e in events)
+    inputs = await _daily_inputs(day, has_imported=has_imported)
     transfers = {}
     for event in events:
         if event.get('date') != day or event.get('kind') != 'transfer':

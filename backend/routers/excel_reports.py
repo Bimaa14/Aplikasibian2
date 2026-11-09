@@ -64,6 +64,11 @@ async def live_events(include_imported=True):
         imported = bool(t.get('import_source'))
         if t.get('import_source') == 'store_current' and sale_source is None:
             sale_source = await asyncio.to_thread(reference_sale_rows)
+        mix_ratio = (
+            float(n(t.get('transfer_amount', 0)) / n(t['total_amount']))
+            if t.get('payment_method') == 'mix' and n(t.get('total_amount')) > 0
+            else None
+        )
         for d in by_tx.get(t['id'], []):
             if sale_source is not None:
                 d = overlay_sale_detail(t, d, sale_source)
@@ -78,15 +83,22 @@ async def live_events(include_imported=True):
                      qty=d['qty'], name=d['product_name'], product_id=d['product_id'],
                      cost=values['spreadsheet_cost'], price=d['price'], base_price=d.get('base_price') if d.get('base_price') is not None else d['price'],
                      cash_subtotal=values['cash_subtotal'])
+            if mix_ratio is not None:
+                e['non_cash_amount'] = round(d['subtotal'] * mix_ratio, 2)
             if imported:
                 e.update(import_source=t['import_source'], source_sheet=d.get('source_sheet'), source_row=d.get('source_row'))
             else:
                 events.append(e)
             if t.get('return_date'):
-                events.append({**e, 'date': t['return_date'], 'amount': -e['amount'], 'fee': -e['fee'],
-                               'profit': -e['profit'], 'qty': -e['qty'], 'cash_subtotal': -e['cash_subtotal'], 'is_return': True})
+                ret_event = {**e, 'date': t['return_date'], 'amount': -e['amount'], 'fee': -e['fee'],
+                             'profit': -e['profit'], 'qty': -e['qty'], 'cash_subtotal': -e['cash_subtotal'], 'is_return': True}
+                if 'non_cash_amount' in e:
+                    ret_event['non_cash_amount'] = -e['non_cash_amount']
+                events.append(ret_event)
         if not imported and t['payment_method'] not in ('cash', 'credit'):
-            transfer = dict(date=t['date_key'], kind='transfer', amount=t['total_amount'], method=t['payment_method'],
+            transfer_amt = t.get('transfer_amount') or 0 if t['payment_method'] == 'mix' else t['total_amount']
+            transfer_mth = t.get('transfer_method') or 'transfer_bca' if t['payment_method'] == 'mix' else t['payment_method']
+            transfer = dict(date=t['date_key'], kind='transfer', amount=transfer_amt, method=transfer_mth,
                             transaction_id=t['id'], origin='transaction')
             events.append(transfer)
             if t.get('return_date'):
@@ -114,15 +126,19 @@ async def live_events(include_imported=True):
                     refund_amount, refund_ratio = n(0), n(0)
             for p in payments:
                 events.append(dict(**meta, date=p['payment_date'], kind=kind, amount=p['amount'],
-                                   profit=p.get('profit_amount', 0), method=p.get('method', 'cash'), payment_id=p.get('id'),
+                                   profit=p.get('profit_amount', 0), method=p.get('method', 'cash'),
+                                   cash_amount=p.get('cash_amount'), transfer_amount=p.get('transfer_amount'),
+                                   transfer_method=p.get('transfer_method'), payment_id=p.get('id'),
                                    profit_allocation=p.get('profit_allocation') or ('invoice' if p.get('is_down_payment') else None)))
                 if kind == 'credit_payment' and p.get('method', 'cash') != 'cash':
-                    transfer = dict(**meta, date=p['payment_date'], kind='transfer', amount=p['amount'],
-                                    method=p['method'], payment_id=p.get('id'), origin='credit_payment')
+                    transfer_amt = p.get('transfer_amount') or 0 if p.get('method') == 'mix' else p['amount']
+                    transfer_mth = p.get('transfer_method') or 'transfer_bca' if p.get('method') == 'mix' else p['method']
+                    transfer = dict(**meta, date=p['payment_date'], kind='transfer', amount=transfer_amt,
+                                    method=transfer_mth, payment_id=p.get('id'), origin='credit_payment')
                     events.append(transfer)
                     if debt.get('return_date') and refund_amount:
                         events.append({**transfer, 'date': debt['return_date'],
-                                       'amount': -float(n(p['amount']) * refund_ratio), 'is_return': True})
+                                       'amount': -float(n(transfer_amt) * refund_ratio), 'is_return': True})
             if kind == 'credit_payment' and debt.get('return_date') and refund_amount:
                 events.append(dict(**meta, date=debt['return_date'], kind=kind, amount=-float(refund_amount),
                                    profit=-sum(p.get('profit_amount', 0) for p in payments), is_return=True,
@@ -173,8 +189,9 @@ async def reports(month: str = Query(pattern=r'^\d{4}-(0[1-9]|1[0-2])$'), origin
     saved = bool(parameters)
     current_events = [e for e in events if e['date'][:7] == month]
     from lib.reporting import daily_report
+    has_store_current = any(e.get('import_source') == 'store_current' for e in events)
     reference = await asyncio.to_thread(dataset, 'store_current')
-    defaults = reference.get('daily_inputs') or {}
+    defaults = (reference.get('daily_inputs') or {}) if has_store_current else {}
     overrides = await db.books_daily_parameters.find({'date': {'$regex': '^' + month}}, {'_id': 0}).to_list(None)
     by_date = {o['date']: o for o in overrides}
     dates = {e['date'] for e in current_events} | set(by_date)

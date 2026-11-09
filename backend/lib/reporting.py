@@ -27,9 +27,13 @@ def daily_report(events, day, modal_bian=0, laba_bian=0):
     final_cash = net_cash - n(modal_bian) - n(laba_bian)
     profit = cash_profit + receipt_profit - expenses - n(laba_bian) - credit_fee
     spooring = service_profit + credit_fee
+    non_cash_sales = sum(
+        (n(e['non_cash_amount']) if 'non_cash_amount' in e else (n(e.get('amount')) if e.get('method', 'cash') != 'cash' else Decimal(0)))
+        for e in cash if category(e) != 'OIL'
+    )
     values = dict(
         cash_sales=cash_non_oil,
-        non_cash_sales=sum((n(e.get('amount')) for e in cash if e.get('method', 'cash') != 'cash' and category(e) != 'OIL'), Decimal(0)),
+        non_cash_sales=non_cash_sales,
         receivable_payments=amount('credit_payment'), transfer_payments=amount('transfer'),
         montir_fee=cash_fee + credit_fee, expenses=expenses, net_cash=net_cash,
         modal_bian=n(modal_bian), laba_bian=n(laba_bian), final_cash=final_cash,

@@ -1,26 +1,45 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, FileSpreadsheet, Upload, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, FileSpreadsheet, Upload, AlertTriangle, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { ErrorBlock, LoadingBlock } from '@/components/StateBlock';
 import { apiGet, apiPost } from '@/lib/api';
 import { formatIDR, getApiErrorMessage } from '@/lib/format';
 
 const GROUPS: Record<string,string> = { products: 'Produk & stok akhir', history: 'Riwayat transaksi + ledger', receivables: 'Saldo piutang', payables: 'Saldo hutang', reference: 'Snapshot laporan Agustus', purchases: 'Riwayat pembelian', transfers: 'Riwayat transfer', customers: 'Master pelanggan', suppliers: 'Master distributor', source_rows: 'Arsip seluruh sheet' };
 type Preview = { digest: string; summary: Record<string, { total: number; ready: number; blocked: number; imported: boolean }>; warnings: string[]; checks: { month: string; differences: Record<string, number> }[]; rows: Record<string, any>[]; notice: string; filtered_total: number };
+type ResetMode = 'zero_transactions' | 'testing_only' | 'zero_all' | 'sync_store_current';
 
 export default function ImportPage() {
   const [source, setSource] = useState('store_current'), [group, setGroup] = useState('products'), [page, setPage] = useState(1), [selected, setSelected] = useState<string[]>([]), [confirmed, setConfirmed] = useState(false);
+  const [resetMode, setResetMode] = useState<ResetMode>('zero_transactions');
+  const [zeroStock, setZeroStock] = useState(true);
+  const [resetConfirmText, setResetConfirmText] = useState('');
   const client = useQueryClient();
   const [issuesOnly, setIssuesOnly] = useState(false);
   const query = useQuery({ queryKey: ['import-preview', source, group, page, issuesOnly], queryFn: () => apiGet<Preview>(`/imports/preview?source=${source}&group=${group}&page=${page}&issues_only=${issuesOnly}`) });
   const r = query.data;
   const commit = useMutation({ mutationFn: () => apiPost<{ results: Record<string, { status: string; count: number }> }>('/imports/commit', { source, digest: r?.digest, groups: selected, confirmed }), onSuccess: data => { const imported=Object.values(data.results).reduce((s, v) => s+(v.status === 'imported' ? v.count : 0), 0); toast.success(`${imported} catatan baru disimpan. Periksa kembali baris yang tertahan.`); setConfirmed(false); setSelected([]); void client.invalidateQueries(); }, onError: e => toast.error(getApiErrorMessage(e)) });
+  const resetMutation = useMutation({
+    mutationFn: () =>
+      apiPost<{ notice: string }>('/imports/reset', {
+        mode: resetMode,
+        zero_product_stock: zeroStock,
+        confirmation: resetConfirmText,
+      }),
+    onSuccess: (data) => {
+      toast.success(data.notice || 'Data berhasil dibersihkan dan dinolkan.');
+      setResetConfirmText('');
+      void client.invalidateQueries();
+    },
+    onError: (e) => toast.error(getApiErrorMessage(e)),
+  });
   const matched = r?.checks.every(c => Object.values(c.differences).every(n => Math.abs(n) <= 0.01));
   const totalPages = Math.max(1, Math.ceil((r?.filtered_total ?? 0)/20));
-  return <div className="page-workspace space-y-5"><header className="page-heading"><div className="min-w-0"><h1 data-testid="import-title" className="font-heading text-2xl font-bold">Impor Excel</h1><p data-testid="import-description" className="text-sm text-muted-foreground mt-1">Periksa sumber spreadsheet dan status setiap kelompok sebelum menyimpan. Data yang sudah diimpor tidak perlu dimasukkan ulang.</p></div></header><div className="page-toolbar flex flex-wrap items-center gap-3"><label className="w-full text-sm sm:max-w-md">Sumber workbook<select data-testid="import-source" aria-label="Sumber workbook" className="bk-control mt-1" value={source} disabled={commit.isPending} onChange={e => { setSource(e.target.value); setSelected([]); setConfirmed(false); setPage(1); }}><option value="store_current">Store Information System · sumber terbaru</option><option value="store">Store Information System · file unik</option><option value="september">09 - Laporan Bulan September · isi Agustus 2026</option></select></label><Link to="/laporan-excel" data-testid="import-reconciliation-link" className="inline-flex min-h-11 items-center text-primary text-sm sm:ml-auto">Lihat rekonsiliasi rumus</Link></div>
+  return <div className="page-workspace space-y-5"><header className="page-heading"><div className="min-w-0"><h1 data-testid="import-title" className="font-heading text-2xl font-bold">Impor Excel &amp; Reset Data</h1><p data-testid="import-description" className="text-sm text-muted-foreground mt-1">Periksa sumber spreadsheet, nolkan data testing untuk mulai dari awal, atau sinkronkan dengan data toko asli.</p></div></header><div className="page-toolbar flex flex-wrap items-center gap-3"><label className="w-full text-sm sm:max-w-md">Sumber workbook<select data-testid="import-source" aria-label="Sumber workbook" className="bk-control mt-1" value={source} disabled={commit.isPending} onChange={e => { setSource(e.target.value); setSelected([]); setConfirmed(false); setPage(1); }}><option value="store_current">Store Information System · sumber terbaru</option><option value="store">Store Information System · file unik</option><option value="september">09 - Laporan Bulan September · isi Agustus 2026</option></select></label><Link to="/laporan-excel" data-testid="import-reconciliation-link" className="inline-flex min-h-11 items-center text-primary text-sm sm:ml-auto">Lihat rekonsiliasi rumus</Link></div>
     {query.isPending ? <LoadingBlock label="Membaca dan memeriksa workbook asli…" /> : query.isError ? <ErrorBlock error={query.error} onRetry={() => void query.refetch()} /> : r && <>
       <div className="bk-notice flex items-start gap-3" data-testid="import-formula-status">{matched ? <CheckCircle2 className="size-5 text-emerald-700 dark:text-emerald-400 shrink-0" /> : <AlertTriangle className="size-5 text-red-700 dark:text-red-400 shrink-0" />}<span><b>{matched ? `${r.checks.length} periode cocok dengan hasil Excel` : 'Ada selisih rumus. Penyimpanan ditahan.'}</b><small className="block mt-1">Pemeriksaan rumus per periode. File ganda tidak diproses dua kali.</small></span></div>
       <section className="bk-panel"><h2 className="section-heading border-b border-border p-4 font-heading text-base font-semibold">Kelompok data</h2><div className="grid sm:grid-cols-2 xl:grid-cols-3">{Object.entries(r.summary).map(([key, s]) => <div key={key} className={`min-w-0 border-b border-border p-4 ${group===key ? 'bg-accent/60' : ''}`}><button data-testid={`import-group-${key}`} aria-pressed={group === key} className="flex min-h-11 w-full items-start justify-between gap-3 text-left" onClick={() => { setGroup(key); setPage(1); }}><span className="min-w-0"><span className="block text-sm font-semibold">{GROUPS[key]}</span><span className="mt-2 block text-xs text-muted-foreground">{s.ready} lolos · {s.blocked} ditahan</span></span><strong className="font-mono text-xl">{s.total.toLocaleString('id-ID')}</strong></button><label className="mt-3 flex min-h-11 items-center gap-3 border-t border-border pt-2 text-sm"><input data-testid={`import-select-${key}`} type="checkbox" disabled={!s.ready || s.imported || commit.isPending} checked={selected.includes(key)} onChange={e => { setSelected(e.target.checked ? [...selected, key] : selected.filter(k => k !== key)); setConfirmed(false); }} /><span data-testid={`import-state-${key}`}>{s.imported ? 'Sudah diimpor' : s.ready ? 'Pilih baris lolos' : 'Perlu pemeriksaan'}</span></label></div>)}</div></section>
@@ -34,5 +53,69 @@ export default function ImportPage() {
       <section className="bk-panel p-5 space-y-4"><h2 className="font-heading text-lg" data-testid="import-confirmation-title">Simpan hanya setelah diperiksa</h2><label className="text-sm flex gap-3 items-start"><input data-testid="import-confirm-checkbox" type="checkbox" disabled={!selected.length || commit.isPending} checked={confirmed} onChange={e => setConfirmed(e.target.checked)} className="mt-1" /><span data-testid="import-confirmation-text">Saya sudah memeriksa sumber, periode, stok, dan baris tertahan. Saya menyetujui penyimpanan kelompok yang dipilih. Data yang sudah ada tidak ditimpa; transaksi historis tidak mengubah stok lagi.</span></label><Button data-testid="import-commit-button" disabled={!selected.length || !confirmed || !matched || commit.isPending || query.isFetching} onClick={() => commit.mutate()}><Upload />{commit.isPending ? 'Menyimpan, jangan tutup halaman…' : 'Impor kelompok yang disetujui'}</Button><p data-testid="import-notice" className="text-xs text-muted-foreground">{r.notice}</p></section>
       <p data-testid="xp-status-note" className="bk-notice">Versi ini adalah aplikasi web dengan database pada server aplikasi. Installer offline satu komputer Windows XP belum tersedia; runtime modern dari project ini tidak mendukung XP.</p>
     </>}
+    <section className="bk-panel p-5 space-y-4 border-amber-500/40" data-testid="reset-data-panel">
+      <div>
+        <h2 className="font-heading text-lg font-semibold">Bersihkan dan nolkan data (Reset Testing &amp; Sinkronisasi)</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Gunakan fitur ini untuk menghapus data percobaan (testing) agar seluruh angka transaksi, piutang/hutang, pengeluaran, dan laporan kembali bernilai Rp 0 sebelum mulai input data baru, atau untuk menyinkronkan ulang dengan data asli toko.
+        </p>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="block text-sm">
+          Mode pengosongan / sinkronisasi
+          <select
+            data-testid="reset-mode-select"
+            className="bk-control mt-1"
+            value={resetMode}
+            disabled={resetMutation.isPending}
+            onChange={e => setResetMode(e.target.value as ResetMode)}
+          >
+            <option value="zero_transactions">Nolkan semua transaksi &amp; laporan (Master barang &amp; pelanggan tetap ada)</option>
+            <option value="testing_only">Hapus transaksi testing baru saja (Kembali ke data impor awal)</option>
+            <option value="zero_all">Kosongkan seluruh data (Termasuk master barang, pelanggan, distributor)</option>
+            <option value="sync_store_current">Sinkronkan ulang dari data asli toko (Store Information System terbaru)</option>
+          </select>
+        </label>
+        <label className="block text-sm">
+          Ketik <b>NOLKAN</b> untuk konfirmasi
+          <Input
+            data-testid="reset-confirm-input"
+            className="mt-1 font-mono uppercase"
+            value={resetConfirmText}
+            disabled={resetMutation.isPending}
+            onChange={e => setResetConfirmText(e.target.value)}
+            placeholder="Ketik NOLKAN"
+          />
+        </label>
+      </div>
+      {(resetMode === 'zero_transactions' || resetMode === 'testing_only') && (
+        <label className="flex min-h-11 items-center gap-3 text-sm">
+          <input
+            data-testid="reset-zero-stock-checkbox"
+            type="checkbox"
+            checked={zeroStock}
+            disabled={resetMutation.isPending}
+            onChange={e => setZeroStock(e.target.checked)}
+          />
+          <span>Nolkan juga stok seluruh barang menjadi 0 unit (nonaktifkan jika ingin mempertahankan saldo stok barang master)</span>
+        </label>
+      )}
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          type="button"
+          variant="destructive"
+          className="min-h-11"
+          data-testid="reset-submit-button"
+          disabled={resetMutation.isPending || resetConfirmText.trim().toUpperCase() !== 'NOLKAN'}
+          onClick={() => resetMutation.mutate()}
+        >
+          <RotateCcw />
+          {resetMutation.isPending ? 'Memproses…' : resetMode === 'sync_store_current' ? 'Sinkronkan data asli toko' : 'Nolkan data sekarang'}
+        </Button>
+        <p className="text-xs text-muted-foreground">
+          Akun pengguna (Admin &amp; Kasir) tetap aman. Setelah dinolkan, Anda dapat langsung mulai input transaksi dari Rp 0 atau memilih mode Sinkronkan ulang kapan saja.
+        </p>
+      </div>
+    </section>
   </div>;
 }

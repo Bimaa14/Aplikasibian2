@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { apiGet, apiPost } from "@/lib/api";
 import { formatDate, formatDateTime, formatIDR, getApiErrorMessage } from "@/lib/format";
+import { formatPaymentMethodDetail } from "@/lib/payments";
 import type { Transaction, TxStatus } from "@/lib/types";
 
 export default function TransactionsPage() {
@@ -194,6 +195,20 @@ export default function TransactionsPage() {
                   <span className="text-muted-foreground">Metode Bayar</span>
                   <PaymentMethodBadge method={detailTx.payment_method} />
                 </div>
+                {(detailTx.payment_method === "mix" || detailTx.down_payment_method === "mix") ? (
+                  <div className="flex flex-wrap justify-between gap-2">
+                    <span className="text-muted-foreground">Rincian Mix</span>
+                    <span className="font-mono text-xs" data-testid="detail-mix-breakdown">
+                      {formatPaymentMethodDetail({
+                        method: "mix",
+                        cash_amount: detailTx.cash_amount,
+                        transfer_amount: detailTx.transfer_amount,
+                        transfer_method: detailTx.transfer_method,
+                        formatMoney: formatIDR,
+                      })}
+                    </span>
+                  </div>
+                ) : null}
                 {detailTx.due_date ? (
                   <div className="flex flex-wrap justify-between gap-2">
                     <span className="text-muted-foreground">Jatuh Tempo</span>

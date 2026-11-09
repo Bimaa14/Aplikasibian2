@@ -1,6 +1,6 @@
 import { buildCreditNote } from './credit-note';
 import type { Transaction } from "./types";
-import { PAYMENT_LABELS } from './payments';
+import { formatPaymentMethodDetail, PAYMENT_LABELS } from './payments';
 import { NOTE_BANK_ACCOUNT, NOTE_PRINT_STYLES } from './note-print';
 
 export type NotePaper = "half" | "full";
@@ -58,6 +58,13 @@ export function buildSalesNoteDocument(transaction: Transaction, settings: NoteS
   const footerRows = ((transaction.discount_total ?? 0) > 0 ? 1 : 0) + (transaction.payment_method !== 'cash' ? 1 : 0);
   // Reserve space for readable text and payment totals on the half-sheet form.
   const blankRows = Math.max(0, (settings.paper === "full" ? 40 : 13) - transaction.details.length - footerRows);
+  const paymentDetail = formatPaymentMethodDetail({
+    method: transaction.payment_method,
+    cash_amount: transaction.cash_amount,
+    transfer_amount: transaction.transfer_amount,
+    transfer_method: transaction.transfer_method,
+    formatMoney: money,
+  });
   const rows = transaction.details.map((line, index) => {
     // The stored subtotal is authoritative, including historical imported transactions.
     const discount = Math.max(0, Math.round((line.price * line.qty - line.subtotal) * 100) / 100);
@@ -118,7 +125,7 @@ export function buildSalesNoteDocument(transaction: Transaction, settings: NoteS
       ${returned ? '<p class="status">TRANSAKSI DIRETUR. NOTA DIBATALKAN</p>' : ""}
       <div class="header-grid"><div class="meta">
         <p><b>Nomor Transaksi : ${escape(transaction.invoice_number)}</b></p>
-        <p>${escape(PAYMENT_LABELS[transaction.payment_method])}</p>
+        <p>${escape(transaction.payment_method === "mix" ? paymentDetail : PAYMENT_LABELS[transaction.payment_method])}</p>
         <p>${noteDate(transaction.date_key)}</p>
         ${transaction.customer_name && transaction.customer_name !== 'Umum' || transaction.vehicle_plate ? `<p class="secondary">Pelanggan : ${escape(transaction.customer_name || "Umum")}${transaction.vehicle_plate ? ` · Nopol : ${escape(transaction.vehicle_plate)}` : ""}</p>` : ''}
       </div><div class="store"><p class="store-name">${escape(settings.name)}</p>
@@ -140,7 +147,7 @@ export function buildSalesNoteDocument(transaction: Transaction, settings: NoteS
   </div><dl class="totals">
     ${(transaction.discount_total ?? 0) > 0 ? `<div><dt>Potongan nota :</dt><dd>${money(transaction.discount_total)}</dd></div>` : ''}
     <div class="grand-total"><dt>Total Transaksi :</dt><dd>${money(transaction.total_amount)}</dd></div>
-    ${transaction.payment_method !== 'cash' ? `<div><dt>Pembayaran :</dt><dd>${escape(PAYMENT_LABELS[transaction.payment_method])}</dd></div>` : ''}
+    ${transaction.payment_method !== 'cash' ? `<div><dt>Pembayaran :</dt><dd>${escape(paymentDetail)}</dd></div>` : ''}
     <div><dt>Jumlah diterima :</dt><dd>${money(transaction.cash_received)}</dd></div>
     <div><dt>${transaction.payment_method === 'cash' ? 'Kembalian' : 'Kelebihan pembayaran'} :</dt><dd>${money(transaction.change_amount)}</dd></div>
   </dl></div>

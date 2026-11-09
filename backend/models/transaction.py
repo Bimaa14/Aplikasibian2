@@ -5,8 +5,9 @@ from typing import List, Literal, Optional
 
 from pydantic import BaseModel, Field, model_validator
 
-PaymentMethod = Literal["cash", "credit", "edc", "transfer_bca", "transfer_bri", "transfer_bni", "qris"]
-ImmediatePaymentMethod = Literal["cash", "edc", "transfer_bca", "transfer_bri", "transfer_bni", "qris"]
+PaymentMethod = Literal["cash", "credit", "edc", "transfer_bca", "transfer_bri", "transfer_bni", "qris", "mix"]
+ImmediatePaymentMethod = Literal["cash", "edc", "transfer_bca", "transfer_bri", "transfer_bni", "qris", "mix"]
+NonCashMethod = Literal["edc", "transfer_bca", "transfer_bri", "transfer_bni", "qris"]
 
 
 class CheckoutItem(BaseModel):
@@ -24,12 +25,15 @@ class TransactionCreate(BaseModel):
     payment_method: PaymentMethod
     discount_total: float = Field(default=0, ge=0, le=1e12, allow_inf_nan=False, multiple_of=0.01)
     cash_received: Optional[float] = Field(default=None, ge=0, le=1e12, allow_inf_nan=False, multiple_of=0.01)
+    cash_amount: Optional[float] = Field(default=None, ge=0, le=1e12, allow_inf_nan=False, multiple_of=0.01)
+    transfer_amount: Optional[float] = Field(default=None, ge=0, le=1e12, allow_inf_nan=False, multiple_of=0.01)
+    transfer_method: Optional[NonCashMethod] = None
     customer_id: Optional[str] = None
     due_date: Optional[date] = None  # serialises to YYYY-MM-DD
     credit_term_days: Optional[int] = Field(default=None, strict=True, ge=1, le=3650)
     down_payment_amount: float = Field(default=0, ge=0, le=1e12, allow_inf_nan=False, multiple_of=0.01)
     down_payment_method: Optional[ImmediatePaymentMethod] = None
-    vehicle_plate: Optional[str] = None  # nomor polisi (opsional) — untuk riwayat kendaraan
+    vehicle_plate: Optional[str] = None  # nomor polisi (opsional), untuk riwayat kendaraan
 
     @model_validator(mode="after")
     def credit_rule(self):
@@ -39,6 +43,14 @@ class TransactionCreate(BaseModel):
             self.credit_term_days is not None or self.down_payment_amount or self.down_payment_method is not None
         ):
             raise ValueError("Tenor dan uang muka hanya tersedia untuk transaksi tempo")
+        uses_mix = self.payment_method == "mix" or (self.payment_method == "credit" and self.down_payment_method == "mix")
+        if not uses_mix and (self.cash_amount is not None or self.transfer_amount is not None or self.transfer_method is not None):
+            raise ValueError("Rincian pembayaran mix hanya diisi saat memilih metode Mix")
+        if uses_mix:
+            if not self.cash_amount or self.cash_amount <= 0 or not self.transfer_amount or self.transfer_amount <= 0:
+                raise ValueError("Pembayaran mix wajib mengisi nominal tunai dan transfer lebih dari nol")
+            if self.transfer_method is None:
+                raise ValueError("Metode transfer untuk pembayaran mix wajib dipilih")
         if self.payment_method == "credit":
             if self.cash_received is not None:
                 raise ValueError("Uang diterima tidak diisi untuk pembayaran tempo")
@@ -48,6 +60,8 @@ class TransactionCreate(BaseModel):
                 raise ValueError("Tenor wajib diisi untuk pembayaran tempo (credit)")
             if self.down_payment_amount and self.down_payment_method is None:
                 raise ValueError("Metode pembayaran uang muka wajib dipilih")
+            if self.down_payment_method == "mix" and round((self.cash_amount or 0) + (self.transfer_amount or 0), 2) != round(self.down_payment_amount, 2):
+                raise ValueError("Jumlah tunai dan transfer pada mix harus sama dengan nominal uang muka")
         return self
 
 
@@ -97,6 +111,9 @@ class Transaction(BaseModel):
     total_amount: float
     cash_received: Optional[float] = None
     change_amount: Optional[float] = None
+    cash_amount: Optional[float] = None
+    transfer_amount: Optional[float] = None
+    transfer_method: Optional[NonCashMethod] = None
     barang_amount: float = 0
     jasa_amount: float = 0
     total_cost: float = 0

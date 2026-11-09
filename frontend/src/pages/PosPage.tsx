@@ -10,9 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { apiGet, apiPost } from "@/lib/api";
 import { formatIDR, getApiErrorMessage } from "@/lib/format";
-import type { Customer, PaymentMethod, Product, Transaction } from "@/lib/types";
+import type { Customer, NonCashMethod, PaymentMethod, Product, Transaction } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { PAYMENT_OPTIONS } from "@/lib/payments";
+import { NON_CASH_OPTIONS, PAYMENT_OPTIONS } from "@/lib/payments";
 import { mechanicFeeTotal } from "@/lib/pos-pricing";
 
 type CartLine = { product: Product; qty: number };
@@ -23,6 +23,9 @@ type CheckoutBody = {
   discount_total: number;
   payment_method: PaymentMethod;
   cash_received: number | null;
+  cash_amount: number | null;
+  transfer_amount: number | null;
+  transfer_method: NonCashMethod | null;
   customer_id: string | null;
   due_date: string | null;
   credit_term_days: number | null;
@@ -44,6 +47,9 @@ export default function PosPage() {
   const [cart, setCart] = useState<CartLine[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [receivedInput, setReceivedInput] = useState<string | null>(null);
+  const [mixCashInput, setMixCashInput] = useState("");
+  const [mixTransferInput, setMixTransferInput] = useState("");
+  const [mixTransferMethod, setMixTransferMethod] = useState<NonCashMethod>("transfer_bca");
   const [itemDiscounts, setItemDiscounts] = useState<Record<string, string>>({});
   const [surcharges, setSurcharges] = useState<Record<string, string>>({});
   const [customerId, setCustomerId] = useState("");
@@ -150,6 +156,9 @@ export default function PosPage() {
       setCart([]);
       setPaymentMethod("cash");
       setReceivedInput(null);
+      setMixCashInput("");
+      setMixTransferInput("");
+      setMixTransferMethod("transfer_bca");
       setItemDiscounts({});
       setSurcharges({});
       setCustomerId("");
@@ -184,16 +193,51 @@ export default function PosPage() {
   const dueDatePreview = isCredit && !termInvalid && systemQuery.data?.today
     ? (() => { const date = new Date(`${systemQuery.data.today}T12:00:00Z`); date.setUTCDate(date.getUTCDate() + termDays); return date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }); })()
     : null;
-  const amountReceived = receivedInput === null ? totalAmount : Number(receivedInput);
-  const receivedInvalid = paymentMethod !== "credit" && (receivedInput === "" || !Number.isFinite(amountReceived) || amountReceived < totalAmount || amountReceived > 1e12);
+
+  const isMixPayment = isCredit ? (useDownPayment && downPaymentMethod === "mix") : paymentMethod === "mix";
+  const mixTargetAmount = isCredit ? downPaymentAmount : totalAmount;
+  const mixCashAmount = isMixPayment ? Number(mixCashInput) : 0;
+  const mixTransferAmount = isMixPayment ? Number(mixTransferInput) : 0;
+  const mixSumMatches = Math.round((mixCashAmount + mixTransferAmount) * 100) === Math.round(mixTargetAmount * 100);
+  const mixInvalid = isMixPayment && (
+    mixCashInput === "" ||
+    mixTransferInput === "" ||
+    !Number.isFinite(mixCashAmount) ||
+    !Number.isFinite(mixTransferAmount) ||
+    mixCashAmount <= 0 ||
+    mixTransferAmount <= 0 ||
+    !mixSumMatches
+  );
+
+  function handleMixCashChange(val: string) {
+    setMixCashInput(val);
+    const cashNum = Number(val);
+    if (val !== "" && Number.isFinite(cashNum) && cashNum >= 0 && Number.isFinite(mixTargetAmount) && mixTargetAmount > 0 && cashNum < mixTargetAmount) {
+      setMixTransferInput(String(Math.max(0, Math.round((mixTargetAmount - cashNum) * 100) / 100)));
+    }
+  }
+
+  function handleMixTransferChange(val: string) {
+    setMixTransferInput(val);
+    const tfNum = Number(val);
+    if (val !== "" && Number.isFinite(tfNum) && tfNum >= 0 && Number.isFinite(mixTargetAmount) && mixTargetAmount > 0 && tfNum < mixTargetAmount) {
+      setMixCashInput(String(Math.max(0, Math.round((mixTargetAmount - tfNum) * 100) / 100)));
+    }
+  }
+
+  const amountReceived = paymentMethod === "mix" ? totalAmount : (receivedInput === null ? totalAmount : Number(receivedInput));
+  const receivedInvalid = paymentMethod !== "credit" && paymentMethod !== "mix" && (receivedInput === "" || !Number.isFinite(amountReceived) || amountReceived < totalAmount || amountReceived > 1e12);
 
   function submitCheckout() {
-    if (cart.length === 0 || creditMissing || termInvalid || downPaymentInvalid || receivedInvalid || pricingInvalid || submitting.current || checkoutMutation.isPending) return;
+    if (cart.length === 0 || creditMissing || termInvalid || downPaymentInvalid || receivedInvalid || mixInvalid || pricingInvalid || submitting.current || checkoutMutation.isPending) return;
     const body = {
       items: cart.map((l) => ({ product_id: l.product.id, qty: l.qty, credit_surcharge: isCredit ? Number(surcharges[l.product.id] || 0) : 0, discount_per_unit: itemDiscount(l.product.id) })),
       discount_total: 0,
       payment_method: paymentMethod,
       cash_received: paymentMethod !== "credit" ? amountReceived : null,
+      cash_amount: isMixPayment ? mixCashAmount : null,
+      transfer_amount: isMixPayment ? mixTransferAmount : null,
+      transfer_method: isMixPayment ? mixTransferMethod : null,
       customer_id: customerId || null,
       due_date: null,
       credit_term_days: isCredit ? termDays : null,
@@ -445,7 +489,65 @@ export default function PosPage() {
               </select>
               {isCredit && !useDownPayment ? <p className="text-xs text-muted-foreground">Belum ada pembayaran. Seluruh total menjadi piutang.</p> : null}
             </div>
-            {!isCredit ? <div className="space-y-2">
+            {isMixPayment ? (
+              <div className="space-y-3 rounded-lg border border-border bg-secondary/30 p-3" data-testid="checkout-mix-panel">
+                <p className="text-xs font-medium text-muted-foreground">
+                  Rincian Mix (Tunai + Transfer) untuk {isCredit ? "uang muka" : "total transaksi"} ({formatIDR(Number.isFinite(mixTargetAmount) ? mixTargetAmount : 0)})
+                </p>
+                <div className="space-y-2">
+                  <Label htmlFor="checkout-mix-cash">Nominal tunai (Rp)</Label>
+                  <Input
+                    id="checkout-mix-cash"
+                    data-testid="checkout-mix-cash"
+                    type="number"
+                    inputMode="decimal"
+                    min="0.01"
+                    max={Math.max(0.01, (Number.isFinite(mixTargetAmount) ? mixTargetAmount : totalAmount) - 0.01)}
+                    step="0.01"
+                    value={mixCashInput}
+                    aria-invalid={mixInvalid}
+                    onChange={event => handleMixCashChange(event.target.value)}
+                    placeholder="Nominal bayar tunai"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="checkout-mix-transfer">Nominal transfer (Rp)</Label>
+                  <Input
+                    id="checkout-mix-transfer"
+                    data-testid="checkout-mix-transfer"
+                    type="number"
+                    inputMode="decimal"
+                    min="0.01"
+                    max={Math.max(0.01, (Number.isFinite(mixTargetAmount) ? mixTargetAmount : totalAmount) - 0.01)}
+                    step="0.01"
+                    value={mixTransferInput}
+                    aria-invalid={mixInvalid}
+                    onChange={event => handleMixTransferChange(event.target.value)}
+                    placeholder="Nominal bayar transfer"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="checkout-mix-method">Rekening / kanal transfer</Label>
+                  <select
+                    id="checkout-mix-method"
+                    data-testid="checkout-mix-method"
+                    className="bk-control"
+                    value={mixTransferMethod}
+                    onChange={event => setMixTransferMethod(event.target.value as NonCashMethod)}
+                  >
+                    {NON_CASH_OPTIONS.map(([key, label]) => (
+                      <option key={key} value={key}>{label}</option>
+                    ))}
+                  </select>
+                </div>
+                {mixInvalid ? (
+                  <p role="alert" data-testid="checkout-mix-error" className="text-xs text-destructive">
+                    Isi nominal tunai dan transfer lebih dari 0 dengan jumlah tepat sebesar {formatIDR(Number.isFinite(mixTargetAmount) ? mixTargetAmount : 0)}.
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+            {!isCredit && paymentMethod !== "mix" ? <div className="space-y-2">
               <Label htmlFor="checkout-cash-received">Bayar (Rp)</Label>
               <div className="flex gap-2">
                 <Input id="checkout-cash-received" data-testid="checkout-cash-received" type="number" inputMode="decimal" min={totalAmount} max={1e12} step="0.01"
@@ -462,7 +564,7 @@ export default function PosPage() {
               <span className="text-muted-foreground">Subtotal</span>
               <span className="font-mono" data-testid="cart-subtotal">{formatIDR(grossAmount)}</span>
             </div>
-            {itemDiscountTotal > 0 ? <div className="flex justify-between text-sm"><span className="text-muted-foreground">Potongan</span><span className="font-mono">−{formatIDR(itemDiscountTotal)}</span></div> : null}
+            {itemDiscountTotal > 0 ? <div className="flex justify-between text-sm"><span className="text-muted-foreground">Potongan</span><span className="font-mono">-{formatIDR(itemDiscountTotal)}</span></div> : null}
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Service Fee Mekanik</span>
               <span className="font-mono" data-testid="cart-service-fee">{formatIDR(serviceFeeTotal)}</span>
@@ -476,13 +578,13 @@ export default function PosPage() {
               {isCredit ? <div className="space-y-2 border-t border-border pt-3 text-sm" aria-live="polite">
                 <div className="flex justify-between gap-2"><span>Uang muka</span><span className="font-mono">{formatIDR(Number.isFinite(downPaymentAmount) ? downPaymentAmount : 0)}</span></div>
                 <div className="flex justify-between gap-2 font-semibold"><span>Sisa piutang</span><span data-testid="checkout-remaining" className="font-mono">{formatIDR(Number.isFinite(remainingAmount) ? remainingAmount : 0)}</span></div>
-              </div> : <p id="checkout-received-feedback" className="flex justify-between gap-2 border-t border-border pt-3 text-sm" aria-live="polite"><span>{paymentMethod === "cash" ? "Kembalian" : "Kelebihan pembayaran"}</span><strong className="font-mono" data-testid="checkout-change">{formatIDR(receivedInvalid || pricingInvalid ? 0 : Math.round((amountReceived - totalAmount) * 100) / 100)}</strong></p>}
+              </div> : <p id="checkout-received-feedback" className="flex justify-between gap-2 border-t border-border pt-3 text-sm" aria-live="polite"><span>{paymentMethod === "cash" ? "Kembalian" : "Kelebihan pembayaran"}</span><strong className="font-mono" data-testid="checkout-change">{formatIDR(receivedInvalid || mixInvalid || pricingInvalid ? 0 : Math.round((amountReceived - totalAmount) * 100) / 100)}</strong></p>}
               {checkoutMutation.isError ? <p role="alert" data-testid="checkout-save-error" className="text-sm text-destructive">{getApiErrorMessage(checkoutMutation.error)}. Coba Print lagi untuk melanjutkan permintaan yang sama.</p> : null}
             <Button
               className="pos-pay-button w-full"
               size="lg"
               data-testid="checkout-submit-button"
-              disabled={checkoutMutation.isPending || creditMissing || termInvalid || downPaymentInvalid || receivedInvalid || pricingInvalid}
+              disabled={checkoutMutation.isPending || creditMissing || termInvalid || downPaymentInvalid || receivedInvalid || mixInvalid || pricingInvalid}
               onClick={submitCheckout}
             >
               {checkoutMutation.isPending ? "Menyimpan..." : "Print"}

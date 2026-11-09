@@ -1,9 +1,10 @@
-// Hand-written mirrors of the backend Pydantic models — nothing infers across the HTTP
+// Hand-written mirrors of the backend Pydantic models. Nothing infers across the HTTP
 // boundary, so this file must change in the same edit as backend/models/*.
 
 export type ProductType = "barang" | "jasa";
 export type ProductOwner = "bian" | "ibu" | "non" | "polosan" | "non vpt" | "non vat";
-export type PaymentMethod = "cash" | "credit" | "edc" | "transfer_bca" | "transfer_bri" | "transfer_bni" | "qris";
+export type NonCashMethod = "edc" | "transfer_bca" | "transfer_bri" | "transfer_bni" | "qris";
+export type PaymentMethod = "cash" | "credit" | NonCashMethod | "mix";
 export type TxStatus = "completed" | "returned";
 export type DebtStatus = "unpaid" | "partial" | "paid" | "void";
 export type UserRole = "admin" | "kasir";
@@ -72,6 +73,9 @@ export interface Transaction {
   discount_total?: number;
   cash_received?: number | null;
   change_amount?: number | null;
+  cash_amount?: number | null;
+  transfer_amount?: number | null;
+  transfer_method?: NonCashMethod | "transfer" | null;
   credit_term_days?: number | null;
   down_payment_amount?: number;
   down_payment_method?: Exclude<PaymentMethod, "credit"> | null;
@@ -94,7 +98,6 @@ export interface Transaction {
   details: TransactionDetail[];
 }
 
-// --- Stok masuk (barang masuk dari distributor) ---
 export interface StockInItem {
   owner?: ProductOwner | null;
   tax?: 0 | 1 | null;
@@ -126,7 +129,6 @@ export interface StockIn {
   items: StockInItem[];
 }
 
-// --- Riwayat kendaraan ---
 export interface VehicleServiceSummary {
   plate: string;
   visit_count: number;
@@ -143,7 +145,6 @@ export interface VehicleDetail extends VehicleServiceSummary {
   services: Transaction[];
 }
 
-// --- Laporan bulanan ---
 export interface ExpenseByCategory {
   category: string;
   amount: number;
@@ -219,7 +220,15 @@ export interface Expense {
 }
 
 export interface DebtPayment {
-  id: string; amount: number; payment_date: string; method: string; note: string; profit_amount: number;
+  id: string;
+  amount: number;
+  payment_date: string;
+  method: string;
+  cash_amount?: number | null;
+  transfer_amount?: number | null;
+  transfer_method?: NonCashMethod | "transfer" | null;
+  note: string;
+  profit_amount: number;
 }
 
 export interface User {

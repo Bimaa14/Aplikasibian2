@@ -3,6 +3,7 @@ import asyncio
 import uuid
 from collections import defaultdict
 from datetime import datetime, timezone
+from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from lib.auth import require_admin
@@ -144,3 +145,259 @@ async def commit(body: Commit, user: dict = Depends(require_admin)):
             await db.import_batches.update_one({'id': batch_id}, {'$set': {'status': 'completed', 'count': count, 'completed_at': datetime.now(timezone.utc).isoformat()}})
             results[group] = {'status': 'imported', 'count': count}
         return {'results': results, 'notice': 'Hanya baris lolos pemeriksaan yang disimpan; baris tertahan tetap membutuhkan rekonsiliasi.'}
+
+
+class ResetDataInput(BaseModel):
+    mode: Literal['testing_only', 'zero_transactions', 'zero_all', 'sync_store_current'] = 'zero_transactions'
+    zero_product_stock: bool = True
+    confirmation: str
+
+
+async def _sync_store_current(user_id: str) -> dict:
+    raw = await asyncio.to_thread(dataset, 'store_current')
+    for name in (
+        'transactions', 'transaction_details', 'checkout_requests', 'accounts_receivable',
+        'accounts_payable', 'expenses', 'stock_in', 'excel_events', 'transfer_history',
+        'purchase_history', 'excel_snapshots', 'excel_parameters', 'books_daily_parameters',
+        'import_batches', 'products', 'customers', 'suppliers',
+    ):
+        await db[name].delete_many({})
+    master = defaultdict(list)
+    products = []
+    for p in raw['products']:
+        if p.get('issue'):
+            continue
+        doc = {k: v for k, v in p.items() if k not in ('row', 'sheet', 'issue', 'note')}
+        doc.update(
+            id=stable('store-master', p['row'], p['name']),
+            import_source='store_current',
+            source_row=p['row'],
+            source_sheet='DATABASE',
+            source_digest=raw['digest'],
+            active=True,
+        )
+        if doc.get('type') == 'jasa':
+            doc['stock'] = 0
+        products.append(doc)
+        master[p['name'].casefold()].append(doc)
+    if products:
+        await db.products.insert_many(products)
+    for group in ('customers', 'suppliers'):
+        seen_names = set()
+        docs = []
+        for p in raw.get(group, []):
+            key = p['name'].strip().casefold()
+            if key and key not in seen_names:
+                seen_names.add(key)
+                docs.append(dict(id=stable('store-party', group, key), name=p['name'], phone='', address='', source_code=p.get('code', '')))
+        if docs:
+            await db[group].insert_many(docs)
+    parties = {p['name'].strip().casefold(): p['id'] for p in await db.customers.find({}, {'_id': 0, 'name': 1, 'id': 1}).to_list(None)}
+    groups = defaultdict(list)
+    for e in raw['events']:
+        if e['kind'] in ('cash_sale', 'credit_sale'):
+            if e['qty'] == 0 and e['amount'] == 0:
+                continue
+            if e['qty'] <= 0 or e['qty'] != int(e['qty']) or e['amount'] < 0:
+                continue
+            groups[(e['date'], e['invoice'], e.get('customer', ''), e['kind'])].append(e)
+    transactions, details = [], []
+    for key, entries in groups.items():
+        txid = stable('store-history', *key)
+        lines = []
+        for e in entries:
+            candidates = master.get(e['name'].casefold(), [])
+            pid = candidates[0]['id'] if len(candidates) == 1 else stable('store-history-unresolved', e['name'])
+            line = dict(
+                id=stable(txid, e['sheet'], e['row']),
+                transaction_id=txid,
+                product_id=pid,
+                product_name=e['name'],
+                product_type='jasa' if e['category'] in ('SERVICE', 'COMPLEMENTARY') else 'barang',
+                product_size=e.get('product_size', ''),
+                product_brand=e.get('product_brand', ''),
+                product_sku=candidates[0]['sku'] if len(candidates) == 1 else None,
+                qty=int(e['qty']),
+                price=e['price'],
+                base_price=e['base_price'],
+                cash_subtotal=e['cash_subtotal'],
+                credit_surcharge=e['credit_surcharge'],
+                discount_amount=e['discount_amount'],
+                subtotal=e['amount'],
+                cost_price=e['cost'],
+                service_fee=e['fee'] / e['qty'] if e['qty'] else 0,
+                spreadsheet_fee=e['fee'],
+                spreadsheet_profit=e['profit'],
+                category=e['category'],
+                owner=e['owner'],
+                tax=e['tax'],
+                tax_source=e['tax_source'],
+                source_row=e['row'],
+                source_sheet=e['sheet'],
+                import_source='store_current',
+            )
+            lines.append(line)
+        tx = dict(
+            id=txid,
+            invoice_number='XL-' + key[0].replace('-', '') + '-' + txid[:8],
+            source_invoice=key[1],
+            date=datetime.fromisoformat(key[0]).replace(tzinfo=timezone.utc),
+            date_key=key[0],
+            customer_id=parties.get(key[2].strip().casefold()),
+            customer_name=key[2] or None,
+            payment_method='credit' if key[3] == 'credit_sale' else 'cash',
+            source_payment_unallocated=key[3] == 'cash_sale',
+            total_amount=sum(l['subtotal'] for l in lines),
+            discount_total=sum(l['discount_amount'] for l in lines),
+            barang_amount=sum(l['subtotal'] for l in lines if l['product_type'] == 'barang'),
+            jasa_amount=sum(l['subtotal'] for l in lines if l['product_type'] == 'jasa'),
+            total_cost=sum(l['cost_price'] * l['qty'] for l in lines),
+            service_fee=sum(l['spreadsheet_fee'] for l in lines),
+            total_profit=sum(l['spreadsheet_profit'] for l in lines),
+            spreadsheet_profit=sum(l['spreadsheet_profit'] for l in lines),
+            status='completed',
+            due_date=entries[0].get('due_date'),
+            import_source='store_current',
+            source_row=entries[0]['row'],
+            source_sheet=entries[0]['sheet'],
+            source_digest=raw['digest'],
+        )
+        transactions.append(tx)
+        details.extend(lines)
+    for start in range(0, len(transactions), 1000):
+        await db.transactions.insert_many(transactions[start:start + 1000])
+    for start in range(0, len(details), 1000):
+        await db.transaction_details.insert_many(details[start:start + 1000])
+    for key, collection in [('events', 'excel_events'), ('purchases', 'purchase_history'), ('transfers', 'transfer_history')]:
+        docs = [{**r, 'id': stable('store-source', key, r['sheet'], r['row']), 'import_source': 'store_current', 'source_digest': raw['digest']} for r in raw.get(key, [])]
+        for start in range(0, len(docs), 1000):
+            await db[collection].insert_many(docs[start:start + 1000])
+    for group, count in [
+        ('products', len(products)),
+        ('history', len(transactions)),
+        ('purchases', len(raw.get('purchases', []))),
+        ('transfers', len(raw.get('transfers', []))),
+        ('customers', len(raw.get('customers', []))),
+        ('suppliers', len(raw.get('suppliers', []))),
+        ('source_rows', len(raw.get('source_rows', []))),
+    ]:
+        await db.import_batches.insert_one(dict(
+            id=stable(raw['digest'], group),
+            source='store_current',
+            group=group,
+            status='completed',
+            count=count,
+            digest=raw['digest'],
+            recorded_by=user_id,
+        ))
+    return {
+        'products_synced': len(products),
+        'transactions_synced': len(transactions),
+        'events_synced': len(raw.get('events', [])),
+    }
+
+
+@router.post('/reset')
+async def reset_data(body: ResetDataInput, user: dict = Depends(require_admin)):
+    """Reset or zero out operational/testing data so the system is clean for fresh input or re-sync."""
+    if body.confirmation.strip().upper() != 'NOLKAN':
+        raise HTTPException(422, 'Ketik kata kunci NOLKAN untuk mengonfirmasi pengosongan data')
+    async with financial_lock:
+        deleted = {}
+        if body.mode == 'sync_store_current':
+            deleted = await _sync_store_current(user['id'])
+            return {
+                'mode': body.mode,
+                'zero_product_stock': False,
+                'deleted': deleted,
+                'reset_at': datetime.now(timezone.utc).isoformat(),
+                'recorded_by': user['id'],
+                'notice': 'Data berhasil disinkronkan ulang dengan sumber Store terbaru.',
+            }
+        if body.mode == 'testing_only':
+            test_txs = await db.transactions.find({'import_source': {'$exists': False}}, {'_id': 0, 'id': 1}).to_list(None)
+            test_tx_ids = [t['id'] for t in test_txs]
+            r_tx = await db.transactions.delete_many({'import_source': {'$exists': False}})
+            r_det = await db.transaction_details.delete_many({'transaction_id': {'$in': test_tx_ids}}) if test_tx_ids else None
+            r_chk = await db.checkout_requests.delete_many({})
+            r_ar = await db.accounts_receivable.delete_many({'import_source': {'$exists': False}})
+            r_ap = await db.accounts_payable.delete_many({'import_source': {'$exists': False}})
+            r_exp = await db.expenses.delete_many({'import_source': {'$exists': False}})
+            r_si = await db.stock_in.delete_many({'import_source': {'$exists': False}})
+            r_dp = await db.books_daily_parameters.delete_many({})
+            r_ep = await db.excel_parameters.delete_many({})
+            await db.transactions.update_many(
+                {'import_source': {'$exists': True}, 'status': 'returned'},
+                {'$set': {'status': 'completed'}, '$unset': {'returned_at': '', 'return_date': '', 'return_reason': '', 'refund_amount': ''}},
+            )
+            for collection in (db.accounts_receivable, db.accounts_payable):
+                async for debt in collection.find({'import_source': {'$exists': True}}):
+                    baseline_payments = [p for p in debt.get('payments', []) if p.get('import_source') or p.get('report_excluded')]
+                    if len(baseline_payments) != len(debt.get('payments', [])) or debt.get('return_date'):
+                        paid = round(sum(float(p.get('amount', 0)) for p in baseline_payments), 2)
+                        rem = max(0.0, round(float(debt.get('amount', 0)) - paid, 2))
+                        status = 'paid' if rem == 0 else ('partial' if paid > 0 else 'unpaid')
+                        await collection.update_one(
+                            {'id': debt['id']},
+                            {'$set': {'payments': baseline_payments, 'paid_amount': paid, 'remaining': rem, 'status': status},
+                             '$unset': {'return_date': '', 'refund_amount': ''}},
+                        )
+            for src in ('store_current', 'store'):
+                if await db.import_batches.find_one({'source': src, 'group': 'products', 'status': 'completed'}):
+                    raw = await asyncio.to_thread(dataset, src)
+                    for row in raw.get('products', []):
+                        await db.products.update_many(
+                            {'import_source': src, 'source_row': row['row']},
+                            {'$set': {'stock': 0 if row.get('type') == 'jasa' else row['stock']}},
+                        )
+                    break
+            if body.zero_product_stock:
+                await db.products.update_many({'type': 'barang'}, {'$set': {'stock': 0}})
+            deleted = {
+                'transactions': r_tx.deleted_count,
+                'transaction_details': r_det.deleted_count if r_det else 0,
+                'checkout_requests': r_chk.deleted_count,
+                'accounts_receivable': r_ar.deleted_count,
+                'accounts_payable': r_ap.deleted_count,
+                'expenses': r_exp.deleted_count,
+                'stock_in': r_si.deleted_count,
+                'daily_parameters': r_dp.deleted_count,
+                'excel_parameters': r_ep.deleted_count,
+            }
+        else:
+            tx_collections = (
+                'transactions',
+                'transaction_details',
+                'checkout_requests',
+                'accounts_receivable',
+                'accounts_payable',
+                'expenses',
+                'stock_in',
+                'excel_events',
+                'transfer_history',
+                'purchase_history',
+                'excel_snapshots',
+                'excel_parameters',
+                'books_daily_parameters',
+            )
+            for name in tx_collections:
+                res = await db[name].delete_many({})
+                deleted[name] = res.deleted_count
+            if body.mode == 'zero_all':
+                for name in ('products', 'customers', 'suppliers', 'import_batches'):
+                    res = await db[name].delete_many({})
+                    deleted[name] = res.deleted_count
+            else:
+                res_batches = await db.import_batches.delete_many({'group': {'$nin': ['products', 'customers', 'suppliers']}})
+                deleted['import_batches'] = res_batches.deleted_count
+                if body.zero_product_stock:
+                    res_prod = await db.products.update_many({'type': 'barang'}, {'$set': {'stock': 0}})
+                    deleted['products_zeroed'] = res_prod.modified_count
+        return {
+            'mode': body.mode,
+            'zero_product_stock': body.zero_product_stock,
+            'deleted': deleted,
+            'reset_at': datetime.now(timezone.utc).isoformat(),
+            'recorded_by': user['id'],
+            'notice': 'Data berhasil dibersihkan dan dinolkan. Sistem siap untuk testing dari 0 atau sinkronisasi data asli.',
+        }

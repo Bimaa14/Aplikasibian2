@@ -1,7 +1,7 @@
 import type { Transaction } from './types';
 import type { NoteSettings } from './sales-note';
 import { NOTE_PRINT_STYLES } from './note-print';
-import { PAYMENT_LABELS } from './payments';
+import { formatPaymentMethodDetail } from './payments';
 
 const esc = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 const money = (value: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 }).format(value).replace(/\s/g, '');
@@ -15,6 +15,15 @@ export function buildCreditNote(transaction: Transaction, settings: NoteSettings
   const discount = transaction.discount_total ?? 0;
   const downPayment = transaction.down_payment_amount ?? 0;
   const remaining = Math.max(0, Math.round((transaction.total_amount - downPayment) * 100) / 100);
+  const dpDetail = transaction.down_payment_method
+    ? formatPaymentMethodDetail({
+        method: transaction.down_payment_method,
+        cash_amount: transaction.cash_amount,
+        transfer_amount: transaction.transfer_amount,
+        transfer_method: transaction.transfer_method,
+        formatMoney: money,
+      })
+    : '';
   return `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Nota Tempo ${esc(transaction.invoice_number)}</title><style>
     @page { size: ${width} ${height}; margin: 0; }
     * { box-sizing: border-box; } html { color-scheme: light; background: white; }
@@ -45,7 +54,7 @@ export function buildCreditNote(transaction: Transaction, settings: NoteSettings
   <header><div class="store"><h1>${esc(settings.name)}</h1><p>SEDIA BAN BARU DAN VULKANISIR</p><p>SPOORING, BALANCE, NITROGEN, OLI<br>DAN SERVICE KAKI-KAKI</p><p>${esc(settings.address)}</p>${settings.phone ? `<p>${esc(settings.phone)}</p>` : ''}</div>
   <div class="recipient"><p>Majalaya, ${esc(transaction.date_key.split('-').reverse().join('/'))}</p><p>Kepada Yth. ${esc(transaction.customer_name || '-')}</p>${transaction.customer_address ? `<p>${esc(transaction.customer_address)}</p>` : ''}${transaction.vehicle_plate ? `<p>Nopol: ${esc(transaction.vehicle_plate)}</p>` : ''}<h2>Nota Penjualan Tempo</h2><p>No. ${esc(transaction.invoice_number)}</p><p>Jatuh tempo: ${esc(transaction.due_date?.split('-').reverse().join('/') || '-')}${transaction.credit_term_days ? ` (${esc(transaction.credit_term_days)} hari)` : ''}</p></div></header>
   <table aria-label="Rincian nota tempo"><colgroup><col style="width:12%"><col style="width:32%"><col style="width:18%"><col style="width:18%"><col style="width:20%"></colgroup><thead><tr><th>BANYAKNYA</th><th>UKURAN</th><th>MERK</th><th>SATUAN</th><th>TOTAL</th></tr></thead><tbody>${rows}${'<tr class="blank"><td></td><td></td><td></td><td></td><td></td></tr>'.repeat(blanks)}</tbody></table>
-  <section class="bottom"><div class="summary"><p class="notice">Harga satuan sudah termasuk tambahan tempo. ${discount > 0 ? 'Total sudah setelah potongan item dan nota. ' : ''}${downPayment > 0 ? 'Nota mencatat tagihan dan uang muka awal. Pembayaran berikutnya dicatat pada kwitansi terpisah.' : 'Nota ini mencatat tagihan awal. Pembayaran dicatat pada kwitansi terpisah.'}</p><dl class="totals">${discount > 0 ? `<div><dt>Potongan nota</dt><dd>${money(discount)}</dd></div>` : ''}<div><dt><b>Total tagihan</b></dt><dd><b>${money(transaction.total_amount)}</b></dd></div>${downPayment > 0 ? `<div><dt>Uang muka</dt><dd>${money(downPayment)}</dd></div>${transaction.down_payment_method ? `<div><dt>Pembayaran DP</dt><dd>${esc(PAYMENT_LABELS[transaction.down_payment_method])}</dd></div>` : ''}<div><dt><b>Sisa piutang awal</b></dt><dd><b>${money(remaining)}</b></dd></div>` : ''}</dl></div>
+  <section class="bottom"><div class="summary"><p class="notice">Harga satuan sudah termasuk tambahan tempo. ${discount > 0 ? 'Total sudah setelah potongan item dan nota. ' : ''}${downPayment > 0 ? 'Nota mencatat tagihan dan uang muka awal. Pembayaran berikutnya dicatat pada kwitansi terpisah.' : 'Nota ini mencatat tagihan awal. Pembayaran dicatat pada kwitansi terpisah.'}</p><dl class="totals">${discount > 0 ? `<div><dt>Potongan nota</dt><dd>${money(discount)}</dd></div>` : ''}<div><dt><b>Total tagihan</b></dt><dd><b>${money(transaction.total_amount)}</b></dd></div>${downPayment > 0 ? `<div><dt>Uang muka</dt><dd>${money(downPayment)}</dd></div>${dpDetail ? `<div><dt>Pembayaran DP</dt><dd>${esc(dpDetail)}</dd></div>` : ''}<div><dt><b>Sisa piutang awal</b></dt><dd><b>${money(remaining)}</b></dd></div>` : ''}</dl></div>
   <div class="signatures"><div>Tanda Terima,<div class="signature">( ................................ )</div></div><div>Hormat Kami,<div class="signature">( ................................ )</div></div></div></section>
   </body></html>`;
 }
