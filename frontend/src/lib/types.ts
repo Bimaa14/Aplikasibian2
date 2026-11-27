@@ -187,6 +187,7 @@ export interface AccountsReceivable {
   paid_amount: number; remaining: number; payments: DebtPayment[];
   issued_date: string; days_overdue: number; days_remaining: number; due_label: string; aging_bucket: string | null;
   legacy_payment_history_missing: boolean;
+  note?: string;
   id: string;
   transaction_id: string;
   invoice_number: string;
@@ -201,6 +202,7 @@ export interface AccountsPayable {
   paid_amount: number; remaining: number; payments: DebtPayment[];
   issued_date: string; days_overdue: number; days_remaining: number; due_label: string; aging_bucket: string | null;
   legacy_payment_history_missing: boolean;
+  note?: string;
   id: string;
   supplier_id: string;
   supplier_name: string;

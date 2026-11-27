@@ -19,6 +19,7 @@ def hydrate(doc):
     d.setdefault('payments', [])
     d.setdefault('version', 0)
     d.setdefault('issued_date', '')
+    d.setdefault('note', '')
     d['legacy_payment_history_missing'] = bool(d['paid_amount'] and not d['payments'])
     active = d['status'] in ('unpaid', 'partial')
     delta = (date.fromisoformat(d['due_date']) - date.fromisoformat(today_iso())).days
@@ -82,6 +83,55 @@ async def pay(collection, debt_id, body, user):
              '$push': {'payments': p}}, projection={'_id': 0}, return_document=ReturnDocument.AFTER)
         if not result:
             raise HTTPException(409, 'Tagihan berubah. Muat ulang sebelum membayar lagi')
+        return hydrate(result)
+
+
+async def update_debt(collection, debt_id, updates, user):
+    async with financial_lock:
+        raw = await collection.find_one({'id': debt_id}, {'_id': 0})
+        if not raw:
+            raise HTTPException(404, 'Tagihan tidak ditemukan')
+        d = hydrate(raw)
+        if d['status'] == 'void':
+            raise HTTPException(409, 'Tagihan berstatus Void/Retur tidak dapat diubah')
+
+        new_amount = round(float(updates['amount']), 2)
+        paid_amount = round(float(d['paid_amount']), 2)
+        if new_amount < paid_amount:
+            raise HTTPException(
+                422,
+                f'Nominal tagihan tidak boleh lebih kecil dari total yang sudah dibayar ({paid_amount:g})',
+            )
+
+        new_issued_date = updates.get('issued_date') or d.get('issued_date') or today_iso()
+        payment_dates = [p['payment_date'] for p in d.get('payments', []) if p.get('payment_date')]
+        if payment_dates and new_issued_date > min(payment_dates):
+            raise HTTPException(
+                422,
+                'Tanggal tagihan tidak boleh setelah tanggal pembayaran yang sudah tercatat',
+            )
+
+        remaining = round(new_amount - paid_amount, 2)
+        new_status = 'paid' if remaining == 0 else ('partial' if paid_amount > 0 else 'unpaid')
+        fields = {
+            **updates,
+            'amount': new_amount,
+            'issued_date': new_issued_date,
+            'remaining': remaining,
+            'status': new_status,
+            'version': d['version'] + 1,
+            'updated_by': user['id'],
+            'updated_at': datetime.now(timezone.utc).isoformat(),
+        }
+        query = {'id': debt_id, 'version': raw.get('version', {'$exists': False})}
+        result = await collection.find_one_and_update(
+            query,
+            {'$set': fields},
+            projection={'_id': 0},
+            return_document=ReturnDocument.AFTER,
+        )
+        if not result:
+            raise HTTPException(409, 'Tagihan berubah. Muat ulang sebelum menyimpan perubahan')
         return hydrate(result)
 
 

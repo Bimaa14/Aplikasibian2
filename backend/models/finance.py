@@ -64,13 +64,43 @@ class DebtBase(BaseModel):
     aging_bucket: Optional[str] = None
     legacy_payment_history_missing: bool = False
     refund_amount: float = 0
+    note: str = ''
 
 
 class AccountsReceivable(DebtBase):
-    transaction_id: str
+    transaction_id: str = ''
     invoice_number: str = ''
     customer_id: str = ''
     customer_name: str = ''
+
+
+class ReceivableCreate(BaseModel):
+    customer_id: Optional[str] = None
+    customer_name: Optional[str] = Field(default=None, max_length=200)
+    invoice_number: str = Field(min_length=1, max_length=100)
+    amount: float = Field(gt=0, le=1e12, allow_inf_nan=False, multiple_of=0.01)
+    issued_date: Optional[str] = None
+    due_date: str
+    note: str = Field(default='', max_length=500)
+
+    @model_validator(mode='after')
+    def validate_fields(self):
+        self.invoice_number = self.invoice_number.strip()
+        if not self.invoice_number:
+            raise ValueError('Nomor invoice wajib diisi')
+        self.customer_id = (self.customer_id or '').strip() or None
+        self.customer_name = ' '.join((self.customer_name or '').split()) or None
+        if not self.customer_id and not self.customer_name:
+            raise ValueError('Pilih pelanggan atau isi nama pelanggan')
+        date.fromisoformat(self.due_date)
+        if self.issued_date:
+            date.fromisoformat(self.issued_date)
+        self.note = self.note.strip()
+        return self
+
+
+class ReceivableUpdate(ReceivableCreate):
+    pass
 
 
 class CustomerReceivableSummary(BaseModel):
@@ -92,12 +122,24 @@ class PayableCreate(BaseModel):
     supplier_id: str
     invoice_number: str = Field(min_length=1, max_length=100)
     amount: float = Field(gt=0, le=1e12, allow_inf_nan=False, multiple_of=0.01)
+    issued_date: Optional[str] = None
     due_date: str
+    note: str = Field(default='', max_length=500)
 
     @model_validator(mode='after')
     def valid_date(self):
+        self.invoice_number = self.invoice_number.strip()
+        if not self.invoice_number:
+            raise ValueError('Nomor invoice wajib diisi')
         date.fromisoformat(self.due_date)
+        if self.issued_date:
+            date.fromisoformat(self.issued_date)
+        self.note = self.note.strip()
         return self
+
+
+class PayableUpdate(PayableCreate):
+    pass
 
 
 class Expense(BaseModel):
